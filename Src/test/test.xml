@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<ConfigApp>
+    <Config name="Config 001">
+        <Value name="bool001" type="BOOL">0</Value>
+        <Value name="bool002" type="BOOL">1</Value>
+        <Value name="bool003" type="BOOL">0</Value>
+        <Value name="string001" type="String">我是中国人</Value>
+        <Value name="string002" type="String">a</Value>
+        <Value name="string003" type="String">你好吧？</Value>
+        <Value name="dw001" type="DWORD">2</Value>
+        <Value name="dw002" type="DWORD">3</Value>
+        <Value name="dw003" type="DWORD">23</Value>
+    </Config>
+    <Config name="Config 002">
+        <Value name="bool001" type="BOOL">0</Value>
+        <Value name="bool002" type="BOOL">1</Value>
+        <Value name="bool003" type="BOOL">0</Value>
+        <Value name="string001" type="String"></Value>
+        <Value name="string002" type="String">a</Value>
+        <Value name="string003" type="String">b</Value>
+        <Value name="dw001" type="DWORD">2</Value>
+        <Value name="dw002" type="DWORD">3</Value>
+        <Value name="dw003" type="DWORD">23</Value>
+    </Config>
+</ConfigApp>
