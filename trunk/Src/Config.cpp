@@ -10,6 +10,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "Config.h"
+/*
 
 Config::Config(StdString strName)
 : _strName(strName)
@@ -103,3 +104,4 @@ void Config::SetName(StdString strName)
 {
     _strName = strName;
 }
+*/

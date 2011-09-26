@@ -11,7 +11,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "HashMD5Impl.h"
-#include "md5.h"
+/*
+ #include "md5.h"
+
 
 HashMD5Impl::HashMD5Impl(void)
 {
@@ -79,4 +81,4 @@ StdString HashMD5Impl::ComputeHash(const unsigned char* pBuf, unsigned long lLen
 	}
 
 	return szBuf;
-}
+}*/

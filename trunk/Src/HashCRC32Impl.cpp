@@ -10,6 +10,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "HashCRC32Impl.h"
+/*
 
 HashCRC32Impl::HashCRC32Impl(void)
 {
@@ -122,4 +123,4 @@ int HashCRC32Impl::Get_CRC(const unsigned char* buffer, int nLen)
 		ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
 	// Exclusive OR the result with the beginning value.
 	return ulCRC ^ 0xffffffff;
-}
+}*/

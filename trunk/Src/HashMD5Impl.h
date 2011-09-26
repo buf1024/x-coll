@@ -12,7 +12,7 @@
 /** @file HashMD5Impl.h */
 #ifndef _HASHMD5IMPL_H_
 #define _HASHMD5IMPL_H_
-
+/*
 #include "HashImpl.h"
 
 
@@ -29,5 +29,5 @@ public:
 
 private:
     StdString ComputeHash(const unsigned char* pBuf, unsigned long lLen);
-};
+};*/
 #endif

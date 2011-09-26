@@ -10,6 +10,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "FileService.h"
+/*
 
 #include <Shlwapi.h>
 
@@ -246,18 +247,18 @@ BOOL CreateDirectoryNested( LPCTSTR  lpszDir )
 
     TCHAR   szPreDir[ MAX_PATH ];
     _tcscpy_s( szPreDir, lpszDir );
-    //È·±£Â·¾¶Ä©Î²Ã»ÓÐ·´Ð±¸Ü
+    //È·ï¿½ï¿½Â·ï¿½ï¿½Ä©Î²Ã»ï¿½Ð·ï¿½Ð±ï¿½ï¿½
     TCHAR *pend = szPreDir + lstrlen(szPreDir) - 1;
     if(*pend==_T('/')|| *pend==_T('\\'))
     {
         *pend = _T('\0');
     }
 
-    //»ñÈ¡ÉÏ¼¶Ä¿Â¼
+    //ï¿½ï¿½È¡ï¿½Ï¼ï¿½Ä¿Â¼
     BOOL  bGetPreDir  = ::PathRemoveFileSpec( szPreDir );
     if( !bGetPreDir ) return FALSE;
 
-    //Èç¹ûÉÏ¼¶Ä¿Â¼²»´æÔÚ,ÔòµÝ¹é´´½¨ÉÏ¼¶Ä¿Â¼
+    //ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ý¹é´´ï¿½ï¿½ï¿½Ï¼ï¿½Ä¿Â¼
     if( !::PathIsDirectory( szPreDir ) )
     {
         CreateDirectoryNested( szPreDir );
@@ -283,3 +284,4 @@ BOOL CreateDirs (LPCTSTR lpFileName)
     }
     return CreateDirectoryNested (lpNameCopy);
 }
+*/

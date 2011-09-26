@@ -9,11 +9,11 @@
 // Contact     : buf1024@gmail.com
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
-#pragma once
 
 #include <map>
 
 #include <StdString.h>
+/*
 
 
 class Config;
@@ -38,3 +38,4 @@ private:
     std::map<StdString, Config*> _mapConfigAppOpt;
 };
 
+*/

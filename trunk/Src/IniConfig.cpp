@@ -10,8 +10,9 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "IniConfig.h"
+/*
 
-Section::Section(StdString strSectionName /* = _T("") */)
+Section::Section(StdString strSectionName  = _T("") )
 :m_strSectionName(strSectionName)
 {
 	m_mapKeyValue.clear();
@@ -314,4 +315,4 @@ void IniConfig::ClearUp()
 	{
 		delete *iter;
 	}
-}
+}*/

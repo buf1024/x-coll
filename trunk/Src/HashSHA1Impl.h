@@ -27,6 +27,7 @@
 
 #include "HashImpl.h"
 #include "sha1.h"
+/*
 
 class HashSHA1Impl :
     public HashImpl, private SHA1
@@ -40,5 +41,6 @@ public:
     virtual StdString GetFileHash(StdString strFile);
 };
 
+*/
 
 #endif
