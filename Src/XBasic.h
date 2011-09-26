@@ -12,6 +12,8 @@
 
 #include "XBasicCore.h"
 
+// 字符串服务扩展
+
 // xml 格式的应用程序配置
 #include "Config.h"
 #include "ConfigApp.h"
@@ -34,5 +36,6 @@
 
 // 日志服务
 
+// 测试框架
 
 #endif /* XBASIC_H_ */

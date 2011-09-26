@@ -10,6 +10,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "HashSHA1Impl.h"
+/*
 
 HashSHA1Impl::HashSHA1Impl(void)
 {
@@ -79,3 +80,4 @@ StdString HashSHA1Impl::GetFileHash(StdString strFile)
 	return strRet;
 }
 
+*/

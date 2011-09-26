@@ -9,10 +9,10 @@
 // Contact     : buf1024@gmail.com
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
-#pragma once
 
 #include <map>
-#include <StdString.h>
+#include "StdString.h"
+/*
 
 class Config
 {
@@ -48,3 +48,4 @@ private:
     std::map<StdString, long> _mapDoubleWordOpt;
 };
 
+*/

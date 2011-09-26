@@ -13,6 +13,7 @@
 
 #ifndef _HASHCRC32IMPL_H_
 #define _HASHCRC32IMPL_H_
+/*
 
 #include "HashImpl.h"
 
@@ -34,5 +35,6 @@ private:
 private:
     unsigned long crc32_table[256]; // Lookup table array
 };
+*/
 
 #endif

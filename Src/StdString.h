@@ -15,17 +15,31 @@
 #include <string>
 #include <list>
 
-#if _UNICODE
-#define StdString   std::wstring
-#define StdChar     wchar_t
+// 只有WINODWS才定义多字符串
+#ifdef WINDOWS
+  #if _UNICODE
+    #define StdString   std::wstring
+    #define StdChar     wchar_t
+    #define _T(x)       L#x
+  #else
+    #define StdString   std::string
+    #define StdChar     char
+    #define _T(x)       #x
+  #endif
 #else
-#define StdString   std::string
-#define StdChar     char
+  #define StdString     std::string
+  #define StdChar       char
+  #define _T(x)         #x
 #endif
+
+
 
 XBASIC_NAMEPACE_BEGIN
 
 //extend string service
+
+#ifdef WINDOWS
+
 /**
  * Convert an ANSI string to ANSI string
  * @return the ANSI string
@@ -187,112 +201,115 @@ inline const StdChar* GetCStyleStdString(const std::wstring strValue, StdChar* p
 #endif
 }
 
+#endif
 
 /**
- * Split a given string into group
- * @param strValue the string that will be handled
- * @param strDelim the delimiter
- * @param rgpRet the result that return
- * @return the count of the split result
+ * 将给出的字符串分割到组里
+ * @param szStrValue 要分割的字符串
+ * @param strDelim 分割符
+ * @param szStrDelim 结果集合
+ * @return 结果集的个数，如果出错则返回负数
  */
-template<typename T>
-int Split(T& strValue, const T& strDelim, std::list<T>& rgpRet)
+inline int Split(const StdChar* szStrValue, const StdChar* szStrDelim, std::list<StdString>& rgpRet)
 {
-    rgpRet.clear();
-
-    if (strDelim.empty())
-    {
+    if(szStrValue == NullPtr ||
+            szStrDelim == NullPtr)
         return -1;
-    }
-
-    size_t nStartPos = 0;
-    size_t nIdx = strValue.find_first_of(strDelim);
-    while(nIdx != T::npos)
-    {
-        T strSub = strValue.substr(nStartPos, nIdx - nStartPos);
-        if (!strSub.empty())
-        {
-            rgpRet.push_back(strSub);
-        }        
-        nStartPos = nIdx + 1;
-        nIdx = strValue.find_first_of(strDelim, nStartPos);
-    }
-    if (nStartPos < strValue.length())
-    {
-        rgpRet.push_back(strValue.substr(nStartPos));
-    }
-    return rgpRet.size();
+    return 0;
+}
+/**
+ * 将给出的字符串分割到组里
+ * @param strValue 要分割的字符串
+ * @param strDelim 分割符
+ * @param rgpRet 结果集合
+ * @return 结果集的个数
+ */
+inline int Split(const StdString& strValue, const StdString& strDelim, std::list<StdString>& rgpRet)
+{
+    return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
 }
 
 /**
- * Trim the left of a given string
- * @param strValue the string that will be handled
- * @param strDelim the delimiter
- * @return the trimmed result
+ * 去掉字符串A左边包含字符串B的部分
+ * @param szStrValue 要处理的字符串
+ * @param szStrDelim 包含的字符串
+ * @return 已经去掉字符串A左边包含字符串B的部分
  * @see TrimRight
  * @see Trim
  */
-template<typename T>
-T TrimLeft(T& strValue, const T& strDelim)
+inline StdString TrimLeft(const StdChar* szStrValue, const StdChar* szStrDelim)
 {
-    const T::traits_type::_Elem* pData = strValue.c_str();
-    size_t nStart = 0;
-    for(size_t i=0; i<strValue.length(); i++)
-    {        
-        if (strDelim.find(pData[i]) != T::npos)
-        {
-            nStart++;
-        }
-        else
-        {
-            break;
-        }
-    }
-    return pData + nStart;
+    if (szStrValue == NullPtr ||
+            szStrDelim == NullPtr)
+        return StdString();
+    return StdString();
+}
+
+/**
+ * 去掉字符串A左边包含字符串B的部分
+ * @param strValue 要处理的字符串
+ * @param strDelim 包含的字符串
+ * @return 已经去掉字符串A左边包含字符串B的部分
+ * @see TrimRight
+ * @see Trim
+ */
+inline StdString TrimLeft(const StdString& strValue, const StdString& strDelim)
+{
+    return TrimLeft(strValue.c_str(), strDelim.c_str());
 }
 
 
 /**
- * Trim the right of a given string
- * @param strValue the string that will be handled
- * @param strDelim the delimiter
- * @return the trimmed result
+ * 去掉字符串A右边包含字符串B的部分
+ * @param szStrValue 要处理的字符串
+ * @param szStrDelim 包含的字符串
+ * @return 已经去掉字符串A右边包含字符串B的部分
  * @see TrimLeft
  * @see Trim
  */
-template<typename T>
-T TrimRight(T& strValue, const T& strDelim)
+inline StdString TrimRight(const StdChar* szStrValue, const StdChar* szStrDelim)
 {
-    const T::traits_type::_Elem* pData = strValue.c_str();
-    size_t nEnd = strValue.length();
-    for(size_t i=nEnd-1; i>=0; i--)
-    {
-        if (strDelim.find(pData[i]) != T::npos)
-        {
-            nEnd--;
-        }
-        else
-        {
-            break;
-        }
-    }
-    return strValue.substr(0, nEnd);
+    if (szStrValue == NullPtr ||
+            szStrDelim == NullPtr)
+        return StdString();
+    return StdString();
 }
-
 /**
- * Trim the given string
- * @param strValue the string that will be handled
- * @param strDelim the delimiter
- * @return the trimmed result
+ * 去掉字符串A右边包含字符串B的部分
+ * @param strValue 要处理的字符串
+ * @param strDelim 包含的字符串
+ * @return 已经去掉字符串A右边包含字符串B的部分
+ * @see TrimLeft
+ * @see Trim
+ */
+inline StdString TrimRight(const StdString& strValue, const StdString& strDelim)
+{
+    return TrimRight(strValue.c_str(), strDelim.c_str());
+}
+/**
+ * 去掉字符串A左边和右边包含字符串B的部分
+ * @param szStrValue 要处理的字符串
+ * @param szStrDelim 包含的字符串
+ * @return 去掉字符串A左边和右边包含字符串B的部分
  * @see TrimLeft
  * @see TrimRight
  */
-template<typename T>
-inline T Trim(T& strValue, const T& strDelim)
+inline StdString Trim(const StdChar* szStrValue, const StdChar* szStrDelim)
 {
-    return TrimLeft(
-        TrimRight(strValue, strDelim), strDelim);
-
+    StdString strLeft = TrimLeft(szStrValue, szStrDelim);
+    return TrimRight(strLeft.c_str(), szStrDelim);
+}
+/**
+ * 去掉字符串A左边和右边包含字符串B的部分
+ * @param strValue 要处理的字符串
+ * @param strDelim 包含的字符串
+ * @return 去掉字符串A左边和右边包含字符串B的部分
+ * @see TrimLeft
+ * @see TrimRight
+ */
+inline StdString Trim(const StdString& strValue, const StdString& strDelim)
+{
+    return Trim(strValue.c_str(), strDelim.c_str());
 }
 
 /**
@@ -301,42 +318,77 @@ inline T Trim(T& strValue, const T& strDelim)
  * @param strSubStr the started string
  * @return true is a string is starts with another string, false otherwise
  */
-template<typename T>
-bool StartsWith(const T& strValue, const T& strSubStr)
+inline bool StartsWith(const StdChar* szStrValue, const StdChar*szStrSubStr)
 {
-    T str = strValue.substr(0, strSubStr.length());
+    return false;
+}
+/**
+ * Check whether a string is starts with another string
+ * @param strValue the string that will be checked
+ * @param strSubStr the started string
+ * @return true is a string is starts with another string, false otherwise
+ */
+inline bool StartsWith(const StdString& strValue, const StdString& strSubStr)
+{
+    StdString str = strValue.substr(0, strSubStr.length());
     return str == strSubStr;
 }
+/**
+ * 测试A字符串是否以B字符串结束
+ * @param strValue 被测试的字符串
+ * @param strSubStr 结束的字符串
+ * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
+ */
+inline bool EndsWith(const StdChar* szStrValue, const StdChar*szStrSubStr)
+{
+
+    return false;
+}
+
 
 /**
- * Check whether a string is ends with another string
- * @param strValue the string that will be checked
- * @param strSubStr the ended string
- * @return true is a string is ends with another string, false otherwise
+ * 测试A字符串是否以B字符串结束
+ * @param strValue 被测试的字符串
+ * @param strSubStr 结束的字符串
+ * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
  */
-//template<typename T>
-//bool EndsWith(T& strValue, T& strSubStr);
-template<typename T>
-bool EndsWith(const T& strValue, const T& strSubStr)
+inline bool EndsWith(const StdString& strValue, const StdString& strSubStr)
 {
     int nPos = strValue.length() - strSubStr.length();
     if (nPos >= 0)
     {
-        T str = strValue.substr(nPos);
+        StdString str = strValue.substr(nPos);
         return str == strSubStr;
     }
     return false;
 }
+
+
 /**
- * Check whether a string contains another string
- * @param strValue the string that will be checked
- * @param strSubStr the ended string
- * @return true is a string is ends with another string, false otherwise
+ * 测试A字符串是否包括B字符串
+ * @param strValue 被测试的字符串
+ * @param strSubStr 包含的字符串
+ * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
  */
-template<typename T>
-bool Contains(const T& strValue, const T& strSubStr)
+inline bool Contains(const StdChar* szStrValue, const StdChar* szStrSubStr)
 {
-    return strValue.find(strSubStr) != T::npos;
+/*    if(szStrValue == NullPtr ||
+            szStrSubStr == NullPtr)*/
+        return false;
+/*    StdString strValue(szStrValue);
+    StdString strSubValue(szStrSubStr);
+    return Contains(strValue, strSubValue);*/
+}
+
+/**
+ * 测试A字符串是否包括B字符串
+ * @param strValue 被测试的字符串
+ * @param strSubStr 包含的字符串
+ * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
+ */
+inline bool Contains(const StdString& strValue, const StdString& strSubStr)
+{
+    return strValue.find(strSubStr) != StdString::npos;
 }
 
 XBASIC_NAMESPACE_END

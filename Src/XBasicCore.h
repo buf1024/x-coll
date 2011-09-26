@@ -8,22 +8,28 @@
 #ifndef XBASICCORE_H_
 #define XBASICCORE_H_
 
+#include <assert.h>
+
+#define USING_NAMESPACE
+
 // 是否使用名命空间
 #ifdef USING_NAMESPACE
 
 #define XBASICNAMESPACE XBasic
 
 #define XBASIC_NAMEPACE_BEGIN                                                            \
-    namespace xbasic {                                                                   \
+    namespace XBASICNAMESPACE {                                                          \
 
 #define XBASIC_NAMESPACE_END                                                             \
     }                                                                                    \
+
+#define USE_XBASIC_NAMESPACE using namespace XBASICNAMESPACE
 
 #else
 
 #define XBASIC_NAMEPACE_BEGIN
 #define XBASIC_NAMESPACE_END
-
+#define USE_XBASIC_NAMESPACE
 #endif
 
 #ifdef WINDOWS
@@ -45,6 +51,7 @@
   #else
     #pragma comment(lib, "xbasicd.lib")
   #endif
+
 #endif
 
 
@@ -55,6 +62,7 @@
 #endif
 
 #define NullPtr             (0)
+#define ASSERT(expr)        assert(expr)
 
 #define Min(a, b)           ((a)>(b)?(b):(a))
 #define Max(a, b)           ((a)>(b)?(a):(b))

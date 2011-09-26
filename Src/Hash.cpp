@@ -9,6 +9,7 @@
 // Contact     : buf1024@gmail.com
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
+/*
 #include "Hash.h"
 #include "HashImpl.h"
 
@@ -36,4 +37,4 @@ StdString Hash::GetStringHash(std::wstring strValue)
 StdString Hash::GetFileHash(StdString strFile)
 {
 	return m_pImpl->GetFileHash(strFile);
-}
+}*/

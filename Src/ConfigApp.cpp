@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "Config.h"
 #include "ConfigApp.h"
+/*
 
 #include "tinyxml.h"
 
@@ -196,4 +197,4 @@ long ConfigApp::GetLongFromString(std::string strValue)
     long dwValue = 0L;
     sscanf_s(strValue.c_str(), "%ld", &dwValue);
     return dwValue;
-}
+}*/

@@ -13,6 +13,7 @@
 // Create at 2010-9-26 22:49:51 by heidong
 //============================================================================
 #pragma once
+/*
 #include <CmmWinHdr.h>
 
 class SingletonInst
@@ -32,3 +33,4 @@ private:
 	HANDLE m_hEvent;
 	BOOL m_bInstExist;
 };
+*/

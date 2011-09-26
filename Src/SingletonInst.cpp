@@ -1,5 +1,5 @@
-#include <crtdbg.h>
 #include "SingletonInst.h"
+/*
 
 SingletonInst::SingletonInst(LPCTSTR pszName)
 : m_hEvent(INVALID_HANDLE_VALUE)
@@ -61,4 +61,4 @@ BOOL SingletonInst::operator ! ()
 SingletonInst::operator BOOL ()
 {
 	return !m_bInstExist;
-}
+}*/
