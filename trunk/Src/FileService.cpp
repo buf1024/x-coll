@@ -247,18 +247,18 @@ BOOL CreateDirectoryNested( LPCTSTR  lpszDir )
 
     TCHAR   szPreDir[ MAX_PATH ];
     _tcscpy_s( szPreDir, lpszDir );
-    //È·ï¿½ï¿½Â·ï¿½ï¿½Ä©Î²Ã»ï¿½Ð·ï¿½Ð±ï¿½ï¿½
+    //???¡¤???¦Â??§Ù?§Ò??
     TCHAR *pend = szPreDir + lstrlen(szPreDir) - 1;
     if(*pend==_T('/')|| *pend==_T('\\'))
     {
         *pend = _T('\0');
     }
 
-    //ï¿½ï¿½È¡ï¿½Ï¼ï¿½Ä¿Â¼
+    //????????
     BOOL  bGetPreDir  = ::PathRemoveFileSpec( szPreDir );
     if( !bGetPreDir ) return FALSE;
 
-    //ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ý¹é´´ï¿½ï¿½ï¿½Ï¼ï¿½Ä¿Â¼
+    //??????????????,???ø’???????
     if( !::PathIsDirectory( szPreDir ) )
     {
         CreateDirectoryNested( szPreDir );
