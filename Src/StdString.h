@@ -1,8 +1,8 @@
 /*
  * File       : StdString.h
- * Description: å­—ç¬¦ä¸²åŠŸèƒ½æ‰©å±•
+ * Description: ×Ö·û´®¹¦ÄÜÀ©Õ¹
  * Version    : 2011-05-09 Created
- *              2011-9 24 1.1 å¤šæ“ä½œç³»ç»Ÿæ”¯æŒ
+ *              2011-9 24 1.1 ¶à²Ù×÷ÏµÍ³Ö§³Ö
  * Author     : buf1024@gmail.com
  */
 
@@ -15,21 +15,21 @@
 #include <string>
 #include <list>
 
-// åªæœ‰WINODWSæ‰å®šä¹‰å¤šå­—ç¬¦ä¸²
+// Ö»ÓĞWINODWS²Å¶¨Òå¶à×Ö·û´®
 #ifdef WINDOWS
   #if _UNICODE
     #define StdString   std::wstring
     #define StdChar     wchar_t
-    #define _T(x)       L#x
+    #define _T(x)       L##x
   #else
     #define StdString   std::string
     #define StdChar     char
-    #define _T(x)       #x
+    #define _T(x)       x
   #endif
 #else
   #define StdString     std::string
   #define StdChar       char
-  #define _T(x)         #x
+  #define _T(x)         x
 #endif
 
 
@@ -40,277 +40,244 @@ XBASIC_NAMEPACE_BEGIN
 
 #ifdef WINDOWS
 
-/**
- * Convert an ANSI string to ANSI string
- * @return the ANSI string
- */
-inline std::string GetAnsiString(const std::string strValue)
-{
-    return strValue;
-}
-/**
- * Convert a wide string to ANSI string
- * @return the ANSI string
- */
-inline std::string GetAnsiString(const std::wstring strValue)
-{
-    if (strValue.empty())
-    {
-        return "";
-    }
-
-    int nLen = (strValue.length() + 1)*2;
-    //int nLen = strValue.length() + 1;
-    char* pszBuf = new char[nLen];
-    //We don't use C Runtime convert function here
-    ::WideCharToMultiByte(CP_ACP, 0L, 
-        strValue.c_str(), -1, 
-        pszBuf, nLen,
-        NULL, NULL);
-
-    //wcstombs(pszBuf, strValue.c_str(), nLen);
-
-    std::string strRet = pszBuf;
-    delete[] pszBuf;
-
-    return strRet;
-}
-/**
- * Convert a wide string to wide string
- * @return the wide string
- */
-inline std::wstring GetWideString(const std::wstring strValue)
-{
-    return strValue;
-}
-/**
- * Convert a ANSI string to wide string
- * @return the wide string
- */
-
-inline std::wstring GetWideString(const std::string strValue)
-{
-    if (strValue.empty())
-    {
-        return L"";
-    }
-
-    int nLen = strValue.length() + 1;
-    wchar_t* pszBuf = new wchar_t[nLen];
-    //We don't use C Runtime convert function here
-    ::MultiByteToWideChar(CP_ACP, 0L,
-        strValue.c_str(), -1,       
-        pszBuf, nLen);
-
-    //mbstowcs(pszBuf, strValue.c_str(), nLen);
-
-    std::wstring strRet = pszBuf;
-    delete[] pszBuf;
-
-    return strRet;
-}
-
-/**
- * Convert a ANSI string to std string
- * @return the std string
- */
-inline StdString GetStdString(std::string strValue)
-{
-#if _UNICODE
-    return GetWideString(strValue);
-#else    
-    return strValue;
-#endif    
-}
-/**
- * Convert a wide string to std string
- * @return the std string
- */
-inline StdString GetStdString(const std::wstring strValue)
-{
-#if _UNICODE
-    return strValue;
-#else
-    return GetAnsiString(strValue);
-#endif    
-}
-
-/**
- * @see GetCStyleStdString
- */
-inline const char* GetCStyleAnsiString(const std::string strValue, char* pBuf)
-{
-    //std::string strVal = GetAnsiString(strValue);
-    std::string strVal = strValue;
-    int nLen = strVal.length() + 1;
-    memcpy(pBuf, strVal.c_str(), nLen);
-    return pBuf;
-}
-/**
- * @see GetCStyleStdString
- */
-inline const char* GetCStyleAnsiString(const std::wstring strValue, char* pBuf)
-{
-    return GetCStyleAnsiString(
-        GetAnsiString(strValue), pBuf);
-}
-/**
- * @see GetCStyleStdString
- */
-inline const wchar_t* GetCStyleWideString(const std::wstring strValue, wchar_t* pBuf)
-{
-    std::wstring strVal = strValue;
-    int nLen = (strVal.length() + 1)*sizeof(wchar_t);
-    memcpy(pBuf, strVal.c_str(), nLen);
-    return pBuf;
-}
-
-/**
- * @see GetCStyleStdString
- */
-inline const wchar_t* GetCStyleWideString(const std::string strValue, wchar_t* pBuf)
-{
-    return GetCStyleWideString(
-        GetWideString(strValue), pBuf);
-}
-
-/**
- * @see GetCStyleStdString
- */
-inline const StdChar* GetCStyleStdString(const std::string strValue, StdChar* pBuf)
-{
-#if _UNICODE
-    return GetCStyleWideString(strValue, pBuf);
-#else
-    return GetCStyleAnsiString(strValue, pBuf);
+///**
+// * Convert an ANSI string to ANSI string
+// * @return the ANSI string
+// */
+//inline std::string GetAnsiString(const std::string strValue)
+//{
+//    return strValue;
+//}
+///**
+// * Convert a wide string to ANSI string
+// * @return the ANSI string
+// */
+//inline std::string GetAnsiString(const std::wstring strValue)
+//{
+//    if (strValue.empty())
+//    {
+//        return "";
+//    }
+//
+//    int nLen = (strValue.length() + 1)*2;
+//    //int nLen = strValue.length() + 1;
+//    char* pszBuf = new char[nLen];
+//    //We don't use C Runtime convert function here
+//    ::WideCharToMultiByte(CP_ACP, 0L, 
+//        strValue.c_str(), -1, 
+//        pszBuf, nLen,
+//        NULL, NULL);
+//
+//    //wcstombs(pszBuf, strValue.c_str(), nLen);
+//
+//    std::string strRet = pszBuf;
+//    delete[] pszBuf;
+//
+//    return strRet;
+//}
+///**
+// * Convert a wide string to wide string
+// * @return the wide string
+// */
+//inline std::wstring GetWideString(const std::wstring strValue)
+//{
+//    return strValue;
+//}
+///**
+// * Convert a ANSI string to wide string
+// * @return the wide string
+// */
+//
+//inline std::wstring GetWideString(const std::string strValue)
+//{
+//    if (strValue.empty())
+//    {
+//        return L"";
+//    }
+//
+//    int nLen = strValue.length() + 1;
+//    wchar_t* pszBuf = new wchar_t[nLen];
+//    //We don't use C Runtime convert function here
+//    ::MultiByteToWideChar(CP_ACP, 0L,
+//        strValue.c_str(), -1,       
+//        pszBuf, nLen);
+//
+//    //mbstowcs(pszBuf, strValue.c_str(), nLen);
+//
+//    std::wstring strRet = pszBuf;
+//    delete[] pszBuf;
+//
+//    return strRet;
+//}
+//
+///**
+// * Convert a ANSI string to std string
+// * @return the std string
+// */
+//inline StdString GetStdString(std::string strValue)
+//{
+//#if _UNICODE
+//    return GetWideString(strValue);
+//#else    
+//    return strValue;
+//#endif    
+//}
+///**
+// * Convert a wide string to std string
+// * @return the std string
+// */
+//inline StdString GetStdString(const std::wstring strValue)
+//{
+//#if _UNICODE
+//    return strValue;
+//#else
+//    return GetAnsiString(strValue);
+//#endif    
+//}
+//
+///**
+// * @see GetCStyleStdString
+// */
+//inline const char* GetCStyleAnsiString(const std::string strValue, char* pBuf)
+//{
+//    //std::string strVal = GetAnsiString(strValue);
+//    std::string strVal = strValue;
+//    int nLen = strVal.length() + 1;
+//    memcpy(pBuf, strVal.c_str(), nLen);
+//    return pBuf;
+//}
+///**
+// * @see GetCStyleStdString
+// */
+//inline const char* GetCStyleAnsiString(const std::wstring strValue, char* pBuf)
+//{
+//    return GetCStyleAnsiString(
+//        GetAnsiString(strValue), pBuf);
+//}
+///**
+// * @see GetCStyleStdString
+// */
+//inline const wchar_t* GetCStyleWideString(const std::wstring strValue, wchar_t* pBuf)
+//{
+//    std::wstring strVal = strValue;
+//    int nLen = (strVal.length() + 1)*sizeof(wchar_t);
+//    memcpy(pBuf, strVal.c_str(), nLen);
+//    return pBuf;
+//}
+//
+///**
+// * @see GetCStyleStdString
+// */
+//inline const wchar_t* GetCStyleWideString(const std::string strValue, wchar_t* pBuf)
+//{
+//    return GetCStyleWideString(
+//        GetWideString(strValue), pBuf);
+//}
+//
+///**
+// * @see GetCStyleStdString
+// */
+//inline const StdChar* GetCStyleStdString(const std::string strValue, StdChar* pBuf)
+//{
+//#if _UNICODE
+//    return GetCStyleWideString(strValue, pBuf);
+//#else
+//    return GetCStyleAnsiString(strValue, pBuf);
+//#endif
+//}
+//
+///**
+// * Get the C style string
+// * @param strValue the string
+// * @param pBuf the buffer to hold the value
+// * @return the C style string
+// */
+//inline const StdChar* GetCStyleStdString(const std::wstring strValue, StdChar* pBuf)
+//{
+//#if _UNICODE
+//    return GetCStyleWideString(strValue, pBuf);
+//#else
+//    return GetCStyleAnsiString(strValue, pBuf);
+//#endif
+//}
+//
 #endif
-}
 
+int StringLenth(const StdChar* szStrVal);
 /**
- * Get the C style string
- * @param strValue the string
- * @param pBuf the buffer to hold the value
- * @return the C style string
+ * ½«¸ø³öµÄ×Ö·û´®·Ö¸îµ½×éÀï
+ * @param szStrValue Òª·Ö¸îµÄ×Ö·û´®
+ * @param strDelim ·Ö¸î·û
+ * @param szStrDelim ½á¹û¼¯ºÏ
+ * @return ½á¹û¼¯µÄ¸öÊı£¬Èç¹û³ö´íÔò·µ»Ø¸ºÊı
  */
-inline const StdChar* GetCStyleStdString(const std::wstring strValue, StdChar* pBuf)
-{
-#if _UNICODE
-    return GetCStyleWideString(strValue, pBuf);
-#else
-    return GetCStyleAnsiString(strValue, pBuf);
-#endif
-}
-
-#endif
-
+int Split(const StdChar* szStrValue, const StdChar* szStrDelim, std::list<StdString>& rgpRet);
 /**
- * å°†ç»™å‡ºçš„å­—ç¬¦ä¸²åˆ†å‰²åˆ°ç»„é‡Œ
- * @param szStrValue è¦åˆ†å‰²çš„å­—ç¬¦ä¸²
- * @param strDelim åˆ†å‰²ç¬¦
- * @param szStrDelim ç»“æœé›†åˆ
- * @return ç»“æœé›†çš„ä¸ªæ•°ï¼Œå¦‚æœå‡ºé”™åˆ™è¿”å›è´Ÿæ•°
+ * ½«¸ø³öµÄ×Ö·û´®·Ö¸îµ½×éÀï
+ * @param strValue Òª·Ö¸îµÄ×Ö·û´®
+ * @param strDelim ·Ö¸î·û
+ * @param rgpRet ½á¹û¼¯ºÏ
+ * @return ½á¹û¼¯µÄ¸öÊı
  */
-inline int Split(const StdChar* szStrValue, const StdChar* szStrDelim, std::list<StdString>& rgpRet)
-{
-    if(szStrValue == NullPtr ||
-            szStrDelim == NullPtr)
-        return -1;
-    return 0;
-}
-/**
- * å°†ç»™å‡ºçš„å­—ç¬¦ä¸²åˆ†å‰²åˆ°ç»„é‡Œ
- * @param strValue è¦åˆ†å‰²çš„å­—ç¬¦ä¸²
- * @param strDelim åˆ†å‰²ç¬¦
- * @param rgpRet ç»“æœé›†åˆ
- * @return ç»“æœé›†çš„ä¸ªæ•°
- */
-inline int Split(const StdString& strValue, const StdString& strDelim, std::list<StdString>& rgpRet)
-{
-    return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
-}
+int Split(const StdString& strValue, const StdString& strDelim, std::list<StdString>& rgpRet);
 
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param szStrValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param szStrDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å·²ç»å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®A×ó±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param szStrValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param szStrDelim °üº¬µÄ×Ö·û´®
+ * @return ÒÑ¾­È¥µô×Ö·û´®A×ó±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimRight
  * @see Trim
  */
-inline StdString TrimLeft(const StdChar* szStrValue, const StdChar* szStrDelim)
-{
-    if (szStrValue == NullPtr ||
-            szStrDelim == NullPtr)
-        return StdString();
-    return StdString();
-}
+StdString TrimLeft(const StdChar* szStrValue, const StdChar* szStrDelim);
 
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param strValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param strDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å·²ç»å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®A×ó±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param strValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param strDelim °üº¬µÄ×Ö·û´®
+ * @return ÒÑ¾­È¥µô×Ö·û´®A×ó±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimRight
  * @see Trim
  */
-inline StdString TrimLeft(const StdString& strValue, const StdString& strDelim)
-{
-    return TrimLeft(strValue.c_str(), strDelim.c_str());
-}
+StdString TrimLeft(const StdString& strValue, const StdString& strDelim);
 
 
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param szStrValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param szStrDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å·²ç»å»æ‰å­—ç¬¦ä¸²Aå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®AÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param szStrValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param szStrDelim °üº¬µÄ×Ö·û´®
+ * @return ÒÑ¾­È¥µô×Ö·û´®AÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimLeft
  * @see Trim
  */
-inline StdString TrimRight(const StdChar* szStrValue, const StdChar* szStrDelim)
-{
-    if (szStrValue == NullPtr ||
-            szStrDelim == NullPtr)
-        return StdString();
-    return StdString();
-}
+StdString TrimRight(const StdChar* szStrValue, const StdChar* szStrDelim);
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param strValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param strDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å·²ç»å»æ‰å­—ç¬¦ä¸²Aå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®AÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param strValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param strDelim °üº¬µÄ×Ö·û´®
+ * @return ÒÑ¾­È¥µô×Ö·û´®AÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimLeft
  * @see Trim
  */
-inline StdString TrimRight(const StdString& strValue, const StdString& strDelim)
-{
-    return TrimRight(strValue.c_str(), strDelim.c_str());
-}
+StdString TrimRight(const StdString& strValue, const StdString& strDelim);
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹å’Œå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param szStrValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param szStrDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹å’Œå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®A×ó±ßºÍÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param szStrValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param szStrDelim °üº¬µÄ×Ö·û´®
+ * @return È¥µô×Ö·û´®A×ó±ßºÍÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimLeft
  * @see TrimRight
  */
-inline StdString Trim(const StdChar* szStrValue, const StdChar* szStrDelim)
-{
-    StdString strLeft = TrimLeft(szStrValue, szStrDelim);
-    return TrimRight(strLeft.c_str(), szStrDelim);
-}
+StdString Trim(const StdChar* szStrValue, const StdChar* szStrDelim);
 /**
- * å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹å’Œå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
- * @param strValue è¦å¤„ç†çš„å­—ç¬¦ä¸²
- * @param strDelim åŒ…å«çš„å­—ç¬¦ä¸²
- * @return å»æ‰å­—ç¬¦ä¸²Aå·¦è¾¹å’Œå³è¾¹åŒ…å«å­—ç¬¦ä¸²Bçš„éƒ¨åˆ†
+ * È¥µô×Ö·û´®A×ó±ßºÍÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
+ * @param strValue Òª´¦ÀíµÄ×Ö·û´®
+ * @param strDelim °üº¬µÄ×Ö·û´®
+ * @return È¥µô×Ö·û´®A×ó±ßºÍÓÒ±ß°üº¬×Ö·û´®BµÄ²¿·Ö
  * @see TrimLeft
  * @see TrimRight
  */
-inline StdString Trim(const StdString& strValue, const StdString& strDelim)
-{
-    return Trim(strValue.c_str(), strDelim.c_str());
-}
+StdString Trim(const StdString& strValue, const StdString& strDelim);
 
 /**
  * Check whether a string is starts with another string
@@ -318,78 +285,57 @@ inline StdString Trim(const StdString& strValue, const StdString& strDelim)
  * @param strSubStr the started string
  * @return true is a string is starts with another string, false otherwise
  */
-inline bool StartsWith(const StdChar* szStrValue, const StdChar*szStrSubStr)
-{
-    return false;
-}
+bool StartsWith(const StdChar* szStrValue, const StdChar*szStrSubStr);
 /**
  * Check whether a string is starts with another string
  * @param strValue the string that will be checked
  * @param strSubStr the started string
  * @return true is a string is starts with another string, false otherwise
  */
-inline bool StartsWith(const StdString& strValue, const StdString& strSubStr)
-{
-    StdString str = strValue.substr(0, strSubStr.length());
-    return str == strSubStr;
-}
+bool StartsWith(const StdString& strValue, const StdString& strSubStr);
 /**
- * æµ‹è¯•Aå­—ç¬¦ä¸²æ˜¯å¦ä»¥Bå­—ç¬¦ä¸²ç»“æŸ
- * @param strValue è¢«æµ‹è¯•çš„å­—ç¬¦ä¸²
- * @param strSubStr ç»“æŸçš„å­—ç¬¦ä¸²
- * @return true å­—ç¬¦ä¸²Aä»¥Bå­—ç¬¦ä¸²ç»“æŸ, false å­—ç¬¦ä¸²Aä¸ä»¥Bå­—ç¬¦ä¸²ç»“æŸ
+ * ²âÊÔA×Ö·û´®ÊÇ·ñÒÔB×Ö·û´®½áÊø
+ * @param strValue ±»²âÊÔµÄ×Ö·û´®
+ * @param strSubStr ½áÊøµÄ×Ö·û´®
+ * @return true ×Ö·û´®AÒÔB×Ö·û´®½áÊø, false ×Ö·û´®A²»ÒÔB×Ö·û´®½áÊø
  */
-inline bool EndsWith(const StdChar* szStrValue, const StdChar*szStrSubStr)
-{
-
-    return false;
-}
-
+bool EndsWith(const StdChar* szStrValue, const StdChar*szStrSubStr);
 
 /**
- * æµ‹è¯•Aå­—ç¬¦ä¸²æ˜¯å¦ä»¥Bå­—ç¬¦ä¸²ç»“æŸ
- * @param strValue è¢«æµ‹è¯•çš„å­—ç¬¦ä¸²
- * @param strSubStr ç»“æŸçš„å­—ç¬¦ä¸²
- * @return true å­—ç¬¦ä¸²Aä»¥Bå­—ç¬¦ä¸²ç»“æŸ, false å­—ç¬¦ä¸²Aä¸ä»¥Bå­—ç¬¦ä¸²ç»“æŸ
+ * ²âÊÔA×Ö·û´®ÊÇ·ñÒÔB×Ö·û´®½áÊø
+ * @param strValue ±»²âÊÔµÄ×Ö·û´®
+ * @param strSubStr ½áÊøµÄ×Ö·û´®
+ * @return true ×Ö·û´®AÒÔB×Ö·û´®½áÊø, false ×Ö·û´®A²»ÒÔB×Ö·û´®½áÊø
  */
-inline bool EndsWith(const StdString& strValue, const StdString& strSubStr)
-{
-    int nPos = strValue.length() - strSubStr.length();
-    if (nPos >= 0)
-    {
-        StdString str = strValue.substr(nPos);
-        return str == strSubStr;
-    }
-    return false;
-}
+bool EndsWith(const StdString& strValue, const StdString& strSubStr);
 
 
+bool Contains(const StdChar* szStrValue, const StdChar ch);
+bool Contains(const StdString& strValue, const StdChar ch);
 /**
- * æµ‹è¯•Aå­—ç¬¦ä¸²æ˜¯å¦åŒ…æ‹¬Bå­—ç¬¦ä¸²
- * @param strValue è¢«æµ‹è¯•çš„å­—ç¬¦ä¸²
- * @param strSubStr åŒ…å«çš„å­—ç¬¦ä¸²
- * @return true å­—ç¬¦ä¸²AåŒ…æ‹¬Bå­—ç¬¦ä¸², false å­—ç¬¦ä¸²Aä¸åŒ…æ‹¬Bå­—ç¬¦ä¸²
+ * ²âÊÔA×Ö·û´®ÊÇ·ñ°üÀ¨B×Ö·û´®
+ * @param strValue ±»²âÊÔµÄ×Ö·û´®
+ * @param strSubStr °üº¬µÄ×Ö·û´®
+ * @return true ×Ö·û´®A°üÀ¨B×Ö·û´®, false ×Ö·û´®A²»°üÀ¨B×Ö·û´®
  */
-inline bool Contains(const StdChar* szStrValue, const StdChar* szStrSubStr)
-{
-/*    if(szStrValue == NullPtr ||
-            szStrSubStr == NullPtr)*/
-        return false;
-/*    StdString strValue(szStrValue);
-    StdString strSubValue(szStrSubStr);
-    return Contains(strValue, strSubValue);*/
-}
-
+bool Contains(const StdChar* szStrValue, const StdChar* szStrSubStr);
 /**
- * æµ‹è¯•Aå­—ç¬¦ä¸²æ˜¯å¦åŒ…æ‹¬Bå­—ç¬¦ä¸²
- * @param strValue è¢«æµ‹è¯•çš„å­—ç¬¦ä¸²
- * @param strSubStr åŒ…å«çš„å­—ç¬¦ä¸²
- * @return true å­—ç¬¦ä¸²AåŒ…æ‹¬Bå­—ç¬¦ä¸², false å­—ç¬¦ä¸²Aä¸åŒ…æ‹¬Bå­—ç¬¦ä¸²
+ * ²âÊÔA×Ö·û´®ÊÇ·ñ°üÀ¨B×Ö·û´®
+ * @param strValue ±»²âÊÔµÄ×Ö·û´®
+ * @param strSubStr °üº¬µÄ×Ö·û´®
+ * @return true ×Ö·û´®A°üÀ¨B×Ö·û´®, false ×Ö·û´®A²»°üÀ¨B×Ö·û´®
  */
-inline bool Contains(const StdString& strValue, const StdString& strSubStr)
-{
-    return strValue.find(strSubStr) != StdString::npos;
-}
+bool Contains(const StdString& strValue, const StdString& strSubStr);
+const StdChar* FirtPosition(const StdChar* szStrVal, const StdChar* szSubVal);
+const StdChar* FirtPosition(const StdChar* szStrVal, const StdChar ch);
+StdString FromNumber(long lVal);
+StdString FromNumber(int nVal);
+StdString FromNumber(double fVal);
+
+long ToLong(const StdChar* szStrVal, int nBase, bool& bStat);
+long ToLong(StdString& strVal, int nBase, bool& bStat);
+double ToDouble(const StdChar* szStrVal, bool& bStat);
+double ToDouble(StdString& strVal, bool& bStat);
 
 XBASIC_NAMESPACE_END
 

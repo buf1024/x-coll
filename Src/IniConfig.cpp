@@ -1,18 +1,17 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// GCLib -- Personal basic library project
-// 
-// FileName    : IniConfig.cpp
-// Purpose     : 
-// Version     : 2010-10-16 0:19:55 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
-#include "IniConfig.h"
 /*
+ * File       : IniConfig.cpp
+ * Description: Ini配置文件
+ * Version    : 2010-10-16 Created
+ *              2011-9 24 1.1 多操作系统支持
+ * Author     : buf1024@gmail.com
+ */
+#include "IniConfig.h"
 
-Section::Section(StdString strSectionName  = _T("") )
+#include <stdio.h>
+
+USE_XBASIC_NAMESPACE;
+
+Section::Section(StdString strSectionName /* = _T("") */)
 :m_strSectionName(strSectionName)
 {
 	m_mapKeyValue.clear();
@@ -44,7 +43,7 @@ void Section::Insert(const StdString strKey, TCHAR chValue)
 	if (!strKey.empty())
 	{
 		TCHAR szBuf[32] = {0};
-		_sntprintf_s(szBuf, 32, 32, _T("%c"), chValue);
+	//	_sntprintf_s(szBuf, 32, 32, _T("%c"), chValue);
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -53,7 +52,7 @@ void Section::Insert(const StdString strKey, int nValue)
 	if (!strKey.empty())
 	{
 		TCHAR szBuf[32] = {0};
-		_sntprintf_s(szBuf, 32, 32, _T("%d"), nValue);
+	//	_sntprintf_s(szBuf, 32, 32, _T("%d"), nValue);
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -62,7 +61,7 @@ void Section::Insert(const StdString strKey, long lValue)
 	if (!strKey.empty())
 	{
 		TCHAR szBuf[32] = {0};
-		_sntprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
+	//	_sntprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
 		m_mapKeyValue[strKey] = szBuf;
 	}
 
@@ -72,7 +71,7 @@ void Section::Insert(const StdString strKey, double dValue)
 	if (!strKey.empty())
 	{
 		TCHAR szBuf[32] = {0};
-		_sntprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
+	//	_sntprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -175,7 +174,7 @@ bool Section::Save(StdString strFilePath)
 	return bRet;
 }
 
-
+// IniConfig
 
 IniConfig::IniConfig(StdString strFilePath)
 {
@@ -189,6 +188,7 @@ IniConfig::~IniConfig()
 void IniConfig::SetFilePath(const StdString strFilePath)
 {
 	m_strFilePath = strFilePath;
+    Load(m_strFilePath);
 }
 StdString IniConfig::GetFilePath() const
 {
@@ -197,7 +197,9 @@ StdString IniConfig::GetFilePath() const
 
 bool IniConfig::Insert(Section* pSec)
 {
-	bool bRet = false;
+    ASSERT(pSec != NullPtr);
+	
+    bool bRet = false;
 	if (pSec)
 	{
 		if (GetSection(pSec->GetSectionName()) == NULL)
@@ -207,21 +209,28 @@ bool IniConfig::Insert(Section* pSec)
 		}
 	}
 	return bRet;
+
 }
 void IniConfig::Delete(const StdString strSection)
 {
-	Section* pSec = GetSection(strSection);
-	if (pSec)
-	{
-		m_lstSections.remove(pSec);
-        delete pSec;
-	}
+    for(ICIterator iter = m_lstSections.begin();
+        iter != m_lstSections.end();
+        ++iter)
+    {
+        if ((*iter)->GetSectionName() == strSection)
+        {
+            delete *iter;
+            m_lstSections.erase(iter);
+            break;
+        }
+    }
 	
 }
 Section* IniConfig::GetSection(const StdString strSecName)
 {
-	Section* pSec = NULL;
-	for(ICIterator iter = m_lstSections.begin();
+	Section* pSec = NullPtr;
+	
+    for(ICIterator iter = m_lstSections.begin();
 		iter != m_lstSections.end();
 		++iter)
 	{
@@ -231,64 +240,85 @@ Section* IniConfig::GetSection(const StdString strSecName)
 			break;
 		}
 	}
+
 	return pSec;
 }
 
 bool IniConfig::Load(const StdString strFilePath)
 {
-	bool bRet = false;
-	ClearUp();
-	SetFilePath(strFilePath);
-#if _UNICODE
-	std::wfstream file(strFilePath.c_str(), std::ios_base::in);
+    ClearUp();
+	m_strFilePath = strFilePath;
+
+    FILE* pFile = NullPtr;
+#ifndef _UNICODE
+	pFile = fopen(strFilePath.c_str(), _T("r"));
 #else
-    std::fstream file(strFilePath.c_str(), std::ios_base::in);
+    pFile = _wfopen(strFilePath.c_str(), _T("r"));
 #endif
 
-	if (file.is_open())
-	{
-		std::list<StdString> lstSections;
-		while(!file.eof())
-		{
-			TCHAR szBuf[64] = {0};
-			file.getline(szBuf, 64);
-			StdString str = szBuf;
-			if (str[0] == _T('[') && str[str.length()-1] == _T(']'))
-			{
-				str.erase(str.begin());
-				str.erase(str.end()-1);				
-				if (!str.empty())
-				{
-					lstSections.push_back(str);
-				}
-				
-			}			
-		}
-		bool bOp = true;
-		for(std::list<StdString>::iterator  iter = lstSections.begin();
-			iter != lstSections.end();
-			++iter)
-		{
-			Section* pSec = new Section(*iter);
-			if (pSec->Load(strFilePath))
-			{
-				Insert(pSec);
-			}
-			else
-			{
-				bOp = false;
-				break;
-			}
-			
-		}
-		if (!bOp)
-		{
-			ClearUp();
-		}
-		bRet = bOp;
-	}
+    if (pFile == NullPtr)
+    {
+        return false;
+    }
 
-	return bRet;
+    StdChar szLine[MAX_LINE] = _T("");
+
+    const StdChar* pTmp = NullPtr;
+
+    Section* pCurSec = NullPtr;
+
+    while(feof(pFile) != EOF)
+    {
+#ifndef _UNICODE
+        fgets(szLine, MAX_LINE - 1, pFile);
+#else
+        fgetws(szLine, MAX_LINE - 1, pFile);
+#endif
+        StdString& strTrim = Trim(szLine, _T(" "));
+        pTmp = strTrim.c_str();
+
+        if (StringLenth(pTmp) <= 0){
+            continue;
+        }
+        if (*pTmp == _T('#') || *pTmp == _T(';'))
+        {
+            continue;
+        }
+        // Start section
+        if (*pTmp == _T('['))
+        {
+            const StdChar* pNameDel = ++pTmp;
+            while(*pTmp != _T('\0') && *pTmp != _T(']'))
+            {
+                pTmp++;
+            }
+            if (*pTmp == _T('\0'))
+            {
+                fclose(pFile);
+                return false;
+            }
+            pCurSec = new Section(StdString(pNameDel, pTmp - pNameDel));
+            m_lstSections.push_back(pCurSec);
+        }
+        if (pCurSec != NullPtr)
+        {
+            std::list<StdString> lstKV;
+            int nCount = Split(pTmp, _T("="), lstKV);
+            if (nCount != 2)
+            {
+                fclose(pFile);
+                return false;
+            }
+            StdString strKey = lstKV.front();
+            StdString strVal = lstKV.back();
+            pCurSec->Insert(strKey, strVal);
+            
+        }
+    }
+
+    fclose(pFile);
+	
+    return true;
 }
 bool IniConfig::Save(const StdString strFilePath)
 {
@@ -315,4 +345,4 @@ void IniConfig::ClearUp()
 	{
 		delete *iter;
 	}
-}*/
+}

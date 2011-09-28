@@ -1,18 +1,23 @@
 /*
  * File       : XBasicCore.h
- * Description: ä¸å¹³å°ç›¸å…³çš„ä¸€äº›å®šä¹‰å’Œä¸€äº›å…¬å…±çš„å­—ä¹‰
+ * Description: ÓëÆ½Ì¨Ïà¹ØµÄÒ»Ğ©ºê¶¨Òå
  * Version    : 2011-9-24 Created
  * Author     : buf1024@gmail.com
  */
-
 #ifndef XBASICCORE_H_
 #define XBASICCORE_H_
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
+
+#ifdef WINDOWS
+#include <Windows.h>
+#endif
 
 #define USING_NAMESPACE
 
-// æ˜¯å¦ä½¿ç”¨åå‘½ç©ºé—´
+// ÊÇ·ñÊ¹ÓÃÃüÃû¿Õ¼ä
 #ifdef USING_NAMESPACE
 
 #define XBASICNAMESPACE XBasic
@@ -30,30 +35,39 @@
 #define XBASIC_NAMEPACE_BEGIN
 #define XBASIC_NAMESPACE_END
 #define USE_XBASIC_NAMESPACE
+
 #endif
 
 #ifdef WINDOWS
-// ç¼–è¯‘æˆåŠ¨æ€åº“æ—¶
-#ifdef XBASICDLL
-  #define XBASICAPI __decspec(dllexport)
-#else
-  // ç¼–è¯‘é™æ€æ€åº“æ—¶
-  #ifdef XBASICSTAT
-    #define XBASICAPI
+  // ÊÇ·ñ±àÒë³ÉDLL
+  #ifdef XBASICDLL
+    #define XBASICAPI __decspec(dllexport)
   #else
-    // ç¼–è¯‘æˆåŠ¨æ€åº“,è¿æ¥åˆ°æ­¤åº“æ—¶
-    #define XBASICAPI __decspec(dllimport)
+    // ÊÇ·ñ±àÒë³É¾²Ì¬¿â
+    #ifdef XBASICSTAT
+      #define XBASICAPI
+    #else
+
+      // Ê¹ÓÃDLLÊ± 
+      #ifdef USE_DLL
+        #define XBASICAPI __decspec(dllimport)
+        // Ê¹ÓÃÊ±£¬Á¬½Óµ½²»Í¬µÄ¿â  
+        #ifdef _DEBUG
+          #pragma comment(lib, "xbasicd.lib")
+        #else
+          #pragma comment(lib, "xbasic.lib")
+        #endif
+      #else
+        #define XBASICAPI
+        // Ê¹ÓÃÊ±£¬Á¬½Óµ½²»Í¬µÄ¿â  
+        #ifdef _DEBUG
+          #pragma comment(lib, "xbasic_statd.lib")
+        #else
+          #pragma comment(lib, "xbasic_stat.lib")
+        #endif
+      #endif
+    #endif
   #endif
-
-  // è°ƒè¯•æˆ–éè°ƒè¯•è¦è¿æ¥åˆ°çš„åº“
-  #ifdef _DEBUG
-    #pragma comment(lib, "xbasic.lib")
-  #else
-    #pragma comment(lib, "xbasicd.lib")
-  #endif
-
-#endif
-
 
 #else
 
@@ -62,6 +76,8 @@
 #endif
 
 #define NullPtr             (0)
+#define BUF_SIZE            (1024)
+#define MAX_LINE            (4096)
 #define ASSERT(expr)        assert(expr)
 
 #define Min(a, b)           ((a)>(b)?(b):(a))

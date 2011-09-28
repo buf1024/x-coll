@@ -1,8 +1,8 @@
 /*
  * File       : HashImpl.h
- * Description: è®¡ç®—Hashå€¼çš„æ¥å£çš„æŠ½è±¡å®ç°
+ * Description: ¼ÆËãHashÖµµÄ½Ó¿ÚµÄ³éÏóÊµÏÖ
  * Version    : 2010-11-9 1.0 Created
- *              2011-9 24 1.1 å¤šæ“ä½œç³»ç»Ÿæ”¯æŒ
+ *              2011-9 24 1.1 ¶à²Ù×÷ÏµÍ³Ö§³Ö
  * Author     : buf1024@gmail.com
  */
 
