@@ -1,16 +1,13 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// LGCBasic Project
-// 
-// FileName    : Config.cpp
-// Purpose     : 
-// Version     : 2011-02-11 (19:54) 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
-#include "Config.h"
 /*
+ * File       : Config.h
+ * Description: 
+ * Version    : 2011-02-11 Created
+ *              2011-09-29 多操作系统支持
+ * Author     : buf1024@gmail.com
+ */
+#include "Config.h"
+
+USE_XBASIC_NAMESPACE;
 
 Config::Config(StdString strName)
 : _strName(strName)
@@ -51,6 +48,16 @@ long Config::GetDoubleWorld(StdString strName, long lDef)
     }
     return dwRet;
 }
+double Config::GetDouble(StdString strName, double fDef)
+{
+    double fRet =  fDef;
+    DoubleOptIter iter = _mapDoubleOpt.find(strName);
+    if (iter != _mapDoubleOpt.end())
+    {
+        fRet = iter->second;
+    }
+    return fRet;
+}
 
 void Config::AddBoolValue(StdString strName, bool bValue)
 {
@@ -64,7 +71,10 @@ void Config::AddDWORDValue(StdString strName, long dwValue)
 {
     _mapDoubleWordOpt[strName] = dwValue;
 }
-
+void Config::AddDoubleValue(StdString strName, double fValue)
+{
+    _mapDoubleOpt[strName] = fValue;
+}
 bool Config::RemoveBool(StdString strName)
 {
     bool bRet = true;
@@ -95,6 +105,16 @@ bool Config::RemoveDoubleWord(StdString strName)
     }
     return bRet;
 }
+bool Config::RemoveDouble(StdString strName)
+{
+    bool bRet = true;
+    DoubleOptIter iter = _mapDoubleOpt.find(strName);
+    if (iter != _mapDoubleOpt.end())
+    {
+        _mapDoubleOpt.erase(iter);
+    }
+    return bRet;
+}
 
 StdString Config::GetName() const
 {
@@ -104,4 +124,3 @@ void Config::SetName(StdString strName)
 {
     _strName = strName;
 }
-*/
