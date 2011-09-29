@@ -179,6 +179,10 @@
 			Name="XBasicTest"
 			>
 			<File
+				RelativePath="..\Src\test\IniConfigTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Src\test\main.cpp"
 				>
 			</File>

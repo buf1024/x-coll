@@ -9,6 +9,10 @@
 
 #include <stdio.h>
 
+#ifdef WINDOWS
+#pragma warning(disable:4996)
+#endif
+
 USE_XBASIC_NAMESPACE;
 
 Section::Section(StdString strSectionName /* = _T("") */)
@@ -42,8 +46,12 @@ void Section::Insert(const StdString strKey, TCHAR chValue)
 {
 	if (!strKey.empty())
 	{
-		TCHAR szBuf[32] = {0};
-	//	_sntprintf_s(szBuf, 32, 32, _T("%c"), chValue);
+		StdChar szBuf[32] = {0};
+#if _UNICODE
+        _snwprintf_s(szBuf, 32, 32, _T("%c"), chValue);
+#else
+        snprintf(szBuf, 32, _T("%c"), chValue);
+#endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -51,8 +59,12 @@ void Section::Insert(const StdString strKey, int nValue)
 {
 	if (!strKey.empty())
 	{
-		TCHAR szBuf[32] = {0};
-	//	_sntprintf_s(szBuf, 32, 32, _T("%d"), nValue);
+		StdChar szBuf[32] = {0};
+#if _UNICODE
+        _snwprintf_s(szBuf, 32, 32, _T("%d"), nValue);
+#else
+        snprintf(szBuf, 32, _T("%d"), nValue);
+#endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -60,8 +72,12 @@ void Section::Insert(const StdString strKey, long lValue)
 {
 	if (!strKey.empty())
 	{
-		TCHAR szBuf[32] = {0};
-	//	_sntprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
+		StdChar szBuf[32] = {0};
+#if _UNICODE
+        _snwprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
+#else
+        snprintf(szBuf, 32, _T("%ld"), lValue);
+#endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 
@@ -70,8 +86,12 @@ void Section::Insert(const StdString strKey, double dValue)
 {
 	if (!strKey.empty())
 	{
-		TCHAR szBuf[32] = {0};
-	//	_sntprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
+		StdChar szBuf[32] = {0};
+#if _UNICODE
+        _snwprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
+#else
+        snprintf(szBuf, 32, _T("%lf"), dValue);
+#endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
@@ -96,6 +116,84 @@ bool Section::GetValue(const StdString strKey, StdString& strValue, StdString st
 	return bRet;
 }
 
+bool Section::GetValue(const StdString strKey, bool& bValue, bool bDefault)
+{
+    StdString strVal;
+    if (GetValue(strKey, strVal))
+    {
+        strVal = ToLower(strVal);
+        if (strVal == _T("1") || strVal == _T("true"))
+        {
+            return true;
+        }
+    }
+    bValue = bDefault;
+    return false;    
+}
+bool Section::GetValue(const StdString strKey, int& nValue, int nDefault)
+{
+    StdString strVal;
+    if (GetValue(strKey, strVal))
+    {
+        int nRet = 0;
+#if _UNICODE
+        nRet = swscanf(strVal.c_str(), _T("%d"), &nValue);
+#else
+        nRet = sscanf(strVal.c_str(), _T("%d"), &nValue);
+#endif
+        if (nRet <= 0)
+        {
+            nValue = nDefault;
+            return false;
+        }
+        return true;
+    }
+    nValue = nDefault;
+    return false;   
+}
+bool Section::GetValue(const StdString strKey, long& lValue, long lDefault)
+{
+    StdString strVal;
+    if (GetValue(strKey, strVal))
+    {
+        int nRet = 0;
+#if _UNICODE
+        nRet = swscanf(strVal.c_str(), _T("%ld"), &lValue);
+#else
+        nRet = sscanf(strVal.c_str(), _T("%ld"), &lValue);
+#endif
+        if (nRet <= 0)
+        {
+            lValue = lDefault;
+            return false;
+        }
+        return true;
+    }
+    lValue = lDefault;
+    return false;   
+}
+bool Section::GetValue(const StdString strKey, double& fValue, double fDefault)
+{
+    StdString strVal;
+    if (GetValue(strKey, strVal))
+    {
+        int nRet = 0;
+#if _UNICODE
+        nRet = swscanf(strVal.c_str(), _T("%lf"), &fValue);
+#else
+        nRet = sscanf(strVal.c_str(), _T("%lf"), &fValue);
+#endif
+        if (nRet <= 0)
+        {
+            fValue = fDefault;
+            return false;
+        }
+        return true;
+    }
+    fValue = fDefault;
+    return false;
+}
+
 void Section::Delete(const StdString strKey)
 {
 	if (!strKey.empty())
@@ -114,71 +212,63 @@ void Section::Empty()
 	m_mapKeyValue.clear();
 }
 
-bool Section::Load(StdString strFilePath)
-{
-	m_mapKeyValue.clear();
-	bool bRet = false;
-	int nSize = 256;
-	unsigned long nRet = 0;
-	TCHAR* szBuf = new TCHAR[nSize];
-	while(true)
-	{
-		if (nSize == 32767) break;
-		nRet = GetPrivateProfileSection(m_strSectionName.c_str(), szBuf, nSize, strFilePath.c_str());
-		if (nRet == nSize - 2)
-		{
-			delete[] szBuf;
-			nSize = nSize + 256;
-			szBuf = new TCHAR[nSize];
-		}
-		else
-		{
-			if (nRet > 0)
-			{
-				bRet = true;
-			}
-			break;
-			
-		}
-	}
-	if (bRet)
-	{
-		TCHAR* pTmp = szBuf;
-		while(!((*pTmp == 0) && (*(pTmp - 1) == 0)))
-		{
-			StdString str = pTmp;
-			int idx = str.find(_T('='));
-			StdString strKey(str.begin(), str.begin() + idx);
-			StdString strValue(str.begin() + idx +1, str.end());
-			m_mapKeyValue[strKey] = strValue;
-			pTmp = pTmp + str.length() + 1;
-		}
-        delete[] szBuf;
-	}
-	
-	return bRet;
-}
-
 bool Section::Save(StdString strFilePath)
 {
-	bool bRet = false;
-	if (!m_strSectionName.empty())
-	{
-		for (KVIterator iter = m_mapKeyValue.begin(); iter != m_mapKeyValue.end(); ++iter)
-		{
-			WritePrivateProfileString(m_strSectionName.c_str(), iter->first.c_str(),
-				iter->second.c_str(), strFilePath.c_str());
-		}
-		bRet = true;
-	}
-	return bRet;
+    FILE* pFile = NullPtr;
+#ifndef _UNICODE
+    pFile = fopen(strFilePath.c_str(), _T("w+"));
+#else
+    pFile = _wfopen(strFilePath.c_str(), _T("w+"));
+#endif
+
+    return Save(pFile);
+}
+
+bool Section::Save(FILE* pFile)
+{
+    if (pFile != NullPtr && !m_strSectionName.empty())
+    {
+        StdString strLine = _T("[");
+        strLine.append(m_strSectionName);
+        strLine.append(_T("]"));
+        strLine.append(_T("\n"));
+
+        std::string strBuf;
+#ifdef WINDOWS
+        strBuf = GetAnsiString(strLine);
+#else
+        strBuf = strLine.c_str();
+#endif
+        fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
+        
+        for (KVIterator iter = m_mapKeyValue.begin(); iter != m_mapKeyValue.end(); ++iter)
+        {
+            strLine = iter->first;
+            strLine.append(_T("="));
+            strLine.append(iter->second);
+            strLine.append(_T("\n"));
+
+#ifdef WINDOWS
+            strBuf = GetAnsiString(strLine);
+#else
+            strBuf = strLine.c_str();
+#endif
+            fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
+        }
+        return true;
+    }
+    return false;
 }
 
 // IniConfig
 
 IniConfig::IniConfig(StdString strFilePath)
 {
-	Load(strFilePath);
+    m_strFilePath = strFilePath;
+    if (!m_strFilePath.empty())
+    {
+        Load(m_strFilePath);
+    }    
 }
 IniConfig::~IniConfig()
 {
@@ -188,7 +278,6 @@ IniConfig::~IniConfig()
 void IniConfig::SetFilePath(const StdString strFilePath)
 {
 	m_strFilePath = strFilePath;
-    Load(m_strFilePath);
 }
 StdString IniConfig::GetFilePath() const
 {
@@ -247,7 +336,15 @@ Section* IniConfig::GetSection(const StdString strSecName)
 bool IniConfig::Load(const StdString strFilePath)
 {
     ClearUp();
-	m_strFilePath = strFilePath;
+    if (!strFilePath.empty())
+    {
+        m_strFilePath = strFilePath;
+    }
+    if (m_strFilePath.empty())
+    {
+        return false;
+    }
+    
 
     FILE* pFile = NullPtr;
 #ifndef _UNICODE
@@ -269,14 +366,22 @@ bool IniConfig::Load(const StdString strFilePath)
 
     while(feof(pFile) != EOF)
     {
+        szLine[0] = _T('\0');
 #ifndef _UNICODE
-        fgets(szLine, MAX_LINE - 1, pFile);
+        if (fgets(szLine, MAX_LINE - 1, pFile) == NullPtr)
+        {
+            break;
+        }
 #else
-        fgetws(szLine, MAX_LINE - 1, pFile);
+        if (fgetws(szLine, MAX_LINE - 1, pFile) == NullPtr)
+        {
+            break;
+        }
 #endif
-        StdString& strTrim = Trim(szLine, _T(" "));
+        StdString& strTrim = Trim(szLine, _T(" \r\n"));
         pTmp = strTrim.c_str();
 
+        int n = StringLenth(pTmp);
         if (StringLenth(pTmp) <= 0){
             continue;
         }
@@ -299,6 +404,7 @@ bool IniConfig::Load(const StdString strFilePath)
             }
             pCurSec = new Section(StdString(pNameDel, pTmp - pNameDel));
             m_lstSections.push_back(pCurSec);
+            continue;
         }
         if (pCurSec != NullPtr)
         {
@@ -322,23 +428,43 @@ bool IniConfig::Load(const StdString strFilePath)
 }
 bool IniConfig::Save(const StdString strFilePath)
 {
-	bool bRet = true;
-	for(ICIterator iter = m_lstSections.begin();
+    StdString strFileSaved;
+    if (strFilePath.empty())
+    {
+        strFileSaved = m_strFilePath;
+    }
+    else
+    {
+        strFileSaved = strFilePath;
+    }
+
+    FILE* pFile = NullPtr;
+#ifndef _UNICODE
+    pFile = fopen(strFileSaved.c_str(), _T("w+"));
+#else
+    pFile = _wfopen(strFileSaved.c_str(), _T("w+"));
+#endif
+
+    if (pFile == NullPtr)
+    {
+        return false;
+    }
+
+    for(ICIterator iter = m_lstSections.begin();
 		iter != m_lstSections.end();
 		++iter)
 	{
-		if(!(*iter)->Save(strFilePath))
-		{
-			bRet = false;
-			break;
-		}
+		(*iter)->Save(pFile);
 	}
-	return bRet;
+	
+    fclose(pFile);
+
+    return true;
 	 
 }
 void IniConfig::ClearUp()
 {
-	m_strFilePath = _T("");
+	//m_strFilePath = _T("");
 	for(ICIterator iter = m_lstSections.begin();
 		iter != m_lstSections.end();
 		++iter)

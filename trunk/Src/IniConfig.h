@@ -80,6 +80,10 @@ public:
     */
     bool GetValue(const StdString strKey, StdString& strValue, StdString strDefault = _T(""));
 
+    bool GetValue(const StdString strKey, bool& bValue, bool bDefault = false);
+    bool GetValue(const StdString strKey, int& nValue, int nDefault = 0);
+    bool GetValue(const StdString strKey, long& lValue, long lDefault = 0L);
+    bool GetValue(const StdString strKey, double& dValue, double fDefault = 0.0f);
     /**
     * Delete the specific key/value pair
     * @param strKey Key
@@ -89,18 +93,14 @@ public:
     void Empty();
     /**@}*/
     /**
-    * Load the specific section from the file.
-    * we should set the specific section first
-    * @param strFilePath the file path
-    * @return true if load successfully, otherwise false
-    */
-    bool Load(StdString strFilePath);
-    /**
     * Save the section to the specific file
     * @param strFilePath the file path
     * @return true if save successfully, otherwise false
     */
     bool Save(StdString strFilePath);
+
+    
+    bool Save(FILE* pFile);
 
 private:
     StdString m_strSectionName;
@@ -154,13 +154,13 @@ public:
     * @param strFilePath the file path
     * @return true if load successfully, otherwise false
     */
-    bool Load(const StdString strFilePath);
+    bool Load(const StdString strFilePath = _T(""));
     /**
     * Save the IniConfig to the specific file
     * @param strFilePath the file path
     * @return true if save successfully, otherwise false
     */
-    bool Save(const StdString strFilePath);
+    bool Save(const StdString strFilePath = _T(""));
 private:
     void ClearUp();
 private:

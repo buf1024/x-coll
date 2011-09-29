@@ -514,6 +514,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\Util.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\XBasic.h"
 			>
 		</File>
