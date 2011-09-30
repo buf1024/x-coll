@@ -47,8 +47,12 @@ void Section::Insert(const StdString strKey, TCHAR chValue)
 	if (!strKey.empty())
 	{
 		StdChar szBuf[32] = {0};
+#ifdef WINDOWS
 #if _UNICODE
         _snwprintf_s(szBuf, 32, 32, _T("%c"), chValue);
+#else
+        _snprintf(szBuf, 32, _T("%c"), chValue);
+#endif
 #else
         snprintf(szBuf, 32, _T("%c"), chValue);
 #endif
@@ -60,8 +64,12 @@ void Section::Insert(const StdString strKey, int nValue)
 	if (!strKey.empty())
 	{
 		StdChar szBuf[32] = {0};
+#if WINDOWS
 #if _UNICODE
         _snwprintf_s(szBuf, 32, 32, _T("%d"), nValue);
+#else
+        _snprintf(szBuf, 32, _T("%d"), nValue);
+#endif
 #else
         snprintf(szBuf, 32, _T("%d"), nValue);
 #endif
@@ -73,8 +81,12 @@ void Section::Insert(const StdString strKey, long lValue)
 	if (!strKey.empty())
 	{
 		StdChar szBuf[32] = {0};
+#ifdef WINDOWS
 #if _UNICODE
         _snwprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
+#else
+        _snprintf(szBuf, 32, _T("%ld"), lValue);
+#endif
 #else
         snprintf(szBuf, 32, _T("%ld"), lValue);
 #endif
@@ -87,8 +99,12 @@ void Section::Insert(const StdString strKey, double dValue)
 	if (!strKey.empty())
 	{
 		StdChar szBuf[32] = {0};
+#if WINDOWS
 #if _UNICODE
         _snwprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
+#else
+        _snprintf(szBuf, 32, _T("%lf"), dValue);
+#endif
 #else
         snprintf(szBuf, 32, _T("%lf"), dValue);
 #endif
@@ -237,7 +253,7 @@ bool Section::Save(FILE* pFile)
 #ifdef WINDOWS
         strBuf = GetAnsiString(strLine);
 #else
-        strBuf = strLine.c_str();
+        strBuf = strLine;
 #endif
         fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
         
@@ -378,7 +394,7 @@ bool IniConfig::Load(const StdString strFilePath)
             break;
         }
 #endif
-        StdString& strTrim = Trim(szLine, _T(" \r\n"));
+        StdString strTrim = Trim(szLine, _T(" \r\n"));
         pTmp = strTrim.c_str();
 
         int n = StringLenth(pTmp);

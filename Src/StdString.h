@@ -245,8 +245,8 @@ bool Contains(const StdChar* szStrValue, const StdChar* szStrSubStr);
  * @return true ×Ö·û´®A°üÀ¨B×Ö·û´®, false ×Ö·û´®A²»°üÀ¨B×Ö·û´®
  */
 bool Contains(const StdString& strValue, const StdString& strSubStr);
-const StdChar* FirtPosition(const StdChar* szStrVal, const StdChar* szSubVal);
-const StdChar* FirtPosition(const StdChar* szStrVal, const StdChar ch);
+const StdChar* FirstPosition(const StdChar* szStrVal, const StdChar* szSubVal);
+const StdChar* FirstPosition(const StdChar* szStrVal, const StdChar ch);
 
 StdString ToUpper(const StdChar* szStr);
 StdString ToUpper(const StdString& strStr);
@@ -259,6 +259,9 @@ bool IsDigit(const StdString& strStr);
 
 bool IsAlpha(const StdChar* szStr);
 bool IsAlpha(const StdString& strStr);
+
+StdString Replace(const StdChar* szStrVal, const StdChar* szStrOld, const StdChar* szStrNew);
+StdString Replace(const StdString& strVal, const StdString strOld, const StdString strNew);
 
 StdString FromNumber(long lVal);
 StdString FromNumber(int nVal);

@@ -123,52 +123,52 @@ TEST(StdStringTest, Contains)
     ASSERT_TRUE(Contains(pStrVal, _T('d')));
 }
 
-TEST(StdStringTest, FirtPosition)
+TEST(StdStringTest, FirstPosition)
 {
     const StdChar* pStrVal = NullPtr;
     const StdChar* pSubVal = NullPtr;
-    ASSERT_FALSE(FirtPosition(pStrVal, pSubVal));
+    ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("");
     pSubVal = _T("");
-    ASSERT_STREQ(_T(""), FirtPosition(pStrVal, pSubVal));
+    ASSERT_STREQ(_T(""), FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("abcd");
     pSubVal = _T("");
-    ASSERT_STREQ(_T(""), FirtPosition(pStrVal, pSubVal));
+    ASSERT_STREQ(_T(""), FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("AbbccddbbccAB");
     pSubVal = _T("bccA");
-    ASSERT_STREQ(_T("bccAB"), FirtPosition(pStrVal, pSubVal));
+    ASSERT_STREQ(_T("bccAB"), FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("AbbccddbbccAB");
     pSubVal = _T("Abb");
-    ASSERT_STREQ(_T("AbbccddbbccAB"), FirtPosition(pStrVal, pSubVal));
+    ASSERT_STREQ(_T("AbbccddbbccAB"), FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("AbbccddbbccAB");
     pSubVal = _T("cAB");
-    ASSERT_STREQ(_T("cAB"), FirtPosition(pStrVal, pSubVal));
+    ASSERT_STREQ(_T("cAB"), FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("AbbccddbbccAB");
     pSubVal = _T("cAddddddddddddddddddB");
-    ASSERT_FALSE(FirtPosition(pStrVal, pSubVal));
+    ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
     pStrVal = _T("AbbccddbbccAB");
     pSubVal = _T("ddddddddddB");
-    ASSERT_FALSE(FirtPosition(pStrVal, pSubVal));
+    ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
 
     pStrVal = _T("AbbccddbbccAB");
-    ASSERT_FALSE(FirtPosition(pStrVal, _T('X')));
+    ASSERT_FALSE(FirstPosition(pStrVal, _T('X')));
 
     pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("AbbccddbbccAB"), FirtPosition(pStrVal, _T('A')));
+    ASSERT_STREQ(_T("AbbccddbbccAB"), FirstPosition(pStrVal, _T('A')));
 
     pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("B"), FirtPosition(pStrVal, _T('B')));
+    ASSERT_STREQ(_T("B"), FirstPosition(pStrVal, _T('B')));
 
     pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("ddbbccAB"), FirtPosition(pStrVal, _T('d')));
+    ASSERT_STREQ(_T("ddbbccAB"), FirstPosition(pStrVal, _T('d')));
 }
 
 TEST(StdStringTest, Trim)
