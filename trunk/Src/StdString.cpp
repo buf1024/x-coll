@@ -15,6 +15,9 @@ XBASIC_NAMEPACE_BEGIN
 
 #ifdef WINDOWS
 
+#pragma warning(disable:4996)
+
+
 /**
  * Convert an ANSI string to ANSI string
  * @return the ANSI string
@@ -234,7 +237,7 @@ XBASICAPI int Split(const StdChar* szStrValue, const StdChar* szStrDelim, std::l
     const StdChar* pStrValTmp = szStrValue;
     int nCount = 0;
     
-    while((pStrFirst = FirtPosition(pStrValTmp, szStrDelim)))
+    while((pStrFirst = FirstPosition(pStrValTmp, szStrDelim)))
     {
         nCount = pStrFirst - pStrValTmp;
         rgpRet.push_back(StdString(pStrValTmp, nCount));
@@ -494,7 +497,7 @@ XBASICAPI bool Contains(const StdString& strValue, const StdChar ch)
  */
 XBASICAPI bool Contains(const StdChar* szStrValue, const StdChar* szStrSubStr)
 {
-    return FirtPosition(szStrValue, szStrSubStr) != NullPtr;
+    return FirstPosition(szStrValue, szStrSubStr) != NullPtr;
 }
 
 /**
@@ -508,7 +511,7 @@ XBASICAPI bool Contains(const StdString& strValue, const StdString& strSubStr)
     return Contains(strValue.c_str(), strSubStr.c_str());
 }
 
-XBASICAPI const StdChar* FirtPosition(const StdChar* szStrValue, const StdChar* szStrSubStr)
+XBASICAPI const StdChar* FirstPosition(const StdChar* szStrValue, const StdChar* szStrSubStr)
 {
     if(szStrValue == NullPtr ||
         szStrSubStr == NullPtr)
@@ -545,7 +548,7 @@ XBASICAPI const StdChar* FirtPosition(const StdChar* szStrValue, const StdChar* 
     return NullPtr;
 
 }
-XBASICAPI const StdChar* FirtPosition(const StdChar* szStrVal, const StdChar ch)
+XBASICAPI const StdChar* FirstPosition(const StdChar* szStrVal, const StdChar ch)
 {
     if (szStrVal == NullPtr)
     {
@@ -662,16 +665,60 @@ bool IsAlpha(const StdString& strStr)
     return IsAlpha(strStr.c_str());
 }
 
+XBASICAPI StdString Replace(const StdChar* szStrVal, const StdChar* szStrOld, const StdChar* szStrNew)
+{
+    if (szStrVal == NullPtr || *szStrVal == _T('\0'))
+    {
+        return _T("");
+    }
+    if (szStrOld == NullPtr || szStrNew == NullPtr)
+    {
+        return szStrVal;
+    }
+    StdString strRet;
+    const StdChar* pTmpStr = szStrVal;
+    int nLenOld = StringLenth(szStrOld);
+    while(true)
+    {
+        const StdChar* pPosStr = FirstPosition(pTmpStr, szStrOld);
+        if (pPosStr == NullPtr)
+        {
+            break;
+        }
+        strRet.append(StdString(pTmpStr, pPosStr - pTmpStr));
+        strRet.append(szStrNew);
+        pTmpStr = pPosStr + nLenOld;
+        
+    }
+    if (*pTmpStr != _T('\0'))
+    {
+        strRet.append(pTmpStr);
+    }
+    return strRet;
+    
+}
+XBASICAPI StdString Replace(const StdString& strVal, const StdString strOld, const StdString strNew)
+{
+    return Replace(strVal.c_str(), strOld.c_str(), strNew.c_str());
+}
 
 XBASICAPI StdString FromNumber(long lVal)
 {
     StdChar szTmp[8] = _T("");
+#if WINDOWS
 #ifdef _UNICODE
     if(lVal < 0){
         _snwprintf_s(szTmp, 8, sizeof(szTmp), _T("-%ld"), -lVal);
     }else{
         _snwprintf_s(szTmp, 8, sizeof(szTmp), _T("%ld"), lVal);
     }
+#else
+    if(lVal < 0){
+        _snprintf(szTmp, sizeof(szTmp), _T("-%ld"), -lVal);
+    }else{
+        _snprintf(szTmp, sizeof(szTmp), _T("%ld"), lVal);
+    }
+#endif
 #else
     if(lVal < 0){
         snprintf(szTmp, sizeof(szTmp), _T("-%ld"), -lVal);

@@ -498,11 +498,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\SingletonInst.cpp"
+			RelativePath="..\Src\SingletonApp.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\Src\SingletonInst.h"
+			RelativePath="..\Src\SingletonApp.h"
 			>
 		</File>
 		<File
