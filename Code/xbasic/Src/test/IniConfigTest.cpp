@@ -16,6 +16,15 @@ public:
     {
         delete m_pConf;
     }
+public:
+    static void SetUpTestCase()
+    {
+        printf("SetUpTestCase");
+    }
+    static void TearDownTestCase()
+    {
+        printf("TearDownTestCase");
+    }
 protected:
     IniConfig* m_pConf;
 };
