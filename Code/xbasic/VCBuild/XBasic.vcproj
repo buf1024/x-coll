@@ -426,6 +426,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\Src\Appender.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\Config.cpp"
 			>
 		</File>
@@ -442,7 +446,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\ConsoleAppender.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\ConsoleAppender.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\dllmain.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\FileAppender.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\FileAppender.h"
 			>
 		</File>
 		<File
@@ -498,6 +518,30 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\Locker.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\Loger.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\Loger.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\LogFactory.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\LogFactory.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\LogLevel.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\SingletonApp.cpp"
 			>
 		</File>
@@ -515,6 +559,14 @@
 		</File>
 		<File
 			RelativePath="..\Src\Util.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\WinCriticalSectionLocer.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\WinCriticalSectionLocer.h"
 			>
 		</File>
 		<File
