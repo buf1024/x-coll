@@ -17,7 +17,7 @@ XBASIC_NAMEPACE_BEGIN
 class XBASICAPI Appender
 {
 public:
-    virtual void Init(const StdChar* szConf);
+    virtual void Init(const StdChar* szConf)
     {
 
     }

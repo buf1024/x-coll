@@ -526,19 +526,19 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\Loger.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Loger.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\LogFactory.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\Src\LogFactory.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\Logger.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\Logger.h"
 			>
 		</File>
 		<File
