@@ -17,6 +17,10 @@ XBASIC_NAMEPACE_BEGIN
 class XBASICAPI Appender
 {
 public:
+    virtual void Init(const StdChar* szConf);
+    {
+
+    }
     virtual unsigned int Write(int nLogLevel, const StdString& strMsg)
     {
         return 0;

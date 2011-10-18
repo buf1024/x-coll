@@ -522,6 +522,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\Log.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\Loger.cpp"
 			>
 		</File>

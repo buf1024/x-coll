@@ -20,35 +20,35 @@ class Locker;
 
 class XBASICAPI Loger
 {
-public:
+protected:
     Loger();
+public:
     virtual ~Loger();
 
 public:
     void SetLogLevel(LogLevel eLvl);
     LogLevel GetLogLevel() const;
 
+    void SetLocker(Locker* pLocker);
+    Locker* GetLocker() const;
+
 public:
-    void Info(const StdString& strMsg);
-    void Info(const StdChar* szMsg, int nLen = -1);
+    void Info(const StdChar* szFormat, ...);
+    void Debug(const StdChar* szFormat, ...);
+    void Warn(const StdChar* szFormat, ...);
+    void Error(const StdChar* szFormat, ...);
+    void Fatal(const StdChar* szFormat, ...);
 
-    void Debug(const StdString& strMsg);
-    void Debug(const StdChar* szMsg, int nLen = -1);
-
-    void Warn(const StdString& strMsg);
-    void Warn(const StdChar* szMsg, int nLen = -1);
-
-    void Error(const StdString& strMsg);
-    void Error(const StdChar* szMsg, int nLen = -1);
-
-    void Fatal(const StdString& strMsg);
-    void Fatal(const StdChar* szMsg, int nLen = -1);
+    void LogMessage(LogLevel eLvl, const StdChar* szFormat, ...); 
 
 protected:
-    virtual void LogMessage(LogLevel eLvl, const StdChar* szMsg, int nLen = -1) = 0;
+    virtual void Log(LogLevel eLvl, const StdChar* szMsg, int nLen = -1) = 0;
+    virtual void Init(const StdChar* szConf);
 
 protected:
     Locker* m_pLocker;
+
+    LogLevel m_eLvl;
 
 };
 
