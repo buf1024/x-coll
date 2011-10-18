@@ -1,56 +1,72 @@
 /*
- * File       : Loger.cpp
- * Description: 
- * Version    : 2011-10-14 Created
- * Author     : buf1024@gmail.com
- */
+* File       : Loger.cpp
+* Description: 
+* Version    : 2011-10-14 Created
+* Author     : buf1024@gmail.com
+*/
 
 #include "Loger.h"
+#include "Locker.h"
 
 USE_XBASIC_NAMESPACE;
 
-void Loger::Info(const StdString& strMsg)
+Loger* g_pGlobalPrivateLoger = NullPtr;
+
+Loger::Loger()
 {
-
+    m_eLvl = ALL;
+    m_pLocker = NullPtr;
 }
-void Loger::Info(const StdChar* szMsg, int nLen)
-{
-
-}
-
-void Loger::Debug(const StdString& strMsg)
-{
-
-}
-void Loger::Debug(const StdChar* szMsg, int nLen)
+Loger::~Loger()
 {
 
 }
 
-void Loger::Warn(const StdString& strMsg)
+void Loger::SetLogLevel(LogLevel eLvl)
 {
-
+    m_eLvl = eLvl;
 }
-void Loger::Warn(const StdChar* szMsg, int nLen)
+LogLevel Loger::GetLogLevel() const
 {
-
-}
-
-void Loger::Error(const StdString& strMsg)
-{
-
-}
-void Loger::Error(const StdChar* szMsg, int nLen)
-{
-
+    return m_eLvl;
 }
 
-void Loger::Fatal(const StdString& strMsg)
+void Loger::SetLocker(Locker* pLocker)
 {
+    ASSERT(pLocker != NullPtr);
+    if (m_pLocker != NullPtr)
+    {
+        delete m_pLocker;
+    }
+    m_pLocker = pLocker;
+}
+Locker* Loger::GetLocker() const
+{
+    return m_pLocker;
+}
+
+void Loger::Info(const StdChar* szFormat, ...)
+{
+}
+
+void Loger::Debug(const StdChar* szFormat, ...)
+{
+}
+
+void Loger::Warn(const StdChar* szFormat, ...)
+{
+}
+
+void Loger::Error(const StdChar* szFormat, ...)
+{
+}
+
+void Loger::Fatal(const StdChar* szFormat, ...)
+{
+}
+
+void Loger::LogMessage(LogLevel eLvl, const StdChar* szFormat, ...)
+{
+ 
 
 }
-void Loger::Fatal(const StdChar* szMsg, int nLen)
-{
-
-}
-
