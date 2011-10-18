@@ -1,29 +1,30 @@
 /*
- * File       : Loger.h
+ * File       : Logger.h
  * Description: 
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
  */
 
 
-#ifndef LOGER_H_
-#define LOGER_H_
+#ifndef Logger_H_
+#define Logger_H_
 
 #include "XBasicCore.h"
 #include "StdString.h"
-
 #include "LogLevel.h"
+#include <stdarg.h>
+#include <list>
 
 XBASIC_NAMEPACE_BEGIN
 
 class Locker;
+class Appender;
 
-class XBASICAPI Loger
+class XBASICAPI Logger
 {
-protected:
-    Loger();
 public:
-    virtual ~Loger();
+    Logger();
+    ~Logger();
 
 public:
     void SetLogLevel(LogLevel eLvl);
@@ -31,6 +32,10 @@ public:
 
     void SetLocker(Locker* pLocker);
     Locker* GetLocker() const;
+
+    void AddAppender(Appender* pApp);
+    void RemoveAppender(Appender* pApp);
+    Appender* GetAppender(const StdString strAppName);
 
 public:
     void Info(const StdChar* szFormat, ...);
@@ -40,19 +45,21 @@ public:
     void Fatal(const StdChar* szFormat, ...);
 
     void LogMessage(LogLevel eLvl, const StdChar* szFormat, ...); 
+    void LogMessage(LogLevel eLvl, const StdChar* szFormat, va_list va); 
 
 protected:
-    virtual void Log(LogLevel eLvl, const StdChar* szMsg, int nLen = -1) = 0;
-    virtual void Init(const StdChar* szConf);
+    void Log(LogLevel eLvl, const StdChar* szMsg, int nLen = -1);
+    void Init(const StdChar* szConf);
 
 protected:
     Locker* m_pLocker;
-
     LogLevel m_eLvl;
+
+    std::list<Appender*> m_lstApps;
 
 };
 
 XBASIC_NAMESPACE_END
 
 
-#endif /* LOGER_H_ */
+#endif /* Logger_H_ */

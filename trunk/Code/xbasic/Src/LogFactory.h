@@ -12,7 +12,7 @@
 
 XBASIC_NAMEPACE_BEGIN
 
-class Loger;
+class Logger;
 
 class XBASICAPI LogFactory
 {
@@ -22,7 +22,8 @@ private:
 public:
     ~LogFactory(void);
 
-    Loger* CreateLoger(const StdChar* szConf);
+    Logger* CreateLogger(const StdChar* szConf);
+    bool IsConfOk(const StdChar* szConf);
 
 public:
     static LogFactory* GetInst();

@@ -5,11 +5,11 @@
  * Author     : buf1024@gmail.com
  */
 #include "LogFactory.h"
-#include "Loger.h"
+#include "Logger.h"
 
 USE_XBASIC_NAMESPACE;
 
-extern Loger* g_pGlobalPrivateLoger;
+extern Logger* g_pGlobalPrivateLogger;
 
 LogFactory* LogFactory::sm_Inst = NullPtr;
 
@@ -20,9 +20,19 @@ LogFactory::LogFactory(void)
 LogFactory::~LogFactory(void)
 {
 }
-Loger* LogFactory::CreateLoger(const StdChar* szConf)
+Logger* LogFactory::CreateLogger(const StdChar* szConf)
 {
-    return NullPtr;
+    Logger* pLogger = NullPtr;
+
+    if(!IsConfOk(szConf)){
+
+    }
+
+    return pLogger;
+}
+bool IsConfOk(const StdChar* szConf)
+{
+    return false;
 }
 LogFactory* LogFactory::GetInst()
 {
@@ -42,12 +52,12 @@ void LogFactory::ReleaseRC()
 
 LogWrapper::LogWrapper(const StdChar* szConf)
 {
-    if (g_pGlobalPrivateLoger = NullPtr)
+    if (g_pGlobalPrivateLogger = NullPtr)
     {
-        delete g_pGlobalPrivateLoger;
+        delete g_pGlobalPrivateLogger;
     }
     LogFactory* pFactory = LogFactory::GetInst();
-    g_pGlobalPrivateLoger = pFactory->CreateLoger(szConf);
+    g_pGlobalPrivateLogger = pFactory->CreateLogger(szConf);
 }
 LogWrapper::~LogWrapper()
 {
