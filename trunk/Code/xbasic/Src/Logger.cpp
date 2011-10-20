@@ -67,7 +67,7 @@ void Logger::Info(const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(INFO, szFormat, va);
+    LogMessageV(INFO, szFormat, va);
     va_end(va);
 }
 
@@ -75,7 +75,7 @@ void Logger::Debug(const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(DEBUG, szFormat, va);
+    LogMessageV(DEBUG, szFormat, va);
     va_end(va);
 }
 
@@ -83,7 +83,7 @@ void Logger::Warn(const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(WARN, szFormat, va);
+    LogMessageV(WARN, szFormat, va);
     va_end(va);
 }
 
@@ -91,7 +91,7 @@ void Logger::Error(const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(ERR, szFormat, va);
+    LogMessageV(ERR, szFormat, va);
     va_end(va);
 }
 
@@ -99,7 +99,7 @@ void Logger::Fatal(const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(FATAL, szFormat, va);
+    LogMessageV(FATAL, szFormat, va);
     va_end(va);
 }
 
@@ -107,11 +107,11 @@ void Logger::LogMessage(LogLevel eLvl, const StdChar* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
-    LogMessage(eLvl, szFormat, va);
+    LogMessageV(eLvl, szFormat, va);
     va_end(va);
 }
 
-void Logger::LogMessage(LogLevel eLvl, const StdChar* szFormat, va_list va)
+void Logger::LogMessageV(LogLevel eLvl, const StdChar* szFormat, va_list va)
 {
     ASSERT(m_pLocker != NullPtr);
     m_pLocker->Lock();

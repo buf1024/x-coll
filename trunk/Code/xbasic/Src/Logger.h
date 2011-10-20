@@ -45,7 +45,7 @@ public:
     void Fatal(const StdChar* szFormat, ...);
 
     void LogMessage(LogLevel eLvl, const StdChar* szFormat, ...); 
-    void LogMessage(LogLevel eLvl, const StdChar* szFormat, va_list va); 
+    void LogMessageV(LogLevel eLvl, const StdChar* szFormat, va_list va); 
 
 protected:
     void Log(LogLevel eLvl, const StdChar* szMsg, int nLen = -1);

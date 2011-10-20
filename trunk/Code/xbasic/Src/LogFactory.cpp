@@ -6,6 +6,9 @@
  */
 #include "LogFactory.h"
 #include "Logger.h"
+#include "ConsoleAppender.h"
+#include "FileAppender.h"
+#include "IniConfig.h"
 
 USE_XBASIC_NAMESPACE;
 
@@ -22,9 +25,16 @@ LogFactory::~LogFactory(void)
 }
 Logger* LogFactory::CreateLogger(const StdChar* szConf)
 {
-    Logger* pLogger = NullPtr;
+    Logger* pLogger = new Logger;
+
+    Appender* pApp = NullPtr;
 
     if(!IsConfOk(szConf)){
+        pApp = new ConsoleAppender;
+        pLogger->AddAppender(pApp);
+    }
+    else
+    {
 
     }
 
@@ -32,7 +42,11 @@ Logger* LogFactory::CreateLogger(const StdChar* szConf)
 }
 bool IsConfOk(const StdChar* szConf)
 {
-    return false;
+    if (szConf == NullPtr || szConf[0] == '\0')
+    {
+        return false;
+    }
+    return true;
 }
 LogFactory* LogFactory::GetInst()
 {
