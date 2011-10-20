@@ -58,12 +58,12 @@ void Logger::RemoveAppender(Appender* pApp)
 {
 
 }
-Appender* Logger::GetAppender(const StdString strAppName)
+Appender* Logger::GetAppender(const std::string strAppName)
 {
     return NullPtr;
 }
 
-void Logger::Info(const StdChar* szFormat, ...)
+void Logger::Info(const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -71,7 +71,7 @@ void Logger::Info(const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::Debug(const StdChar* szFormat, ...)
+void Logger::Debug(const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -79,7 +79,7 @@ void Logger::Debug(const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::Warn(const StdChar* szFormat, ...)
+void Logger::Warn(const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -87,7 +87,7 @@ void Logger::Warn(const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::Error(const StdChar* szFormat, ...)
+void Logger::Error(const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -95,7 +95,7 @@ void Logger::Error(const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::Fatal(const StdChar* szFormat, ...)
+void Logger::Fatal(const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -103,7 +103,7 @@ void Logger::Fatal(const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::LogMessage(LogLevel eLvl, const StdChar* szFormat, ...)
+void Logger::LogMessage(LogLevel eLvl, const char* szFormat, ...)
 {
     va_list va;
     va_start(va, szFormat);
@@ -111,20 +111,16 @@ void Logger::LogMessage(LogLevel eLvl, const StdChar* szFormat, ...)
     va_end(va);
 }
 
-void Logger::LogMessageV(LogLevel eLvl, const StdChar* szFormat, va_list va)
+void Logger::LogMessageV(LogLevel eLvl, const char* szFormat, va_list va)
 {
     ASSERT(m_pLocker != NullPtr);
     m_pLocker->Lock();
 
-    StdChar szMsg[MSG_BUF] = {0};
+    char szMsg[MSG_BUF] = {0};
     int nLen = -1;
     do 
     {
-#ifdef _UNICODE
-        nLen = _vsnwprintf(szMsg, MSG_BUF, szFormat, va);
-#else
         nLen = vsnprintf(szMsg, MSG_BUF, szFormat, va);
-#endif
         if (nLen == -1)
         {
             Log(eLvl, szMsg, MSG_BUF);
@@ -141,12 +137,12 @@ void Logger::LogMessageV(LogLevel eLvl, const StdChar* szFormat, va_list va)
     m_pLocker->Unlock();
 }
 
-void Logger::Log(LogLevel eLvl, const StdChar* szMsg, int nLen)
+void Logger::Log(LogLevel eLvl, const char* szMsg, int nLen)
 {
 
 }
 
-void Logger::Init(const StdChar* szConf)
+void Logger::Init(const char* szConf)
 {
 
 }

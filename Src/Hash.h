@@ -33,19 +33,19 @@ public:
      * @param strValue 要计算的字符串
      * @return HASH值
 
-    StdString GetStringHash(std::string strValue);
+    std::string GetStringHash(std::string strValue);
     *
      * 计算宽字符形式的字符串HASH值e
      * @param strValue 要计算的字符串
      * @return HASH值
 
-    StdString GetStringHash(std::wstring strValue);
+    std::string GetStringHash(std::wstring strValue);
     *
      * 计算文件的HASH值
      * @param strFile 文件的路径
      * @return HASH值, 如果文件不存在或者出错则返回空字符串
 
-    StdString GetFileHash(StdString strFile);
+    std::string GetFileHash(std::string strFile);
 private:
     HashImpl* m_pImpl; < 具体的实现
 

@@ -19,10 +19,10 @@ class XBASICAPI ParamValue
 public:
     ParamValue()
     {
-        m_strVal = _T("");
+        m_strVal = "";
         memset(&m_sVal, 0, sizeof(m_sVal));
     }
-    ParamValue(const StdString strVal)
+    ParamValue(const std::string strVal)
     {
         m_strVal = strVal;
     }
@@ -73,13 +73,13 @@ public:
         return m_sVal.fVal;
     }
 
-    operator StdString ()
+    operator std::string ()
     {
         return m_strVal;
     }
 
 private:
-    StdString m_strVal;
+    std::string m_strVal;
     union
     {
         bool bVal;

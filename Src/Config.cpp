@@ -9,7 +9,7 @@
 
 USE_XBASIC_NAMESPACE;
 
-Config::Config(StdString strName)
+Config::Config(std::string strName)
 : _strName(strName)
 {
 }
@@ -18,7 +18,7 @@ Config::~Config(void)
 {
 }
 
-bool Config::GetBool(StdString strName, bool bDef)
+bool Config::GetBool(std::string strName, bool bDef)
 {
     bool bRet = bDef;
     BoolOptIter iter = _mapBoolOpt.find(strName);
@@ -28,9 +28,9 @@ bool Config::GetBool(StdString strName, bool bDef)
     }
     return bRet;
 }
-StdString Config::GetString(StdString strName, StdString strDef)
+std::string Config::GetString(std::string strName, std::string strDef)
 {
-    StdString strRet =  strDef;
+    std::string strRet =  strDef;
     StringOptIter iter = _mapStringOpt.find(strName);
     if (iter != _mapStringOpt.end())
     {
@@ -38,7 +38,7 @@ StdString Config::GetString(StdString strName, StdString strDef)
     }
     return strRet;
 }
-long Config::GetDoubleWorld(StdString strName, long lDef)
+long Config::GetDoubleWorld(std::string strName, long lDef)
 {
     long dwRet =  lDef;
     DoubleWordOptIter iter = _mapDoubleWordOpt.find(strName);
@@ -48,7 +48,7 @@ long Config::GetDoubleWorld(StdString strName, long lDef)
     }
     return dwRet;
 }
-double Config::GetDouble(StdString strName, double fDef)
+double Config::GetDouble(std::string strName, double fDef)
 {
     double fRet =  fDef;
     DoubleOptIter iter = _mapDoubleOpt.find(strName);
@@ -59,23 +59,23 @@ double Config::GetDouble(StdString strName, double fDef)
     return fRet;
 }
 
-void Config::AddBoolValue(StdString strName, bool bValue)
+void Config::AddBoolValue(std::string strName, bool bValue)
 {
     _mapBoolOpt[strName] = bValue;
 }
-void Config::AddStringValue(StdString strName, StdString strValue)
+void Config::AddStringValue(std::string strName, std::string strValue)
 {
     _mapStringOpt[strName] = strValue;
 }
-void Config::AddDWORDValue(StdString strName, long dwValue)
+void Config::AddDWORDValue(std::string strName, long dwValue)
 {
     _mapDoubleWordOpt[strName] = dwValue;
 }
-void Config::AddDoubleValue(StdString strName, double fValue)
+void Config::AddDoubleValue(std::string strName, double fValue)
 {
     _mapDoubleOpt[strName] = fValue;
 }
-bool Config::RemoveBool(StdString strName)
+bool Config::RemoveBool(std::string strName)
 {
     bool bRet = true;
     BoolOptIter iter = _mapBoolOpt.find(strName);
@@ -85,7 +85,7 @@ bool Config::RemoveBool(StdString strName)
     }
     return bRet;
 }
-bool Config::RemoveString(StdString strName)
+bool Config::RemoveString(std::string strName)
 {
     bool bRet = true;
     StringOptIter iter = _mapStringOpt.find(strName);
@@ -95,7 +95,7 @@ bool Config::RemoveString(StdString strName)
     }
     return bRet;
 }
-bool Config::RemoveDoubleWord(StdString strName)
+bool Config::RemoveDoubleWord(std::string strName)
 {
     bool bRet = true;
     DoubleWordOptIter iter = _mapDoubleWordOpt.find(strName);
@@ -105,7 +105,7 @@ bool Config::RemoveDoubleWord(StdString strName)
     }
     return bRet;
 }
-bool Config::RemoveDouble(StdString strName)
+bool Config::RemoveDouble(std::string strName)
 {
     bool bRet = true;
     DoubleOptIter iter = _mapDoubleOpt.find(strName);
@@ -116,11 +116,11 @@ bool Config::RemoveDouble(StdString strName)
     return bRet;
 }
 
-StdString Config::GetName() const
+std::string Config::GetName() const
 {
     return _strName;
 }
-void Config::SetName(StdString strName)
+void Config::SetName(std::string strName)
 {
     _strName = strName;
 }

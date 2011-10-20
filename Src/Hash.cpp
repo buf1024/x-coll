@@ -26,15 +26,15 @@ Hash::~Hash()
 		m_pImpl = NULL;
 	}
 }
-StdString Hash::GetStringHash(std::string strValue)
+std::string Hash::GetStringHash(std::string strValue)
 {
 	return m_pImpl->GetStringHash(strValue);
 }
-StdString Hash::GetStringHash(std::wstring strValue)
+std::string Hash::GetStringHash(std::wstring strValue)
 {
 	return m_pImpl->GetStringHash(strValue);
 }
-StdString Hash::GetFileHash(StdString strFile)
+std::string Hash::GetFileHash(std::string strFile)
 {
 	return m_pImpl->GetFileHash(strFile);
 }*/

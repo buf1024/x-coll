@@ -23,22 +23,22 @@ HashMD5Impl::~HashMD5Impl(void)
 {
 }
 
-StdString HashMD5Impl::GetStringHash(std::string strValue)
+std::string HashMD5Impl::GetStringHash(std::string strValue)
 {
 	int nLen = strValue.size();
 	const unsigned char* pBuf = (const unsigned char*)strValue.data();
 	return ComputeHash(pBuf, nLen);
 }
 
-StdString HashMD5Impl::GetStringHash(std::wstring strValue)
+std::string HashMD5Impl::GetStringHash(std::wstring strValue)
 {
 	int nLen = strValue.size() * sizeof(wchar_t);
 	const unsigned char* pBuf = (const unsigned char*)strValue.data();
 	return ComputeHash(pBuf, nLen);
 }
-StdString HashMD5Impl::GetFileHash(StdString strFile)
+std::string HashMD5Impl::GetFileHash(std::string strFile)
 {
-	StdString strRet;
+	std::string strRet;
 
 	HANDLE hFile = CreateFile(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -63,7 +63,7 @@ StdString HashMD5Impl::GetFileHash(StdString strFile)
 }
 
 
-StdString HashMD5Impl::ComputeHash(const unsigned char* pBuf, unsigned long lLen)
+std::string HashMD5Impl::ComputeHash(const unsigned char* pBuf, unsigned long lLen)
 {
 	unsigned char digest[16] = {0};
 

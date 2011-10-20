@@ -36,9 +36,9 @@ public:
     HashSHA1Impl(void);
     ~HashSHA1Impl(void);
 public:
-    virtual StdString GetStringHash(std::string strValue);
-    virtual StdString GetStringHash(std::wstring strValue);
-    virtual StdString GetFileHash(StdString strFile);
+    virtual std::string GetStringHash(std::string strValue);
+    virtual std::string GetStringHash(std::wstring strValue);
+    virtual std::string GetFileHash(std::string strFile);
 };
 
 */

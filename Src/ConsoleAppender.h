@@ -18,8 +18,8 @@ public:
     ConsoleAppender(void);
     virtual ~ConsoleAppender(void);
 
-    virtual unsigned int Write(int nLogLevel, const StdString& strMsg);
-    virtual unsigned int Write(int nLogLevel, const StdChar* szMsg, unsigned int nLen = -1);
+    virtual unsigned int Write(int nLogLevel, const std::string& strMsg);
+    virtual unsigned int Write(int nLogLevel, const char* szMsg, unsigned int nLen = -1);
     virtual Appender* Clone();
 };
 

@@ -12,11 +12,11 @@
 #include <map>
 
 
-#define CONFIG_APP_TAG    "CONFIGAPP"
-#define CONFIG_TAG        "CONFIG"
-#define CONFIG_VALUE_TAG  "VALUE"
-#define CONFIG_NAME_ATTR  "NAME"
-#define CONFIG_TYPE_ATTR  "TYPE"
+#define CONFIG_APP_TAG    "ConfigApp"
+#define CONFIG_TAG        "Config"
+#define CONFIG_VALUE_TAG  "Value"
+#define CONFIG_NAME_ATTR  "name"
+#define CONFIG_TYPE_ATTR  "type"
 #define CONFIG_BOOL_OPT   "BOOL"
 #define CONFIG_DWORD_OPT  "DWORD"
 #define CONFIG_DOUBLE_OPT "DOUBLE"
@@ -28,17 +28,17 @@ XBASIC_NAMEPACE_BEGIN
 class Config;
 class XBASICAPI ConfigApp
 {
-    typedef std::map<StdString, Config*>::iterator ConfigAppIter;
+    typedef std::map<std::string, Config*>::iterator ConfigAppIter;
 public:
     ConfigApp(void);
     ~ConfigApp(void);
 public:
-    Config* GetConfig(StdString strName);
+    Config* GetConfig(std::string strName);
     void AddConfig(Config* pConfig);
-    bool RemoveConfig(StdString strName);
+    bool RemoveConfig(std::string strName);
 
-    bool Load(StdString strFileName);
-    bool Save(StdString strFileName);
+    bool Load(std::string strFileName);
+    bool Save(std::string strFileName);
 
 private:
     std::string GetStringFromLong(long dwValue);
@@ -46,7 +46,7 @@ private:
     long GetLongFromString(std::string strValue);
     double GetDoubleFromString(std::string strValue);
 private:
-    std::map<StdString, Config*> _mapConfigAppOpt;
+    std::map<std::string, Config*> _mapConfigAppOpt;
 };
 
 XBASIC_NAMESPACE_END

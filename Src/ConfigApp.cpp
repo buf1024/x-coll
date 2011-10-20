@@ -28,7 +28,7 @@ ConfigApp::~ConfigApp(void)
     }
 }
 
-Config* ConfigApp::GetConfig(StdString strName)
+Config* ConfigApp::GetConfig(std::string strName)
 {
     Config* pConfig = NULL;
     ConfigAppIter iter = _mapConfigAppOpt.find(strName);
@@ -42,7 +42,7 @@ void ConfigApp::AddConfig(Config* pConfig)
 {
     if (pConfig)
     {
-        StdString strName = pConfig->GetName();
+        std::string strName = pConfig->GetName();
         ConfigAppIter iter = _mapConfigAppOpt.find(strName);
         if (iter != _mapConfigAppOpt.end())
         {
@@ -54,7 +54,7 @@ void ConfigApp::AddConfig(Config* pConfig)
         _mapConfigAppOpt[strName] = pConfig;
     }
 }
-bool ConfigApp::RemoveConfig(StdString strName)
+bool ConfigApp::RemoveConfig(std::string strName)
 {
     bool bRet = true;
     ConfigAppIter iter = _mapConfigAppOpt.find(strName);
@@ -66,11 +66,11 @@ bool ConfigApp::RemoveConfig(StdString strName)
     return bRet;
 }
 
-bool ConfigApp::Load(StdString strFileName)
+bool ConfigApp::Load(std::string strFileName)
 {
 
     TiXmlDocument doc;
-    bool bOK = doc.LoadFile(GetAnsiString(strFileName));
+    bool bOK = doc.LoadFile(strFileName);
     if (!bOK) return false;
 
     TiXmlHandle hDoc(&doc);
@@ -99,7 +99,7 @@ bool ConfigApp::Load(StdString strFileName)
         {
             continue;
         }
-        Config* pConfig = new Config(GetStdString(szConfName));
+        Config* pConfig = new Config(szConfName);
         TiXmlElement* pElemConf = pElem->FirstChildElement();
         
         while(pElemConf)
@@ -114,7 +114,7 @@ bool ConfigApp::Load(StdString strFileName)
             {
                 continue;
             }
-            StdString strName(GetStdString(szName));
+            std::string strName = szName;
             const char *szValue = pElemConf->GetText();
             std::string strValue = szValue == NULL ? "" : szValue;
             if (std::string(szType) == CONFIG_BOOL_OPT)
@@ -123,7 +123,7 @@ bool ConfigApp::Load(StdString strFileName)
             }
             else if (std::string(szType) == CONFIG_STRING_OPT)
             {
-                pConfig->AddStringValue(strName, GetStdString(strValue));
+                pConfig->AddStringValue(strName, strValue);
             }
             else if (std::string(szType) == CONFIG_DWORD_OPT)
             {
@@ -145,7 +145,7 @@ bool ConfigApp::Load(StdString strFileName)
 
     return true;
 }
-bool ConfigApp::Save(StdString strFileName)
+bool ConfigApp::Save(std::string strFileName)
 {
     TiXmlDocument doc;
     TiXmlDeclaration* pDecl = new TiXmlDeclaration("1.0", "utf-8", "yes");
@@ -155,13 +155,13 @@ bool ConfigApp::Save(StdString strFileName)
     {
         Config* pConf = iter->second;
         TiXmlElement* pConfElem = new TiXmlElement(CONFIG_TAG);
-        pConfElem->SetAttribute(CONFIG_NAME_ATTR, GetAnsiString(pConf->_strName));
+        pConfElem->SetAttribute(CONFIG_NAME_ATTR, pConf->_strName);
         //bool opt
         for(Config::BoolOptIter bIter = pConf->_mapBoolOpt.begin();
             bIter != pConf->_mapBoolOpt.end(); ++bIter)
         {
             TiXmlElement* pBool = new TiXmlElement(CONFIG_VALUE_TAG);
-            pBool->SetAttribute(CONFIG_NAME_ATTR, GetAnsiString(bIter->first));
+            pBool->SetAttribute(CONFIG_NAME_ATTR, bIter->first);
             pBool->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_BOOL_OPT);
             TiXmlText* pText = new TiXmlText(bIter->second ? "1" : "0");
             pBool->LinkEndChild(pText);
@@ -172,9 +172,9 @@ bool ConfigApp::Save(StdString strFileName)
             strIter != pConf->_mapStringOpt.end(); ++strIter)
         {
             TiXmlElement* pString = new TiXmlElement(CONFIG_VALUE_TAG);
-            pString->SetAttribute(CONFIG_NAME_ATTR, GetAnsiString(strIter->first));
+            pString->SetAttribute(CONFIG_NAME_ATTR, strIter->first);
             pString->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_STRING_OPT);
-            TiXmlText* pText = new TiXmlText(GetAnsiString(strIter->second));
+            TiXmlText* pText = new TiXmlText(strIter->second);
             pString->LinkEndChild(pText);
             pConfElem->LinkEndChild(pString);
         }
@@ -183,7 +183,7 @@ bool ConfigApp::Save(StdString strFileName)
             dwIter != pConf->_mapDoubleWordOpt.end(); ++dwIter)
         {
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
-            pDW->SetAttribute(CONFIG_NAME_ATTR, GetAnsiString(dwIter->first));
+            pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
             pDW->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_DWORD_OPT);
             TiXmlText* pText = new TiXmlText(GetStringFromLong(dwIter->second));
             pDW->LinkEndChild(pText);
@@ -195,7 +195,7 @@ bool ConfigApp::Save(StdString strFileName)
             dwIter != pConf->_mapDoubleOpt.end(); ++dwIter)
         {
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
-            pDW->SetAttribute(CONFIG_NAME_ATTR, GetAnsiString(dwIter->first));
+            pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
             pDW->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_DOUBLE_OPT);
             TiXmlText* pText = new TiXmlText(GetStringFromDouble(dwIter->second));
             pDW->LinkEndChild(pText);
@@ -206,7 +206,7 @@ bool ConfigApp::Save(StdString strFileName)
     }
     doc.LinkEndChild(pDecl);
     doc.LinkEndChild(pConfApp);
-    doc.SaveFile(GetAnsiString(strFileName));
+    doc.SaveFile(strFileName);
     return true;
 }
 

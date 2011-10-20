@@ -21,12 +21,12 @@ HashCRC32Impl::~HashCRC32Impl(void)
 {
 }
 
-StdString HashCRC32Impl::GetStringHash(std::string strValue)
+std::string HashCRC32Impl::GetStringHash(std::string strValue)
 {
 	int nLen = strValue.size();
 	const unsigned char* pBuf = (const unsigned char*)strValue.data();
 	int nRes = Get_CRC(pBuf, nLen);
-	StdChar szBuf[16] = _T("");
+	char szBuf[16] = "";
 	if (nRes < 0)
 		_sntprintf_s(szBuf, 16, 16, _T("-%x"), -nRes);
 	else
@@ -34,12 +34,12 @@ StdString HashCRC32Impl::GetStringHash(std::string strValue)
 	return szBuf;
 }
 
-StdString HashCRC32Impl::GetStringHash(std::wstring strValue)
+std::string HashCRC32Impl::GetStringHash(std::wstring strValue)
 {
 	int nLen = strValue.size() * sizeof(wchar_t);
 	const unsigned char* pBuf = (const unsigned char*)strValue.data();
 	int nRes = Get_CRC(pBuf, nLen);	
-	StdChar szBuf[16] = _T("");
+	char szBuf[16] = "";
 	if (nRes < 0)
 		_sntprintf_s(szBuf, 16, 16, _T("-%x"), -nRes);
 	else
@@ -47,9 +47,9 @@ StdString HashCRC32Impl::GetStringHash(std::wstring strValue)
 	return szBuf;
 }
 
-StdString HashCRC32Impl::GetFileHash(StdString strFile)
+std::string HashCRC32Impl::GetFileHash(std::string strFile)
 {
-	StdString strRet;
+	std::string strRet;
 
 	HANDLE hFile = CreateFile(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -61,7 +61,7 @@ StdString HashCRC32Impl::GetFileHash(StdString strFile)
 			PBYTE pByte = (PBYTE)MapViewOfFile(hMapping, FILE_MAP_COPY, 0, 0, 0);
 			unsigned long dwSize = GetFileSize(hFile, NULL);			
 			int nRes = Get_CRC(pByte, dwSize);
-			StdChar szBuf[16] = _T("");
+			char szBuf[16] = "";
 			if (nRes < 0)
 				_sntprintf_s(szBuf, 16, 16, _T("-%x"), -nRes);
 			else

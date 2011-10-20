@@ -19,25 +19,25 @@ XBASIC_NAMEPACE_BEGIN
 */
 class XBASICAPI Section
 {
-    typedef std::map< StdString, StdString >::iterator KVIterator;
+    typedef std::map< std::string, std::string >::iterator KVIterator;
 public:
     /**
     * Construct a section with an specific section name
     * @param strSectionName section name, default to empty
     */
-    Section(StdString strSectionName = _T(""));
+    Section(std::string strSectionName = "");
     ~Section();
 public:
     /**
     * Set a section name
     * @param strSectionName the section name
     */
-    void SetSectionName(const StdString strSectionName);
+    void SetSectionName(const std::string strSectionName);
     /**
     * Get a section name
     * @return the section name
     */
-    StdString GetSectionName() const;
+    std::string GetSectionName() const;
 
     /** @name Get and Set function*/
     /** @{*/
@@ -46,31 +46,31 @@ public:
     * @param strKey Key
     * @param strValue the string value
     */
-    void Insert(const StdString strKey, StdString strValue);
+    void Insert(const std::string strKey, std::string strValue);
     /**
     * Insert/update a specific key with a specific value
     * @param strKey Key
     * @param chValue the character value
     */
-    void Insert(const StdString strKey, StdChar chValue);
+    void Insert(const std::string strKey, char chValue);
     /**
     * Insert/update a specific key with a specific value
     * @param strKey Key
     * @param nValue the int value
     */
-    void Insert(const StdString strKey, int nValue);
+    void Insert(const std::string strKey, int nValue);
     /**
     * Insert/update a specific key with a specific value
     * @param strKey Key
     * @param lValue the long value
     */
-    void Insert(const StdString strKey, long lValue);
+    void Insert(const std::string strKey, long lValue);
     /**
     * Insert/update a specific key with a specific value
     * @param strKey Key
     * @param lValue the double dValue
     */
-    void Insert(const StdString strKey, double dValue);
+    void Insert(const std::string strKey, double dValue);
     /**
     * Get a specific key value, if the key not found, return the default one
     * @param strKey Key
@@ -78,17 +78,17 @@ public:
     * @param strDefault The default value
     * @return true if find the specific key, otherwise false
     */
-    bool GetValue(const StdString strKey, StdString& strValue, StdString strDefault = _T(""));
+    bool GetValue(const std::string strKey, std::string& strValue, std::string strDefault = "");
 
-    bool GetValue(const StdString strKey, bool& bValue, bool bDefault = false);
-    bool GetValue(const StdString strKey, int& nValue, int nDefault = 0);
-    bool GetValue(const StdString strKey, long& lValue, long lDefault = 0L);
-    bool GetValue(const StdString strKey, double& dValue, double fDefault = 0.0f);
+    bool GetValue(const std::string strKey, bool& bValue, bool bDefault = false);
+    bool GetValue(const std::string strKey, int& nValue, int nDefault = 0);
+    bool GetValue(const std::string strKey, long& lValue, long lDefault = 0L);
+    bool GetValue(const std::string strKey, double& dValue, double fDefault = 0.0f);
     /**
     * Delete the specific key/value pair
     * @param strKey Key
     */
-    void Delete(const StdString strKey);
+    void Delete(const std::string strKey);
     /**Empty the section*/
     void Empty();
     /**@}*/
@@ -97,14 +97,14 @@ public:
     * @param strFilePath the file path
     * @return true if save successfully, otherwise false
     */
-    bool Save(StdString strFilePath);
+    bool Save(std::string strFilePath);
 
     
     bool Save(FILE* pFile);
 
 private:
-    StdString m_strSectionName;
-    std::map< StdString, StdString > m_mapKeyValue;
+    std::string m_strSectionName;
+    std::map< std::string, std::string > m_mapKeyValue;
 };
 
 /**Represent Ini Confutation File*/
@@ -118,19 +118,19 @@ public:
     * Init IniConfig class with the specific file.
     * @param strFilePath the file path
     */
-    IniConfig(StdString strFilePath = _T(""));
+    IniConfig(std::string strFilePath = "");
     ~IniConfig();
 
     /**
     * Set the file path
     * @param strFilePath the file path
     */
-    void SetFilePath(const StdString strFilePath);
+    void SetFilePath(const std::string strFilePath);
     /**
     * Get the file path
     * @return the file path
     */
-    StdString GetFilePath() const;
+    std::string GetFilePath() const;
 
     /**
     * Insert the specific section
@@ -142,13 +142,13 @@ public:
     * Delete the specific section.*
     * @param strSection the specific secion name
     */
-    void Delete(const StdString strSection);
+    void Delete(const std::string strSection);
     /**
     * Get the specific section
     * @param strSecName The specific section name
     * @return The specific section name, or NULL if not found.
     */
-    Section* GetSection(const StdString strSecName);
+    Section* GetSection(const std::string strSecName);
 
 
     /**
@@ -156,13 +156,13 @@ public:
     * @param strFilePath the file path
     * @return true if load successfully, otherwise false
     */
-    bool Load(const StdString strFilePath = _T(""));
+    bool Load(const std::string strFilePath = "");
     /**
     * Save the IniConfig to the specific file
     * @param strFilePath the file path
     * @return true if save successfully, otherwise false
     */
-    bool Save(const StdString strFilePath = _T(""));
+    bool Save(const std::string strFilePath = "");
 
     Iterator begin() const
     {
@@ -175,7 +175,7 @@ public:
 private:
     void ClearUp();
 private:
-    StdString m_strFilePath;
+    std::string m_strFilePath;
     std::list<Section*> m_lstSections;
 };
 

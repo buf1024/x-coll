@@ -25,8 +25,8 @@ private:
 public:
     ~LogFactory(void);
 
-    Logger* CreateLogger(const StdChar* szConf);
-    bool IsConfOk(const StdChar* szConf);
+    Logger* CreateLogger(const char* szConf);
+    bool IsConfOk(const char* szConf);
 
 public:
     static LogFactory* GetInst();
@@ -37,14 +37,14 @@ private:
 private:
     static LogFactory* sm_Inst;
 
-    std::map<StdString, Appender*> m_MapObjPool;
+    std::map<std::string, Appender*> m_MapObjPool;
 };
 
 //Internal use only
 class LogWrapper
 {
 public:
-    LogWrapper(const StdChar* szConf);
+    LogWrapper(const char* szConf);
     ~LogWrapper();
 };
 

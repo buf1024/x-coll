@@ -15,7 +15,7 @@
 
 USE_XBASIC_NAMESPACE;
 
-Section::Section(StdString strSectionName /* = _T("") */)
+Section::Section(std::string strSectionName /* = "" */)
 :m_strSectionName(strSectionName)
 {
 	m_mapKeyValue.clear();
@@ -25,16 +25,16 @@ Section::~Section()
 
 }
 
-void Section::SetSectionName(const StdString strSectionName)
+void Section::SetSectionName(const std::string strSectionName)
 {
 	m_strSectionName = strSectionName;
 }
-StdString Section::GetSectionName() const
+std::string Section::GetSectionName() const
 {
 	return m_strSectionName;
 }
 
-void Section::Insert(const StdString strKey, StdString strValue)
+void Section::Insert(const std::string strKey, std::string strValue)
 {
 	if (!strKey.empty())
 	{
@@ -42,76 +42,60 @@ void Section::Insert(const StdString strKey, StdString strValue)
 	}
 	
 }
-void Section::Insert(const StdString strKey, TCHAR chValue)
+void Section::Insert(const std::string strKey, char chValue)
 {
 	if (!strKey.empty())
 	{
-		StdChar szBuf[32] = {0};
+		char szBuf[32] = {0};
 #ifdef WINDOWS
-#if _UNICODE
-        _snwprintf_s(szBuf, 32, 32, _T("%c"), chValue);
+        _snprintf(szBuf, 32, "%c", chValue);
 #else
-        _snprintf(szBuf, 32, _T("%c"), chValue);
-#endif
-#else
-        snprintf(szBuf, 32, _T("%c"), chValue);
+        snprintf(szBuf, 32, "%c", chValue);
 #endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
-void Section::Insert(const StdString strKey, int nValue)
+void Section::Insert(const std::string strKey, int nValue)
 {
 	if (!strKey.empty())
 	{
-		StdChar szBuf[32] = {0};
+		char szBuf[32] = {0};
 #if WINDOWS
-#if _UNICODE
-        _snwprintf_s(szBuf, 32, 32, _T("%d"), nValue);
+        _snprintf(szBuf, 32, "%d", nValue);
 #else
-        _snprintf(szBuf, 32, _T("%d"), nValue);
-#endif
-#else
-        snprintf(szBuf, 32, _T("%d"), nValue);
+        snprintf(szBuf, 32, "%d", nValue);
 #endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
-void Section::Insert(const StdString strKey, long lValue)
+void Section::Insert(const std::string strKey, long lValue)
 {
 	if (!strKey.empty())
 	{
-		StdChar szBuf[32] = {0};
+		char szBuf[32] = {0};
 #ifdef WINDOWS
-#if _UNICODE
-        _snwprintf_s(szBuf, 32, 32, _T("%ld"), lValue);
+        _snprintf(szBuf, 32, "%ld", lValue);
 #else
-        _snprintf(szBuf, 32, _T("%ld"), lValue);
-#endif
-#else
-        snprintf(szBuf, 32, _T("%ld"), lValue);
+        snprintf(szBuf, 32, "%ld", lValue);
 #endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 
 }
-void Section::Insert(const StdString strKey, double dValue)
+void Section::Insert(const std::string strKey, double dValue)
 {
 	if (!strKey.empty())
 	{
-		StdChar szBuf[32] = {0};
+		char szBuf[32] = {0};
 #if WINDOWS
-#if _UNICODE
-        _snwprintf_s(szBuf, 32, 32, _T("%lf"), dValue);
+        _snprintf(szBuf, 32, "%lf", dValue);
 #else
-        _snprintf(szBuf, 32, _T("%lf"), dValue);
-#endif
-#else
-        snprintf(szBuf, 32, _T("%lf"), dValue);
+        snprintf(szBuf, 32, "%lf", dValue);
 #endif
 		m_mapKeyValue[strKey] = szBuf;
 	}
 }
-bool Section::GetValue(const StdString strKey, StdString& strValue, StdString strDefault)
+bool Section::GetValue(const std::string strKey, std::string& strValue, std::string strDefault)
 {
 	bool bRet = false;
 	if (!strKey.empty())
@@ -132,13 +116,13 @@ bool Section::GetValue(const StdString strKey, StdString& strValue, StdString st
 	return bRet;
 }
 
-bool Section::GetValue(const StdString strKey, bool& bValue, bool bDefault)
+bool Section::GetValue(const std::string strKey, bool& bValue, bool bDefault)
 {
-    StdString strVal;
+    std::string strVal;
     if (GetValue(strKey, strVal))
     {
         strVal = ToLower(strVal);
-        if (strVal == _T("1") || strVal == _T("true"))
+        if (strVal == "1" || strVal == "true")
         {
             return true;
         }
@@ -146,17 +130,13 @@ bool Section::GetValue(const StdString strKey, bool& bValue, bool bDefault)
     bValue = bDefault;
     return false;    
 }
-bool Section::GetValue(const StdString strKey, int& nValue, int nDefault)
+bool Section::GetValue(const std::string strKey, int& nValue, int nDefault)
 {
-    StdString strVal;
+    std::string strVal;
     if (GetValue(strKey, strVal))
     {
         int nRet = 0;
-#if _UNICODE
-        nRet = swscanf(strVal.c_str(), _T("%d"), &nValue);
-#else
-        nRet = sscanf(strVal.c_str(), _T("%d"), &nValue);
-#endif
+        nRet = sscanf(strVal.c_str(), "%d", &nValue);
         if (nRet <= 0)
         {
             nValue = nDefault;
@@ -167,17 +147,13 @@ bool Section::GetValue(const StdString strKey, int& nValue, int nDefault)
     nValue = nDefault;
     return false;   
 }
-bool Section::GetValue(const StdString strKey, long& lValue, long lDefault)
+bool Section::GetValue(const std::string strKey, long& lValue, long lDefault)
 {
-    StdString strVal;
+    std::string strVal;
     if (GetValue(strKey, strVal))
     {
         int nRet = 0;
-#if _UNICODE
-        nRet = swscanf(strVal.c_str(), _T("%ld"), &lValue);
-#else
-        nRet = sscanf(strVal.c_str(), _T("%ld"), &lValue);
-#endif
+        nRet = sscanf(strVal.c_str(), "%ld", &lValue);
         if (nRet <= 0)
         {
             lValue = lDefault;
@@ -188,17 +164,13 @@ bool Section::GetValue(const StdString strKey, long& lValue, long lDefault)
     lValue = lDefault;
     return false;   
 }
-bool Section::GetValue(const StdString strKey, double& fValue, double fDefault)
+bool Section::GetValue(const std::string strKey, double& fValue, double fDefault)
 {
-    StdString strVal;
+    std::string strVal;
     if (GetValue(strKey, strVal))
     {
         int nRet = 0;
-#if _UNICODE
-        nRet = swscanf(strVal.c_str(), _T("%lf"), &fValue);
-#else
-        nRet = sscanf(strVal.c_str(), _T("%lf"), &fValue);
-#endif
+        nRet = sscanf(strVal.c_str(), "%lf", &fValue);
         if (nRet <= 0)
         {
             fValue = fDefault;
@@ -210,7 +182,7 @@ bool Section::GetValue(const StdString strKey, double& fValue, double fDefault)
     return false;
 }
 
-void Section::Delete(const StdString strKey)
+void Section::Delete(const std::string strKey)
 {
 	if (!strKey.empty())
 	{
@@ -224,18 +196,13 @@ void Section::Delete(const StdString strKey)
 }
 void Section::Empty()
 {
-	m_strSectionName = _T("");
+	m_strSectionName = "";
 	m_mapKeyValue.clear();
 }
 
-bool Section::Save(StdString strFilePath)
+bool Section::Save(std::string strFilePath)
 {
-    FILE* pFile = NullPtr;
-#ifndef _UNICODE
-    pFile = fopen(strFilePath.c_str(), _T("w+"));
-#else
-    pFile = _wfopen(strFilePath.c_str(), _T("w+"));
-#endif
+    FILE* pFile = fopen(strFilePath.c_str(), "w+");
 
     return Save(pFile);
 }
@@ -244,31 +211,24 @@ bool Section::Save(FILE* pFile)
 {
     if (pFile != NullPtr && !m_strSectionName.empty())
     {
-        StdString strLine = _T("[");
+        std::string strLine = "[";
         strLine.append(m_strSectionName);
-        strLine.append(_T("]"));
-        strLine.append(_T("\n"));
+        strLine.append("]");
+        strLine.append("\n");
 
-        std::string strBuf;
-#ifdef WINDOWS
-        strBuf = GetAnsiString(strLine);
-#else
-        strBuf = strLine;
-#endif
+        std::string strBuf = strLine;
+
         fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
         
         for (KVIterator iter = m_mapKeyValue.begin(); iter != m_mapKeyValue.end(); ++iter)
         {
             strLine = iter->first;
-            strLine.append(_T("="));
+            strLine.append("=");
             strLine.append(iter->second);
-            strLine.append(_T("\n"));
+            strLine.append("\n");
 
-#ifdef WINDOWS
-            strBuf = GetAnsiString(strLine);
-#else
-            strBuf = strLine.c_str();
-#endif
+            strBuf = strLine;
+
             fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
         }
         return true;
@@ -278,7 +238,7 @@ bool Section::Save(FILE* pFile)
 
 // IniConfig
 
-IniConfig::IniConfig(StdString strFilePath)
+IniConfig::IniConfig(std::string strFilePath)
 {
     m_strFilePath = strFilePath;
     if (!m_strFilePath.empty())
@@ -291,11 +251,11 @@ IniConfig::~IniConfig()
 	ClearUp();
 }
 
-void IniConfig::SetFilePath(const StdString strFilePath)
+void IniConfig::SetFilePath(const std::string strFilePath)
 {
 	m_strFilePath = strFilePath;
 }
-StdString IniConfig::GetFilePath() const
+std::string IniConfig::GetFilePath() const
 {
 	return m_strFilePath;
 }
@@ -316,7 +276,7 @@ bool IniConfig::Insert(Section* pSec)
 	return bRet;
 
 }
-void IniConfig::Delete(const StdString strSection)
+void IniConfig::Delete(const std::string strSection)
 {
     for(ICIterator iter = m_lstSections.begin();
         iter != m_lstSections.end();
@@ -331,7 +291,7 @@ void IniConfig::Delete(const StdString strSection)
     }
 	
 }
-Section* IniConfig::GetSection(const StdString strSecName)
+Section* IniConfig::GetSection(const std::string strSecName)
 {
 	Section* pSec = NullPtr;
 	
@@ -349,7 +309,7 @@ Section* IniConfig::GetSection(const StdString strSecName)
 	return pSec;
 }
 
-bool IniConfig::Load(const StdString strFilePath)
+bool IniConfig::Load(const std::string strFilePath)
 {
     ClearUp();
     if (!strFilePath.empty())
@@ -362,77 +322,66 @@ bool IniConfig::Load(const StdString strFilePath)
     }
     
 
-    FILE* pFile = NullPtr;
-#ifndef _UNICODE
-	pFile = fopen(strFilePath.c_str(), _T("r"));
-#else
-    pFile = _wfopen(strFilePath.c_str(), _T("r"));
-#endif
+    FILE* pFile  = fopen(strFilePath.c_str(), "r");
 
     if (pFile == NullPtr)
     {
         return false;
     }
 
-    StdChar szLine[MAX_LINE] = _T("");
+    char szLine[MAX_LINE] = "";
 
-    const StdChar* pTmp = NullPtr;
+    const char* pTmp = NullPtr;
 
     Section* pCurSec = NullPtr;
 
     while(feof(pFile) != EOF)
     {
-        szLine[0] = _T('\0');
-#ifndef _UNICODE
+        szLine[0] = '\0';
+
         if (fgets(szLine, MAX_LINE - 1, pFile) == NullPtr)
         {
             break;
         }
-#else
-        if (fgetws(szLine, MAX_LINE - 1, pFile) == NullPtr)
-        {
-            break;
-        }
-#endif
-        StdString strTrim = Trim(szLine, _T(" \r\n"));
+        std::string strTrim = Trim(szLine, " \r\n");
         pTmp = strTrim.c_str();
 
         int n = StringLenth(pTmp);
         if (StringLenth(pTmp) <= 0){
             continue;
         }
-        if (*pTmp == _T('#') || *pTmp == _T(';'))
+        if (*pTmp == '#' || *pTmp == ';')
         {
             continue;
         }
         // Start section
-        if (*pTmp == _T('['))
+        if (*pTmp == '[')
         {
-            const StdChar* pNameDel = ++pTmp;
-            while(*pTmp != _T('\0') && *pTmp != _T(']'))
+            const char* pNameDel = ++pTmp;
+            while(*pTmp != '\0' && *pTmp != ']')
             {
                 pTmp++;
             }
-            if (*pTmp == _T('\0'))
+            if (*pTmp == '\0')
             {
                 fclose(pFile);
                 return false;
             }
-            pCurSec = new Section(StdString(pNameDel, pTmp - pNameDel));
+            pCurSec = new Section(std::string(pNameDel, pTmp - pNameDel));
             m_lstSections.push_back(pCurSec);
             continue;
         }
         if (pCurSec != NullPtr)
         {
-            std::list<StdString> lstKV;
-            int nCount = Split(pTmp, _T("="), lstKV);
+            std::list<std::string> lstKV;
+            int nCount = Split(pTmp, "=", lstKV);
             if (nCount != 2)
             {
                 fclose(pFile);
                 return false;
             }
-            StdString strKey = lstKV.front();
-            StdString strVal = lstKV.back();
+            std::string strKey = lstKV.front();
+            std::string strVal = lstKV.back();
             pCurSec->Insert(strKey, strVal);
             
         }
@@ -442,9 +391,9 @@ bool IniConfig::Load(const StdString strFilePath)
 	
     return true;
 }
-bool IniConfig::Save(const StdString strFilePath)
+bool IniConfig::Save(const std::string strFilePath)
 {
-    StdString strFileSaved;
+    std::string strFileSaved;
     if (strFilePath.empty())
     {
         strFileSaved = m_strFilePath;
@@ -454,12 +403,7 @@ bool IniConfig::Save(const StdString strFilePath)
         strFileSaved = strFilePath;
     }
 
-    FILE* pFile = NullPtr;
-#ifndef _UNICODE
-    pFile = fopen(strFileSaved.c_str(), _T("w+"));
-#else
-    pFile = _wfopen(strFileSaved.c_str(), _T("w+"));
-#endif
+    FILE* pFile  = fopen(strFileSaved.c_str(), "w+");
 
     if (pFile == NullPtr)
     {
@@ -480,7 +424,7 @@ bool IniConfig::Save(const StdString strFilePath)
 }
 void IniConfig::ClearUp()
 {
-	//m_strFilePath = _T("");
+	//m_strFilePath = "";
 	for(ICIterator iter = m_lstSections.begin();
 		iter != m_lstSections.end();
 		++iter)
