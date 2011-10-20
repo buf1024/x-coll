@@ -24,3 +24,7 @@ unsigned int ConsoleAppender::Write(int nLogLevel, const StdChar* szMsg, unsigne
 {
     return 0;
 }
+Appender* ConsoleAppender::Clone()
+{
+    return NullPtr;
+}

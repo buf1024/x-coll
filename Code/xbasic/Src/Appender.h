@@ -17,18 +17,11 @@ XBASIC_NAMEPACE_BEGIN
 class XBASICAPI Appender
 {
 public:
-    virtual void Init(const StdChar* szConf)
-    {
+    virtual void Init(const StdChar* szConf){}
+    virtual unsigned int Write(int nLogLevel, const StdString& strMsg) = 0;
+    virtual unsigned int Write(int nLogLevel, const StdChar* szMsg, unsigned int nLen = -1) = 0;
+    virtual Appender* Clone() = 0;
 
-    }
-    virtual unsigned int Write(int nLogLevel, const StdString& strMsg)
-    {
-        return 0;
-    }
-    virtual unsigned int Write(int nLogLevel, const StdChar* szMsg, unsigned int nLen = -1)
-    {
-        return 0;
-    }
 };
 XBASIC_NAMESPACE_END
 

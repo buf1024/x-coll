@@ -24,3 +24,8 @@ unsigned int FileAppender::Write(int nLogLevel, const StdChar* szMsg, unsigned i
 {
     return 0;
 }
+
+Appender* FileAppender::Clone()
+{
+    return NullPtr;
+}

@@ -18,6 +18,7 @@ LogFactory* LogFactory::sm_Inst = NullPtr;
 
 LogFactory::LogFactory(void)
 {
+    InitFactory();
 }
 
 LogFactory::~LogFactory(void)
@@ -35,7 +36,14 @@ Logger* LogFactory::CreateLogger(const StdChar* szConf)
     }
     else
     {
+        StdString strConf = ToLower(szConf);
+        if (EndsWith(strConf.c_str, _T(".xml")))
+        {
+        }
+        else
+        {
 
+        }
     }
 
     return pLogger;
@@ -47,6 +55,11 @@ bool IsConfOk(const StdChar* szConf)
         return false;
     }
     return true;
+}
+void LogFactory::InitFactory()
+{
+    m_MapObjPool.insert(std::make_pair(_T("FileAppender"), new FileAppender));
+    m_MapObjPool.insert(std::make_pair(_T("ConsoleAppender"), new ConsoleAppender));
 }
 LogFactory* LogFactory::GetInst()
 {

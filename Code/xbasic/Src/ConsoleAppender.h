@@ -20,6 +20,7 @@ public:
 
     virtual unsigned int Write(int nLogLevel, const StdString& strMsg);
     virtual unsigned int Write(int nLogLevel, const StdChar* szMsg, unsigned int nLen = -1);
+    virtual Appender* Clone();
 };
 
 XBASIC_NAMESPACE_END
