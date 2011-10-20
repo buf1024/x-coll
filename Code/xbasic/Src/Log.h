@@ -49,7 +49,7 @@ extern Logger* g_pGlobalPrivateLogger;
     g_pGlobalPrivateLogger->SetLogLevel(level);                               \
 }                                                                             \
 
-#define SET_Logger(pLog)                                                      \
+#define SET_LOGGER(pLog)                                                      \
 {                                                                             \
     ASSERT(pLog != NullPtr);                                                  \
     if (g_pGlobalPrivateLogger != NullPtr)                                    \
@@ -63,7 +63,7 @@ extern Logger* g_pGlobalPrivateLogger;
 #define INIT_STD_LOG(szFile)                                                  \
     LogWrapper* g_pGlobalPriviteLogWraper = new LogWrapper(szFile);           \
 
-#define INIT_DEF_LOG()                                                        \
+#define INIT_CONSOLE_LOG()                                                    \
     LogWrapper* g_pGlobalPriviteLogWraper = new LogWrapper(NullPtr);          \
 
 #endif /* LOG_H_ */

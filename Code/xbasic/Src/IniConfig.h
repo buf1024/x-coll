@@ -112,6 +112,8 @@ class XBASICAPI IniConfig
 {
     typedef std::list<Section*>::iterator ICIterator;
 public:
+    typedef std::list<Section*>::iterator Iterator;
+public:
     /**
     * Init IniConfig class with the specific file.
     * @param strFilePath the file path
@@ -161,6 +163,15 @@ public:
     * @return true if save successfully, otherwise false
     */
     bool Save(const StdString strFilePath = _T(""));
+
+    Iterator begin() const
+    {
+        m_lstSections.begin();
+    }
+    Iterator end()const
+    {
+        m_lstSections.end();
+    }
 private:
     void ClearUp();
 private:
