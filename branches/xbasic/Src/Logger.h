@@ -35,21 +35,21 @@ public:
 
     void AddAppender(Appender* pApp);
     void RemoveAppender(Appender* pApp);
-    Appender* GetAppender(const StdString strAppName);
+    Appender* GetAppender(const std::string strAppName);
 
 public:
-    void Info(const StdChar* szFormat, ...);
-    void Debug(const StdChar* szFormat, ...);
-    void Warn(const StdChar* szFormat, ...);
-    void Error(const StdChar* szFormat, ...);
-    void Fatal(const StdChar* szFormat, ...);
+    void Info(const char* szFormat, ...);
+    void Debug(const char* szFormat, ...);
+    void Warn(const char* szFormat, ...);
+    void Error(const char* szFormat, ...);
+    void Fatal(const char* szFormat, ...);
 
-    void LogMessage(LogLevel eLvl, const StdChar* szFormat, ...); 
-    void LogMessageV(LogLevel eLvl, const StdChar* szFormat, va_list va); 
+    void LogMessage(LogLevel eLvl, const char* szFormat, ...); 
+    void LogMessageV(LogLevel eLvl, const char* szFormat, va_list va); 
 
 protected:
-    void Log(LogLevel eLvl, const StdChar* szMsg, int nLen = -1);
-    void Init(const StdChar* szConf);
+    void Log(LogLevel eLvl, const char* szMsg, int nLen = -1);
+    void Init(const char* szConf);
 
 protected:
     Locker* m_pLocker;

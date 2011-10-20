@@ -32,19 +32,19 @@ protected:
 
 TEST_F(IniConfigTest, IniConfigLoad)
 {
-    m_pConf->Load(_T("E:\\Private\\svn\\x-coll\\Src\\test\\conf001.ini"));
+    m_pConf->Load("E:\\Private\\svn\\x-coll\\Code\\xbasic\\Src\\test\\conf.ini");
 
-    m_pConf->Save(_T("E:\\conf.ini"));
-    Section* pSecA = m_pConf->GetSection(_T("seca"));
+    m_pConf->Save("E:\\conf.ini");
+    Section* pSecA = m_pConf->GetSection("seca");
     long lVal;
-    bool b = pSecA->GetValue(_T("knumber"), lVal);
+    bool b = pSecA->GetValue("knumber", lVal);
     double dVal;
-    b = pSecA->GetValue(_T("kdouble"), dVal);
+    b = pSecA->GetValue("kdouble", dVal);
 
-    Section* pSecB = m_pConf->GetSection(_T("secb"));
-    b = pSecB->GetValue(_T("knumber"), lVal);
+    Section* pSecB = m_pConf->GetSection("secb");
+    b = pSecB->GetValue("knumber", lVal);
     bool bVal;
-    b = pSecB->GetValue(_T("ktrue"), bVal);
+    b = pSecB->GetValue("ktrue", bVal);
 
     b = true;
 }

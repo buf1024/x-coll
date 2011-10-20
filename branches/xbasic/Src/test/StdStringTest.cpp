@@ -15,60 +15,60 @@ USE_XBASIC_NAMESPACE;
 
 TEST(StdStringTest, StringLength)
 {
-    const StdChar* pVal = NullPtr;
+    const char* pVal = NullPtr;
     ASSERT_EQ(-1, StringLenth(pVal));
 
-    pVal = _T("123456789");
+    pVal = "123456789";
     ASSERT_EQ(9, StringLenth(pVal));
 
-    pVal = _T("");
+    pVal = "";
     ASSERT_EQ(0, StringLenth(pVal));
 }
 
 TEST(StdStringTest, EndsWith)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
     ASSERT_FALSE(EndsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("");
-    pSubVal = _T("");
+    pStrVal = "";
+    pSubVal = "";
     ASSERT_TRUE(EndsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("ABC");
+    pStrVal = "ABC";
+    pSubVal = "ABC";
     ASSERT_TRUE(EndsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("BC");
+    pStrVal = "ABC";
+    pSubVal = "BC";
     ASSERT_TRUE(EndsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("B");
+    pStrVal = "ABC";
+    pSubVal = "B";
     ASSERT_FALSE(EndsWith(pStrVal, pSubVal));
 
     
 }
 TEST(StdStringTest, StartsWith)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
     ASSERT_FALSE(EndsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("");
-    pSubVal = _T("");
+    pStrVal = "";
+    pSubVal = "";
     ASSERT_TRUE(StartsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("ABC");
+    pStrVal = "ABC";
+    pSubVal = "ABC";
     ASSERT_TRUE(StartsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("AB");
+    pStrVal = "ABC";
+    pSubVal = "AB";
     ASSERT_TRUE(StartsWith(pStrVal, pSubVal));
 
-    pStrVal = _T("ABC");
-    pSubVal = _T("B");
+    pStrVal = "ABC";
+    pSubVal = "B";
     ASSERT_FALSE(StartsWith(pStrVal, pSubVal));
 
 
@@ -77,185 +77,185 @@ TEST(StdStringTest, StartsWith)
 
 TEST(StdStringTest, Contains)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
     ASSERT_FALSE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("");
-    pSubVal = _T("");
+    pStrVal = "";
+    pSubVal = "";
     ASSERT_TRUE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("abcd");
-    pSubVal = _T("");
+    pStrVal = "abcd";
+    pSubVal = "";
     ASSERT_TRUE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("bccA");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "bccA";
     ASSERT_TRUE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("Abb");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "Abb";
     ASSERT_TRUE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("cAB");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "cAB";
     ASSERT_TRUE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("cAddddddddddddddddddB");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "cAddddddddddddddddddB";
     ASSERT_FALSE(Contains(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("ddddddddddB");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "ddddddddddB";
     ASSERT_FALSE(Contains(pStrVal, pSubVal));
 
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_FALSE(Contains(pStrVal, _T('X')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_FALSE(Contains(pStrVal, 'X'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_TRUE(Contains(pStrVal, _T('A')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_TRUE(Contains(pStrVal, 'A'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_TRUE(Contains(pStrVal, _T('B')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_TRUE(Contains(pStrVal, 'B'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_TRUE(Contains(pStrVal, _T('d')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_TRUE(Contains(pStrVal, 'd'));
 }
 
 TEST(StdStringTest, FirstPosition)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
     ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("");
-    pSubVal = _T("");
-    ASSERT_STREQ(_T(""), FirstPosition(pStrVal, pSubVal));
+    pStrVal = "";
+    pSubVal = "";
+    ASSERT_STREQ("", FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("abcd");
-    pSubVal = _T("");
-    ASSERT_STREQ(_T(""), FirstPosition(pStrVal, pSubVal));
+    pStrVal = "abcd";
+    pSubVal = "";
+    ASSERT_STREQ("", FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("bccA");
-    ASSERT_STREQ(_T("bccAB"), FirstPosition(pStrVal, pSubVal));
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "bccA";
+    ASSERT_STREQ("bccAB", FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("Abb");
-    ASSERT_STREQ(_T("AbbccddbbccAB"), FirstPosition(pStrVal, pSubVal));
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "Abb";
+    ASSERT_STREQ("AbbccddbbccAB", FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("cAB");
-    ASSERT_STREQ(_T("cAB"), FirstPosition(pStrVal, pSubVal));
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "cAB";
+    ASSERT_STREQ("cAB", FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("cAddddddddddddddddddB");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "cAddddddddddddddddddB";
     ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
-    pStrVal = _T("AbbccddbbccAB");
-    pSubVal = _T("ddddddddddB");
+    pStrVal = "AbbccddbbccAB";
+    pSubVal = "ddddddddddB";
     ASSERT_FALSE(FirstPosition(pStrVal, pSubVal));
 
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_FALSE(FirstPosition(pStrVal, _T('X')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_FALSE(FirstPosition(pStrVal, 'X'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("AbbccddbbccAB"), FirstPosition(pStrVal, _T('A')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_STREQ("AbbccddbbccAB", FirstPosition(pStrVal, 'A'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("B"), FirstPosition(pStrVal, _T('B')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_STREQ("B", FirstPosition(pStrVal, 'B'));
 
-    pStrVal = _T("AbbccddbbccAB");
-    ASSERT_STREQ(_T("ddbbccAB"), FirstPosition(pStrVal, _T('d')));
+    pStrVal = "AbbccddbbccAB";
+    ASSERT_STREQ("ddbbccAB", FirstPosition(pStrVal, 'd'));
 }
 
 TEST(StdStringTest, Trim)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
-    StdString strVal = TrimLeft(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
+    std::string strVal = TrimLeft(pStrVal, pSubVal);
+    ASSERT_TRUE(strVal == "");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T(";?");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = ";?";
     strVal = TrimLeft(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T("an;cd?????;"));
+    ASSERT_TRUE(strVal == "an;cd?????;");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T("");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = "";
     strVal = TrimLeft(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(";?an;cd?????;"));
+    ASSERT_TRUE(strVal == ";?an;cd?????;");
 
-    pStrVal = _T("");
-    pSubVal = _T("ddd");
+    pStrVal = "";
+    pSubVal = "ddd";
     strVal = TrimLeft(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    ASSERT_TRUE(strVal == "");
 
     pStrVal = NullPtr;
     pSubVal = NullPtr;
     strVal = TrimRight(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    ASSERT_TRUE(strVal == "");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T(";?");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = ";?";
     strVal = TrimRight(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(";?an;cd"));
+    ASSERT_TRUE(strVal == ";?an;cd");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T("");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = "";
     strVal = TrimRight(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(";?an;cd?????;"));
+    ASSERT_TRUE(strVal == ";?an;cd?????;");
 
-    pStrVal = _T("");
-    pSubVal = _T("ddd");
+    pStrVal = "";
+    pSubVal = "ddd";
     strVal = TrimLeft(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    ASSERT_TRUE(strVal == "");
 
     pStrVal = NullPtr;
     pSubVal = NullPtr;
     strVal = Trim(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    ASSERT_TRUE(strVal == "");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T(";?");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = ";?";
     strVal = Trim(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T("an;cd"));
+    ASSERT_TRUE(strVal == "an;cd");
 
-    pStrVal = _T(";?an;cd?????;");
-    pSubVal = _T("");
+    pStrVal = ";?an;cd?????;";
+    pSubVal = "";
     strVal = Trim(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(";?an;cd?????;"));
+    ASSERT_TRUE(strVal == ";?an;cd?????;");
 
-    pStrVal = _T("");
-    pSubVal = _T("ddd");
+    pStrVal = "";
+    pSubVal = "ddd";
     strVal = Trim(pStrVal, pSubVal);
-    ASSERT_TRUE(strVal == _T(""));
+    ASSERT_TRUE(strVal == "");
     
 }
 
 TEST(StdStringTest, Split)
 {
-    const StdChar* pStrVal = NullPtr;
-    const StdChar* pSubVal = NullPtr;
-    std::list<StdString> rgp;
+    const char* pStrVal = NullPtr;
+    const char* pSubVal = NullPtr;
+    std::list<std::string> rgp;
     int nRet = Split(pStrVal, pSubVal, rgp);
     ASSERT_EQ(-1, nRet);
 
-    pStrVal = _T(";abc;defg;");
-    pSubVal = _T("");
+    pStrVal = ";abc;defg;";
+    pSubVal = "";
     nRet = Split(pStrVal, pSubVal, rgp);
     ASSERT_EQ(-1, nRet);
 
-    pStrVal = _T(";abc;defg;");
-    pSubVal = _T(";");
+    pStrVal = ";abc;defg;";
+    pSubVal = ";";
     nRet = Split(pStrVal, pSubVal, rgp);
     ASSERT_EQ(4, nRet);
 
 
-    pStrVal = _T(";abc;defg;");
-    pSubVal = _T(";abc;defg;");
+    pStrVal = ";abc;defg;";
+    pSubVal = ";abc;defg;";
     nRet = Split(pStrVal, pSubVal, rgp);
     ASSERT_EQ(2, nRet);
 }

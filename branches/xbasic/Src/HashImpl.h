@@ -21,9 +21,9 @@ public:
     HashImpl(){}
     virtual ~HashImpl(){}
 public:
-    virtual StdString GetStringHash(std::string strValue) = 0;
-    virtual StdString GetStringHash(std::wstring strValue) = 0;
-    virtual StdString GetFileHash(StdString strFile) = 0;
+    virtual std::string GetStringHash(std::string strValue) = 0;
+    virtual std::string GetStringHash(std::wstring strValue) = 0;
+    virtual std::string GetFileHash(std::string strFile) = 0;
 
 };
 

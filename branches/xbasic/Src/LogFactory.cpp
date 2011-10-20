@@ -24,7 +24,7 @@ LogFactory::LogFactory(void)
 LogFactory::~LogFactory(void)
 {
 }
-Logger* LogFactory::CreateLogger(const StdChar* szConf)
+Logger* LogFactory::CreateLogger(const char* szConf)
 {
     Logger* pLogger = new Logger;
 
@@ -36,8 +36,8 @@ Logger* LogFactory::CreateLogger(const StdChar* szConf)
     }
     else
     {
-        StdString strConf = ToLower(szConf);
-        if (EndsWith(strConf.c_str, _T(".xml")))
+        std::string strConf = ToLower(szConf);
+        if (EndsWith(strConf.c_str(), ".xml"))
         {
         }
         else
@@ -48,7 +48,7 @@ Logger* LogFactory::CreateLogger(const StdChar* szConf)
 
     return pLogger;
 }
-bool IsConfOk(const StdChar* szConf)
+bool IsConfOk(const char* szConf)
 {
     if (szConf == NullPtr || szConf[0] == '\0')
     {
@@ -58,8 +58,8 @@ bool IsConfOk(const StdChar* szConf)
 }
 void LogFactory::InitFactory()
 {
-    m_MapObjPool.insert(std::make_pair(_T("FileAppender"), new FileAppender));
-    m_MapObjPool.insert(std::make_pair(_T("ConsoleAppender"), new ConsoleAppender));
+    m_MapObjPool.insert(std::make_pair("FileAppender", new FileAppender));
+    m_MapObjPool.insert(std::make_pair("ConsoleAppender", new ConsoleAppender));
 }
 LogFactory* LogFactory::GetInst()
 {
@@ -77,7 +77,7 @@ void LogFactory::ReleaseRC()
     }
 }
 
-LogWrapper::LogWrapper(const StdChar* szConf)
+LogWrapper::LogWrapper(const char* szConf)
 {
     if (g_pGlobalPrivateLogger = NullPtr)
     {

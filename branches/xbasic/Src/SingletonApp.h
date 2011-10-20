@@ -26,7 +26,7 @@ XBASIC_NAMEPACE_BEGIN
 class XBASICAPI SingletonApp
 {
 public:
-    SingletonApp(const StdString strName = _T(""));
+    SingletonApp(const std::string strName = "");
     ~SingletonApp(void);
 
 

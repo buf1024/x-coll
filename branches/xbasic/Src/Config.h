@@ -15,41 +15,41 @@ XBASIC_NAMEPACE_BEGIN
 
 class XBASICAPI Config
 {
-    typedef std::map<StdString, bool>::iterator BoolOptIter;
-    typedef std::map<StdString, StdString>::iterator StringOptIter;
-    typedef std::map<StdString, long>::iterator DoubleWordOptIter;
-    typedef std::map<StdString, double>::iterator DoubleOptIter;
+    typedef std::map<std::string, bool>::iterator BoolOptIter;
+    typedef std::map<std::string, std::string>::iterator StringOptIter;
+    typedef std::map<std::string, long>::iterator DoubleWordOptIter;
+    typedef std::map<std::string, double>::iterator DoubleOptIter;
 
     friend class ConfigApp;
 
 public:
-    Config(StdString strName);
+    Config(std::string strName);
     ~Config(void);
 public:
-    bool GetBool(StdString strName, bool bDef = false);
-    StdString GetString(StdString strName, StdString strDef = _T(""));
-    long GetDoubleWorld(StdString strName, long lDef = 0L);
-    double GetDouble(StdString strName, double fDef = 0.0);
+    bool GetBool(std::string strName, bool bDef = false);
+    std::string GetString(std::string strName, std::string strDef = "");
+    long GetDoubleWorld(std::string strName, long lDef = 0L);
+    double GetDouble(std::string strName, double fDef = 0.0);
 
-    void AddBoolValue(StdString strName, bool bValue);
-    void AddStringValue(StdString strName, StdString strValue);
-    void AddDWORDValue(StdString strName, long dwValue);
-    void AddDoubleValue(StdString strName, double fValue);
+    void AddBoolValue(std::string strName, bool bValue);
+    void AddStringValue(std::string strName, std::string strValue);
+    void AddDWORDValue(std::string strName, long dwValue);
+    void AddDoubleValue(std::string strName, double fValue);
 
-    bool RemoveBool(StdString strName);
-    bool RemoveString(StdString strName);
-    bool RemoveDoubleWord(StdString strName);
-    bool RemoveDouble(StdString strName);
+    bool RemoveBool(std::string strName);
+    bool RemoveString(std::string strName);
+    bool RemoveDoubleWord(std::string strName);
+    bool RemoveDouble(std::string strName);
 
-    StdString GetName() const;
-    void SetName(StdString strName);
+    std::string GetName() const;
+    void SetName(std::string strName);
 
 private:
-    StdString _strName;
-    std::map<StdString, bool> _mapBoolOpt;
-    std::map<StdString, StdString> _mapStringOpt;
-    std::map<StdString, long> _mapDoubleWordOpt;
-    std::map<StdString, double> _mapDoubleOpt;
+    std::string _strName;
+    std::map<std::string, bool> _mapBoolOpt;
+    std::map<std::string, std::string> _mapStringOpt;
+    std::map<std::string, long> _mapDoubleWordOpt;
+    std::map<std::string, double> _mapDoubleOpt;
 };
 
 XBASIC_NAMESPACE_END

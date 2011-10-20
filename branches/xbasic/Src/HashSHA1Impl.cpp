@@ -20,7 +20,7 @@ HashSHA1Impl::HashSHA1Impl(void)
 HashSHA1Impl::~HashSHA1Impl(void)
 {
 }
-StdString HashSHA1Impl::GetStringHash(std::string strValue)
+std::string HashSHA1Impl::GetStringHash(std::string strValue)
 {
 	Reset();
 	int nLen = strValue.size();
@@ -28,12 +28,12 @@ StdString HashSHA1Impl::GetStringHash(std::string strValue)
 	Input(pBuf, nLen);
 	unsigned int digest[5] = {0};
 	Result(digest);
-	TCHAR szRes[48] = _T("");
+	TCHAR szRes[48] = "";
 	_sntprintf_s(szRes, 48, 48, _T("%x%x%x%x%x"),
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 	return szRes;
 }
-StdString HashSHA1Impl::GetStringHash(std::wstring strValue)
+std::string HashSHA1Impl::GetStringHash(std::wstring strValue)
 {
 	Reset();
 	int nLen = strValue.size() * sizeof(wchar_t);
@@ -41,14 +41,14 @@ StdString HashSHA1Impl::GetStringHash(std::wstring strValue)
 	Input(pBuf, nLen);
 	unsigned int digest[5] = {0};
 	Result(digest);
-	TCHAR szRes[48] = _T("");
+	TCHAR szRes[48] = "";
 	_sntprintf_s(szRes, 48, 48, _T("%x%x%x%x%x"),
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 	return szRes;
 }
-StdString HashSHA1Impl::GetFileHash(StdString strFile)
+std::string HashSHA1Impl::GetFileHash(std::string strFile)
 {
-	StdString strRet;
+	std::string strRet;
 
 	HANDLE hFile = CreateFile(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -64,7 +64,7 @@ StdString HashSHA1Impl::GetFileHash(StdString strFile)
 			Input(pByte, dwSize);
 			unsigned int digest[5] = {0};
 			Result(digest);
-			TCHAR szRes[48] = _T("");
+			TCHAR szRes[48] = "";
 			_sntprintf_s(szRes, 48, 48, _T("%x%x%x%x%x"),
 				digest[0], digest[1], digest[2], digest[3], digest[4]);
 			strRet = szRes;

@@ -16,11 +16,11 @@ ConsoleAppender::~ConsoleAppender(void)
 {
 }
 
-unsigned int ConsoleAppender::Write(int nLogLevel, const StdString& strMsg)
+unsigned int ConsoleAppender::Write(int nLogLevel, const std::string& strMsg)
 {
     return 0;
 }
-unsigned int ConsoleAppender::Write(int nLogLevel, const StdChar* szMsg, unsigned int nLen)
+unsigned int ConsoleAppender::Write(int nLogLevel, const char* szMsg, unsigned int nLen)
 {
     return 0;
 }
