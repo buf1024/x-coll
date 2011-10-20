@@ -10,9 +10,12 @@
 #include "XBasicCore.h"
 #include "StdString.h"
 
+#include <map>
+
 XBASIC_NAMEPACE_BEGIN
 
 class Logger;
+class Appender;
 
 class XBASICAPI LogFactory
 {
@@ -30,7 +33,11 @@ public:
     static void ReleaseRC();
 
 private:
+    void InitFactory();
+private:
     static LogFactory* sm_Inst;
+
+    std::map<StdString, Appender*> m_MapObjPool;
 };
 
 //Internal use only
