@@ -1,8 +1,0 @@
-LIBRARY
-
-EXPORTS
-; exports basic COM functions
-	DllGetClassObject PRIVATE
-	DllCanUnloadNow PRIVATE
-	DllRegisterServer PRIVATE
-	DllUnregisterServer PRIVATE
