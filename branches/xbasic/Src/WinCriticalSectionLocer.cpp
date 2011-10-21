@@ -6,9 +6,9 @@
  */
 #include "WinCriticalSectionLocer.h"
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 WinCriticalSectionLocer::WinCriticalSectionLocer(void)
 {

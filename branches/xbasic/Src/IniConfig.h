@@ -104,7 +104,12 @@ public:
 
 private:
     std::string m_strSectionName;
-    std::map< std::string, std::string > m_mapKeyValue;
+    typedef struct MapWrapper
+    {
+        std::map< std::string, std::string > m_mapKeyValue;
+    }MapWrapper;
+    MapWrapper* m_pMapWrapper;
+    
 };
 
 /**Represent Ini Confutation File*/
@@ -112,7 +117,7 @@ class XBASICAPI IniConfig
 {
     typedef std::list<Section*>::iterator ICIterator;
 public:
-    typedef std::list<Section*>::iterator Iterator;
+    typedef std::list<Section*>::const_iterator Iterator;
 public:
     /**
     * Init IniConfig class with the specific file.
@@ -166,17 +171,22 @@ public:
 
     Iterator begin() const
     {
-        m_lstSections.begin();
+        return m_pListWrapper->m_lstSections.begin();
     }
-    Iterator end()const
+    Iterator end() const
     {
-        m_lstSections.end();
+        return  m_pListWrapper->m_lstSections.end();
     }
 private:
     void ClearUp();
 private:
     std::string m_strFilePath;
-    std::list<Section*> m_lstSections;
+    typedef struct ListWrapter
+    {
+        std::list<Section*> m_lstSections;
+    };
+    ListWrapter* m_pListWrapper;
+    
 };
 
 XBASIC_NAMESPACE_END

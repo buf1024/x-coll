@@ -9,30 +9,32 @@
 #include "ConfigApp.h"
 #include "tinyxml.h"
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 #pragma warning(disable:4996)
 #endif
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 ConfigApp::ConfigApp(void)
 {
+    _mapWrapper = new MapWrapper;
 }
 
 ConfigApp::~ConfigApp(void)
 {
-    for (ConfigAppIter iter = _mapConfigAppOpt.begin();
-        iter != _mapConfigAppOpt.end(); ++iter)
+    for (ConfigAppIter iter = _mapWrapper->_mapConfigAppOpt.begin();
+        iter != _mapWrapper->_mapConfigAppOpt.end(); ++iter)
     {
         delete iter->second;
     }
+    delete _mapWrapper;
 }
 
 Config* ConfigApp::GetConfig(std::string strName)
 {
     Config* pConfig = NULL;
-    ConfigAppIter iter = _mapConfigAppOpt.find(strName);
-    if (iter != _mapConfigAppOpt.end())
+    ConfigAppIter iter = _mapWrapper->_mapConfigAppOpt.find(strName);
+    if (iter != _mapWrapper->_mapConfigAppOpt.end())
     {
         pConfig = iter->second;
     }
@@ -43,25 +45,25 @@ void ConfigApp::AddConfig(Config* pConfig)
     if (pConfig)
     {
         std::string strName = pConfig->GetName();
-        ConfigAppIter iter = _mapConfigAppOpt.find(strName);
-        if (iter != _mapConfigAppOpt.end())
+        ConfigAppIter iter = _mapWrapper->_mapConfigAppOpt.find(strName);
+        if (iter != _mapWrapper->_mapConfigAppOpt.end())
         {
             if (pConfig != iter->second)
             {
                 delete iter->second;
             }       
         }
-        _mapConfigAppOpt[strName] = pConfig;
+        _mapWrapper->_mapConfigAppOpt[strName] = pConfig;
     }
 }
 bool ConfigApp::RemoveConfig(std::string strName)
 {
     bool bRet = true;
-    ConfigAppIter iter = _mapConfigAppOpt.find(strName);
-    if (iter != _mapConfigAppOpt.end())
+    ConfigAppIter iter = _mapWrapper->_mapConfigAppOpt.find(strName);
+    if (iter != _mapWrapper->_mapConfigAppOpt.end())
     {
         delete iter->second;    
-        _mapConfigAppOpt.erase(iter);
+        _mapWrapper->_mapConfigAppOpt.erase(iter);
     }
     return bRet;
 }
@@ -73,14 +75,18 @@ bool ConfigApp::Load(std::string strFileName)
     bool bOK = doc.LoadFile(strFileName);
     if (!bOK) return false;
 
-    TiXmlDeclaration* pDecl = doc.RootElement()->ToDeclaration();
+    TiXmlDeclaration* pDecl = doc.FirstChild()->ToDeclaration();
     if (pDecl != NULL)
     {
         _strEncoding = pDecl->Encoding();
+        _strStandalone = pDecl->Standalone();
+        _strVer = pDecl->Version();
     }
     else
     {
         _strEncoding = "utf-8";
+        _strStandalone = "yes";
+        _strVer = "1.0";
     }
     
 
@@ -159,18 +165,20 @@ bool ConfigApp::Load(std::string strFileName)
 bool ConfigApp::Save(std::string strFileName)
 {
     TiXmlDocument doc;
-    TiXmlDeclaration* pDecl = new TiXmlDeclaration("1.0",
-        _strEncoding.length() > 0? _strEncoding.c_str() : "utf-8", "yes");
+    TiXmlDeclaration* pDecl = new TiXmlDeclaration(
+        _strVer.empty() ? "1.0" : _strVer.c_str(),
+        _strEncoding.empty() ? "utf-8" : _strEncoding.c_str(),
+        _strStandalone.empty() ? "yes" : _strStandalone.c_str());
     TiXmlElement* pConfApp = new TiXmlElement(CONFIG_APP_TAG);
-    for (ConfigAppIter iter = _mapConfigAppOpt.begin();
-        iter != _mapConfigAppOpt.end(); ++iter)
+    for (ConfigAppIter iter = _mapWrapper->_mapConfigAppOpt.begin();
+        iter != _mapWrapper->_mapConfigAppOpt.end(); ++iter)
     {
         Config* pConf = iter->second;
         TiXmlElement* pConfElem = new TiXmlElement(CONFIG_TAG);
         pConfElem->SetAttribute(CONFIG_NAME_ATTR, pConf->_strName);
         //bool opt
-        for(Config::BoolOptIter bIter = pConf->_mapBoolOpt.begin();
-            bIter != pConf->_mapBoolOpt.end(); ++bIter)
+        for(Config::BoolOptIter bIter = pConf->_mapWrapper->_mapBoolOpt.begin();
+            bIter != pConf->_mapWrapper->_mapBoolOpt.end(); ++bIter)
         {
             TiXmlElement* pBool = new TiXmlElement(CONFIG_VALUE_TAG);
             pBool->SetAttribute(CONFIG_NAME_ATTR, bIter->first);
@@ -180,8 +188,8 @@ bool ConfigApp::Save(std::string strFileName)
             pConfElem->LinkEndChild(pBool);
         }
         //string opt
-        for(Config::StringOptIter strIter = pConf->_mapStringOpt.begin();
-            strIter != pConf->_mapStringOpt.end(); ++strIter)
+        for(Config::StringOptIter strIter = pConf->_mapWrapper->_mapStringOpt.begin();
+            strIter != pConf->_mapWrapper->_mapStringOpt.end(); ++strIter)
         {
             TiXmlElement* pString = new TiXmlElement(CONFIG_VALUE_TAG);
             pString->SetAttribute(CONFIG_NAME_ATTR, strIter->first);
@@ -191,8 +199,8 @@ bool ConfigApp::Save(std::string strFileName)
             pConfElem->LinkEndChild(pString);
         }
         //dword opt
-        for(Config::DoubleWordOptIter dwIter = pConf->_mapDoubleWordOpt.begin();
-            dwIter != pConf->_mapDoubleWordOpt.end(); ++dwIter)
+        for(Config::DoubleWordOptIter dwIter = pConf->_mapWrapper->_mapDoubleWordOpt.begin();
+            dwIter != pConf->_mapWrapper->_mapDoubleWordOpt.end(); ++dwIter)
         {
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
             pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
@@ -203,8 +211,8 @@ bool ConfigApp::Save(std::string strFileName)
         }
 
         //double opt
-        for(Config::DoubleOptIter dwIter = pConf->_mapDoubleOpt.begin();
-            dwIter != pConf->_mapDoubleOpt.end(); ++dwIter)
+        for(Config::DoubleOptIter dwIter = pConf->_mapWrapper->_mapDoubleOpt.begin();
+            dwIter != pConf->_mapWrapper->_mapDoubleOpt.end(); ++dwIter)
         {
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
             pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
@@ -227,10 +235,24 @@ void ConfigApp::SetEncoding(const std::string strEncoding)
     _strEncoding = strEncoding;
 }
 
+const std::string ConfigApp::GetEncoding() const
+{
+    return _strEncoding;
+}
+
+void ConfigApp::SetStandalone(std::string strStandalone)
+{
+    _strStandalone = strStandalone;
+}
+const std::string ConfigApp::GetStandalone() const
+{
+    return _strStandalone;
+}
+
 std::string ConfigApp::GetStringFromLong(long dwValue)
 {
     char szBuf[32] = {0};
-#ifndef WINDOWS
+#ifndef MSWINDOWS
     snprintf(szBuf, 32, "%ld", dwValue);
 #else
     _snprintf_s(szBuf, 32, 32, "%ld", dwValue);
@@ -240,7 +262,7 @@ std::string ConfigApp::GetStringFromLong(long dwValue)
 std::string ConfigApp::GetStringFromDouble(double fValue)
 {
     char szBuf[32] = {0};
-#ifndef WINDOWS
+#ifndef MSWINDOWS
     snprintf(szBuf, 32, "%lf", fValue);
 #else
     _snprintf_s(szBuf, 32, 32, "%lf", fValue);

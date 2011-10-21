@@ -1,50 +1,87 @@
 #include "IniConfig.h"
 #include "TestCmmHdr.h"
 
+#include <stdio.h>
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 class IniConfigTest : public testing::Test
 {
 public:
     void SetUp()
     {
-        m_pConf = new IniConfig;
+        IniConfig ini;
+        m_strTmpFile = tempnam(".", "IniConfig");
+        Section* pSec = new Section("SecA");
+        pSec->Insert("num", 100);
+        pSec->Insert("str", "hello");
+        pSec->Insert("bool", "true");
+        ini.Insert(pSec);
+        
+        pSec = new Section("SecB");
+        pSec->Insert("num", 200);
+        pSec->Insert("str", "hello");
+        pSec->Insert("bool", "false");
+        ini.Insert(pSec);
+
+        ini.Save(m_strTmpFile);
+
     }
 
     void TearDown()
     {
-        delete m_pConf;
     }
 public:
     static void SetUpTestCase()
     {
-        printf("SetUpTestCase");
     }
     static void TearDownTestCase()
     {
-        printf("TearDownTestCase");
     }
 protected:
-    IniConfig* m_pConf;
+    std::string m_strTmpFile;
 };
 
 
-TEST_F(IniConfigTest, IniConfigLoad)
+TEST_F(IniConfigTest, IniConfig)
 {
-    m_pConf->Load("E:\\Private\\svn\\x-coll\\Code\\xbasic\\Src\\test\\conf.ini");
+    IniConfig ini;
+    ini.Load(m_strTmpFile);
 
-    m_pConf->Save("E:\\conf.ini");
-    Section* pSecA = m_pConf->GetSection("seca");
+    Section* pSec = ini.GetSection("SecA");
+    ASSERT(pSec != NullPtr);
+    
     long lVal;
-    bool b = pSecA->GetValue("knumber", lVal);
-    double dVal;
-    b = pSecA->GetValue("kdouble", dVal);
+    bool b = pSec->GetValue("num", lVal);
+    ASSERT(b);
+    ASSERT(lVal == 100);
+    
+    std::string str;
+    b = pSec->GetValue("str", str);
+    ASSERT(b);
+    ASSERT(str == "hello");
 
-    Section* pSecB = m_pConf->GetSection("secb");
-    b = pSecB->GetValue("knumber", lVal);
     bool bVal;
-    b = pSecB->GetValue("ktrue", bVal);
+    b = pSec->GetValue("bool", bVal);
+    ASSERT(b);
+    ASSERT(bVal);
 
-    b = true;
+    pSec = ini.GetSection("SecB");
+    ASSERT(pSec != NullPtr);
+
+    b = pSec->GetValue("num", lVal);
+    ASSERT(b);
+    ASSERT(lVal == 200);
+
+
+    b = pSec->GetValue("str", str);
+    ASSERT(b);
+    ASSERT(str == "hello");
+
+    b = pSec->GetValue("bool", bVal);
+    ASSERT(b);
+    ASSERT(bVal == false);
+
+    pSec = ini.GetSection("SecC");
+    ASSERT(pSec == NullPtr);
 }

@@ -46,10 +46,17 @@ public:
 
 private:
     std::string _strName;
-    std::map<std::string, bool> _mapBoolOpt;
-    std::map<std::string, std::string> _mapStringOpt;
-    std::map<std::string, long> _mapDoubleWordOpt;
-    std::map<std::string, double> _mapDoubleOpt;
+
+    typedef struct MapWrapper
+    {
+        std::map<std::string, bool> _mapBoolOpt;
+        std::map<std::string, std::string> _mapStringOpt;
+        std::map<std::string, long> _mapDoubleWordOpt;
+        std::map<std::string, double> _mapDoubleOpt;
+    } MapWrapper;
+
+    MapWrapper* _mapWrapper;
+
 };
 
 XBASIC_NAMESPACE_END

@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <stdlib.h>
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 #pragma warning(disable:4996)
 #endif
 
@@ -638,7 +638,7 @@ XBASICAPI std::string FromNumber(long lVal)
 {
     char szTmp[8] = "";
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
     if(lVal < 0){
         _snprintf(szTmp, sizeof(szTmp), "-%ld", -lVal);
     }else{

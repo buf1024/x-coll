@@ -6,7 +6,7 @@
  */
 #include "FileAppender.h"
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 FileAppender::FileAppender(void)
 {

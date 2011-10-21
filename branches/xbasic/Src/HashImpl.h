@@ -11,6 +11,7 @@
 
 
 #include "XBasicCore.h"
+#include "StdString.h"
 
 XBASIC_NAMEPACE_BEGIN
 

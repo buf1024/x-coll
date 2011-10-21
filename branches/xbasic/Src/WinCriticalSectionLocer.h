@@ -10,7 +10,7 @@
 
 #include "Locker.h"
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 
 XBASIC_NAMEPACE_BEGIN
 

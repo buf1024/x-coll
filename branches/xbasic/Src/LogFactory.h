@@ -36,8 +36,11 @@ private:
     void InitFactory();
 private:
     static LogFactory* sm_Inst;
-
-    std::map<std::string, Appender*> m_MapObjPool;
+    typedef struct MapWrapper
+    {
+        std::map<std::string, Appender*> m_MapObjPool;
+    };
+    MapWrapper* m_pMapWrapper;
 };
 
 //Internal use only

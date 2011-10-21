@@ -10,7 +10,7 @@
 
 #include <gtest/gtest.h>
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 
 #if _DEBUG
 #pragma comment(lib, "gtestd.lib")

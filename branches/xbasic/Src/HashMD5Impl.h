@@ -1,22 +1,17 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// GCLib -- Personal basic library project
-// 
-// FileName    : HashMD5Impl.h
-// Purpose     : 
-// Version     : 2010-11-13 15:19:30 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
-/** @file HashMD5Impl.h */
+/*
+ * File       : HashMD5Impl.h
+ * Description: 
+ * Version    : 2010-11-13 Created
+ * Author     : buf1024@gmail.com
+ */
 #ifndef _HASHMD5IMPL_H_
 #define _HASHMD5IMPL_H_
-/*
+
 #include "HashImpl.h"
 
+XBASIC_NAMEPACE_BEGIN
 
-class HashMD5Impl :
+class XBASICAPI HashMD5Impl :
     public HashImpl
 {
 public:
@@ -29,5 +24,8 @@ public:
 
 private:
     std::string ComputeHash(const unsigned char* pBuf, unsigned long lLen);
-};*/
+};
+
+XBASIC_NAMESPACE_END
+
 #endif
