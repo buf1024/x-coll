@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// GCLib -- Personal basic library project
-// 
-// FileName    : HashSHA1Impl.h
-// Purpose     : 
-// Version     : 2010-11-13 15:20:36 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
-/** @file HashSHA1Impl.h */
+/*
+ * File       : HashSHA1Impl.h
+ * Description: 
+ * Version    : 2010-11-13 Created
+ * Author     : buf1024@gmail.com
+ */
+
 #ifndef _HASHSHA1IMPL_H_
 #define _HASHSHA1IMPL_H_
 
@@ -27,7 +22,7 @@
 
 #include "HashImpl.h"
 #include "sha1.h"
-/*
+
 
 class HashSHA1Impl :
     public HashImpl, private SHA1
@@ -41,6 +36,6 @@ public:
     virtual std::string GetFileHash(std::string strFile);
 };
 
-*/
+
 
 #endif
