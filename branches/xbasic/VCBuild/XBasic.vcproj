@@ -44,7 +44,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MSWINDOWS;XBASICDLL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -68,7 +68,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="xbasic.lib"
+				ImportLibrary="$(OutDir)\xbasic.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINDOWS;XBASICSTAT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -182,7 +182,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MSWINDOWS;XBASICDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -205,7 +205,7 @@
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="xbasic.lib"
+				ImportLibrary="$(OutDir)\xbasicd.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -258,7 +258,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WINDOWS;XBASICSTAT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -320,13 +320,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\..\3rd\tinyxml;.\..\3rd\hash"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINDOWS;XBASICSTAT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -385,7 +385,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WINDOWS;XBASICSTAT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -425,6 +425,58 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="3rd"
+			>
+			<Filter
+				Name="hash"
+				>
+				<File
+					RelativePath="..\3rd\hash\md5.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\hash\md5.h"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\hash\sha1.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\hash\sha1.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="tinyxml"
+				>
+				<File
+					RelativePath="..\3rd\tinyxml\tinystr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\tinyxml\tinystr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\tinyxml\tinyxml.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\tinyxml\tinyxml.h"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\tinyxml\tinyxmlerror.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\3rd\tinyxml\tinyxmlparser.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath="..\Src\Appender.h"
 			>
@@ -546,6 +598,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\resource.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\SingletonApp.cpp"
 			>
 		</File>
@@ -575,6 +631,10 @@
 		</File>
 		<File
 			RelativePath="..\Src\XBasic.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\XBasic.rc"
 			>
 		</File>
 		<File
