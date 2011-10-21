@@ -40,6 +40,8 @@ public:
     bool Load(std::string strFileName);
     bool Save(std::string strFileName);
 
+    void SetEncoding(const std::string strEncoding);
+
 private:
     std::string GetStringFromLong(long dwValue);
     std::string GetStringFromDouble(double fValue);
@@ -47,6 +49,7 @@ private:
     double GetDoubleFromString(std::string strValue);
 private:
     std::map<std::string, Config*> _mapConfigAppOpt;
+    std::string _strEncoding;
 };
 
 XBASIC_NAMESPACE_END

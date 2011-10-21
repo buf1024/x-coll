@@ -8,7 +8,7 @@
 
 #ifndef HASHIMPL_H_
 #define HASHIMPL_H_
-/*
+
 
 #include "XBasicCore.h"
 
@@ -28,6 +28,6 @@ public:
 };
 
 XBASIC_NAMESPACE_END
-*/
+
 
 #endif /* HASHIMPL_H_ */

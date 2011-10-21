@@ -465,7 +465,7 @@ XBASICAPI const char* FirstPosition(const char* szStrValue, const char* szStrSub
 
     const char* pSub = szStrValue;
 
-    int nSub = StringLenth(szStrSubStr);
+    //int nSub = StringLenth(szStrSubStr);
     while((pSub = strchr(pSub, *szStrSubStr)))
     {
         const char* pSubTmp = szStrSubStr;

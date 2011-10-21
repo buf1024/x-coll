@@ -73,6 +73,17 @@ bool ConfigApp::Load(std::string strFileName)
     bool bOK = doc.LoadFile(strFileName);
     if (!bOK) return false;
 
+    TiXmlDeclaration* pDecl = doc.RootElement()->ToDeclaration();
+    if (pDecl != NULL)
+    {
+        _strEncoding = pDecl->Encoding();
+    }
+    else
+    {
+        _strEncoding = "utf-8";
+    }
+    
+
     TiXmlHandle hDoc(&doc);
     TiXmlElement* pElemRoot = NULL;
     TiXmlElement* pElem = NULL;
@@ -148,7 +159,8 @@ bool ConfigApp::Load(std::string strFileName)
 bool ConfigApp::Save(std::string strFileName)
 {
     TiXmlDocument doc;
-    TiXmlDeclaration* pDecl = new TiXmlDeclaration("1.0", "utf-8", "yes");
+    TiXmlDeclaration* pDecl = new TiXmlDeclaration("1.0",
+        _strEncoding.length() > 0? _strEncoding.c_str() : "utf-8", "yes");
     TiXmlElement* pConfApp = new TiXmlElement(CONFIG_APP_TAG);
     for (ConfigAppIter iter = _mapConfigAppOpt.begin();
         iter != _mapConfigAppOpt.end(); ++iter)
@@ -208,6 +220,11 @@ bool ConfigApp::Save(std::string strFileName)
     doc.LinkEndChild(pConfApp);
     doc.SaveFile(strFileName);
     return true;
+}
+
+void ConfigApp::SetEncoding(const std::string strEncoding)
+{
+    _strEncoding = strEncoding;
 }
 
 std::string ConfigApp::GetStringFromLong(long dwValue)

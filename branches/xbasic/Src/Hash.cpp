@@ -1,15 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// LGCUI -- Personal Windowless UI Library Project
-// 
-// FileName    : Hash.cpp
-// Purpose     : 
-// Version     : 2010-11-9 20:09:19) 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
 /*
+ * File       : Hash.cpp
+ * Description: 计算Hash值的接口
+ * Version    : 2010-11-9 1.0 Created
+ *              2011-9 24 1.1 多操作系统支持
+ * Author     : buf1024@gmail.com
+ */
+
+
 #include "Hash.h"
 #include "HashImpl.h"
 
@@ -37,4 +34,4 @@ std::string Hash::GetStringHash(std::wstring strValue)
 std::string Hash::GetFileHash(std::string strFile)
 {
 	return m_pImpl->GetFileHash(strFile);
-}*/
+}

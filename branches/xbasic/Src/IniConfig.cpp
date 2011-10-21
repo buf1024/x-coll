@@ -346,7 +346,7 @@ bool IniConfig::Load(const std::string strFilePath)
         std::string strTrim = Trim(szLine, " \r\n");
         pTmp = strTrim.c_str();
 
-        int n = StringLenth(pTmp);
+//        int n = StringLenth(pTmp);
         if (StringLenth(pTmp) <= 0){
             continue;
         }
