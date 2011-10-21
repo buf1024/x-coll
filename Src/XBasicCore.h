@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 #include <Windows.h>
 #endif
 
@@ -28,7 +28,7 @@
 #define XBASIC_NAMESPACE_END                                                             \
     }                                                                                    \
 
-#define USE_XBASIC_NAMESPACE using namespace XBASICNAMESPACE
+#define USE_XBASIC_NAMESPACE using namespace XBASICNAMESPACE;
 
 #else
 
@@ -38,10 +38,10 @@
 
 #endif
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
   // 是否编译成DLL
   #ifdef XBASICDLL
-    #define XBASICAPI __decspec(dllexport)
+    #define XBASICAPI __declspec(dllexport)
   #else
     // 是否编译成静态库
     #ifdef XBASICSTAT
@@ -49,8 +49,8 @@
     #else
 
       // 使用DLL时 
-      #ifdef USE_DLL
-        #define XBASICAPI __decspec(dllimport)
+      #ifdef USEDLL
+        #define XBASICAPI __declspec(dllimport)
         // 使用时，连接到不同的库  
         #ifdef _DEBUG
           #pragma comment(lib, "xbasicd.lib")
@@ -71,7 +71,7 @@
 
 #else
 
-#define XBASICAPI
+//#define XBASICAPI
 
 #endif
 

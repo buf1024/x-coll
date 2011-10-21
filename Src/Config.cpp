@@ -7,22 +7,24 @@
  */
 #include "Config.h"
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 Config::Config(std::string strName)
 : _strName(strName)
 {
+    _mapWrapper = new MapWrapper;
 }
 
 Config::~Config(void)
 {
+    delete _mapWrapper;
 }
 
 bool Config::GetBool(std::string strName, bool bDef)
 {
     bool bRet = bDef;
-    BoolOptIter iter = _mapBoolOpt.find(strName);
-    if (iter != _mapBoolOpt.end())
+    BoolOptIter iter = _mapWrapper->_mapBoolOpt.find(strName);
+    if (iter != _mapWrapper->_mapBoolOpt.end())
     {
         bRet = iter->second;
     }
@@ -31,8 +33,8 @@ bool Config::GetBool(std::string strName, bool bDef)
 std::string Config::GetString(std::string strName, std::string strDef)
 {
     std::string strRet =  strDef;
-    StringOptIter iter = _mapStringOpt.find(strName);
-    if (iter != _mapStringOpt.end())
+    StringOptIter iter = _mapWrapper->_mapStringOpt.find(strName);
+    if (iter != _mapWrapper->_mapStringOpt.end())
     {
         strRet = iter->second;
     }
@@ -41,8 +43,8 @@ std::string Config::GetString(std::string strName, std::string strDef)
 long Config::GetDoubleWorld(std::string strName, long lDef)
 {
     long dwRet =  lDef;
-    DoubleWordOptIter iter = _mapDoubleWordOpt.find(strName);
-    if (iter != _mapDoubleWordOpt.end())
+    DoubleWordOptIter iter = _mapWrapper->_mapDoubleWordOpt.find(strName);
+    if (iter != _mapWrapper->_mapDoubleWordOpt.end())
     {
         dwRet = iter->second;
     }
@@ -51,8 +53,8 @@ long Config::GetDoubleWorld(std::string strName, long lDef)
 double Config::GetDouble(std::string strName, double fDef)
 {
     double fRet =  fDef;
-    DoubleOptIter iter = _mapDoubleOpt.find(strName);
-    if (iter != _mapDoubleOpt.end())
+    DoubleOptIter iter = _mapWrapper->_mapDoubleOpt.find(strName);
+    if (iter != _mapWrapper->_mapDoubleOpt.end())
     {
         fRet = iter->second;
     }
@@ -61,57 +63,57 @@ double Config::GetDouble(std::string strName, double fDef)
 
 void Config::AddBoolValue(std::string strName, bool bValue)
 {
-    _mapBoolOpt[strName] = bValue;
+    _mapWrapper->_mapBoolOpt[strName] = bValue;
 }
 void Config::AddStringValue(std::string strName, std::string strValue)
 {
-    _mapStringOpt[strName] = strValue;
+    _mapWrapper->_mapStringOpt[strName] = strValue;
 }
 void Config::AddDWORDValue(std::string strName, long dwValue)
 {
-    _mapDoubleWordOpt[strName] = dwValue;
+    _mapWrapper->_mapDoubleWordOpt[strName] = dwValue;
 }
 void Config::AddDoubleValue(std::string strName, double fValue)
 {
-    _mapDoubleOpt[strName] = fValue;
+    _mapWrapper->_mapDoubleOpt[strName] = fValue;
 }
 bool Config::RemoveBool(std::string strName)
 {
     bool bRet = true;
-    BoolOptIter iter = _mapBoolOpt.find(strName);
-    if (iter != _mapBoolOpt.end())
+    BoolOptIter iter = _mapWrapper->_mapBoolOpt.find(strName);
+    if (iter != _mapWrapper->_mapBoolOpt.end())
     {
-        _mapBoolOpt.erase(iter);
+        _mapWrapper->_mapBoolOpt.erase(iter);
     }
     return bRet;
 }
 bool Config::RemoveString(std::string strName)
 {
     bool bRet = true;
-    StringOptIter iter = _mapStringOpt.find(strName);
-    if (iter != _mapStringOpt.end())
+    StringOptIter iter = _mapWrapper->_mapStringOpt.find(strName);
+    if (iter != _mapWrapper->_mapStringOpt.end())
     {
-        _mapStringOpt.erase(iter);
+        _mapWrapper->_mapStringOpt.erase(iter);
     }
     return bRet;
 }
 bool Config::RemoveDoubleWord(std::string strName)
 {
     bool bRet = true;
-    DoubleWordOptIter iter = _mapDoubleWordOpt.find(strName);
-    if (iter != _mapDoubleWordOpt.end())
+    DoubleWordOptIter iter = _mapWrapper->_mapDoubleWordOpt.find(strName);
+    if (iter != _mapWrapper->_mapDoubleWordOpt.end())
     {
-        _mapDoubleWordOpt.erase(iter);
+        _mapWrapper->_mapDoubleWordOpt.erase(iter);
     }
     return bRet;
 }
 bool Config::RemoveDouble(std::string strName)
 {
     bool bRet = true;
-    DoubleOptIter iter = _mapDoubleOpt.find(strName);
-    if (iter != _mapDoubleOpt.end())
+    DoubleOptIter iter = _mapWrapper->_mapDoubleOpt.find(strName);
+    if (iter != _mapWrapper->_mapDoubleOpt.end())
     {
-        _mapDoubleOpt.erase(iter);
+        _mapWrapper->_mapDoubleOpt.erase(iter);
     }
     return bRet;
 }

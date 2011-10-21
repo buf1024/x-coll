@@ -19,8 +19,8 @@
 #define CONFIG_TYPE_ATTR  "type"
 #define CONFIG_BOOL_OPT   "BOOL"
 #define CONFIG_DWORD_OPT  "DWORD"
-#define CONFIG_DOUBLE_OPT "DOUBLE"
-#define CONFIG_STRING_OPT "STRING"
+#define CONFIG_DOUBLE_OPT "Double"
+#define CONFIG_STRING_OPT "String"
 
 
 XBASIC_NAMEPACE_BEGIN
@@ -41,6 +41,10 @@ public:
     bool Save(std::string strFileName);
 
     void SetEncoding(const std::string strEncoding);
+    const std::string GetEncoding() const;
+
+    void SetStandalone(std::string strStandalone);
+    const std::string GetStandalone() const;    
 
 private:
     std::string GetStringFromLong(long dwValue);
@@ -48,8 +52,16 @@ private:
     long GetLongFromString(std::string strValue);
     double GetDoubleFromString(std::string strValue);
 private:
-    std::map<std::string, Config*> _mapConfigAppOpt;
+    typedef struct  MapWrapper
+    {
+        std::map<std::string, Config*> _mapConfigAppOpt;
+    }MapWrapper;
+    
+    MapWrapper* _mapWrapper;
+
     std::string _strEncoding;
+    std::string _strStandalone;
+    std::string _strVer;
 };
 
 XBASIC_NAMESPACE_END

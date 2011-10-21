@@ -19,7 +19,7 @@
 #include "XBasicCore.h"
 #include "StdString.h"
 
-// 在WINDOWS不使用内核对象
+// 在MSWINDOWS不使用内核对象
 
 XBASIC_NAMEPACE_BEGIN
 

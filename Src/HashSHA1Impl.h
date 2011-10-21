@@ -23,9 +23,10 @@
 #include "HashImpl.h"
 #include "sha1.h"
 
+XBASIC_NAMEPACE_BEGIN
 
-class HashSHA1Impl :
-    public HashImpl, private SHA1
+class XBASICAPI HashSHA1Impl :
+    public HashImpl
 {
 public:
     HashSHA1Impl(void);
@@ -34,8 +35,10 @@ public:
     virtual std::string GetStringHash(std::string strValue);
     virtual std::string GetStringHash(std::wstring strValue);
     virtual std::string GetFileHash(std::string strFile);
+private:
+    SHA1* m_pSHA1;
 };
 
-
+XBASIC_NAMESPACE_END
 
 #endif

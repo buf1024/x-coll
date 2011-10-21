@@ -12,19 +12,20 @@
 #pragma warning(disable:4996)
 #define MSG_BUF 2048
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 
 Logger* g_pGlobalPrivateLogger = NullPtr;
 
 Logger::Logger()
 {
+    m_pListWrapper = new ListWrapper;
     m_eLvl = ALL;
     m_pLocker = NullPtr;
 }
 Logger::~Logger()
 {
-
+    delete m_pListWrapper;
 }
 
 void Logger::SetLogLevel(LogLevel eLvl)

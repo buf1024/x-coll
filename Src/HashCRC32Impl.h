@@ -1,23 +1,19 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// 
-// GCLib -- Personal basic library project
-// 
-// FileName    : HashCRC32Impl.h
-// Purpose     : 
-// Version     : 2010-11-13 15:19:12) 1.0 Created
-// Author      : heidong
-// Contact     : buf1024@gmail.com
-// Copyright(c): HEIDONG
-////////////////////////////////////////////////////////////////////////////////////////
-/** @file HashCRC32Impl.h */
+/*
+ * File       : HashCRC32Impl.h
+ * Description: 
+ * Version    : 2010-11-13 Created
+ * Author     : buf1024@gmail.com
+ */
 
 #ifndef _HASHCRC32IMPL_H_
 #define _HASHCRC32IMPL_H_
-/*
+
 
 #include "HashImpl.h"
 
-class HashCRC32Impl :
+XBASIC_NAMEPACE_BEGIN
+
+class XBASICAPI HashCRC32Impl :
     public HashImpl
 {
 public:
@@ -35,6 +31,7 @@ private:
 private:
     unsigned long crc32_table[256]; // Lookup table array
 };
-*/
+
+XBASIC_NAMESPACE_END
 
 #endif

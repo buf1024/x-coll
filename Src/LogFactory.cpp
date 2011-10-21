@@ -10,7 +10,7 @@
 #include "FileAppender.h"
 #include "IniConfig.h"
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 extern Logger* g_pGlobalPrivateLogger;
 
@@ -18,11 +18,13 @@ LogFactory* LogFactory::sm_Inst = NullPtr;
 
 LogFactory::LogFactory(void)
 {
+    m_pMapWrapper = new MapWrapper;
     InitFactory();
 }
 
 LogFactory::~LogFactory(void)
 {
+    delete m_pMapWrapper;
 }
 Logger* LogFactory::CreateLogger(const char* szConf)
 {
@@ -48,7 +50,7 @@ Logger* LogFactory::CreateLogger(const char* szConf)
 
     return pLogger;
 }
-bool IsConfOk(const char* szConf)
+bool LogFactory::IsConfOk(const char* szConf)
 {
     if (szConf == NullPtr || szConf[0] == '\0')
     {
@@ -58,8 +60,8 @@ bool IsConfOk(const char* szConf)
 }
 void LogFactory::InitFactory()
 {
-    m_MapObjPool.insert(std::make_pair("FileAppender", new FileAppender));
-    m_MapObjPool.insert(std::make_pair("ConsoleAppender", new ConsoleAppender));
+    m_pMapWrapper->m_MapObjPool.insert(std::make_pair("FileAppender", new FileAppender));
+    m_pMapWrapper->m_MapObjPool.insert(std::make_pair("ConsoleAppender", new ConsoleAppender));
 }
 LogFactory* LogFactory::GetInst()
 {

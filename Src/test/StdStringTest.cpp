@@ -11,7 +11,7 @@
 #include "TestCmmHdr.h"
 #include "StdString.h"
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 TEST(StdStringTest, StringLength)
 {

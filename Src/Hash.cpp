@@ -10,6 +10,8 @@
 #include "Hash.h"
 #include "HashImpl.h"
 
+USE_XBASIC_NAMESPACE
+
 Hash::Hash(HashImpl* pImpl)
 : m_pImpl(pImpl)
 {

@@ -6,7 +6,7 @@
  */
 #include "ConsoleAppender.h"
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 ConsoleAppender::ConsoleAppender(void)
 {

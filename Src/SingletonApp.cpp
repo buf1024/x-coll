@@ -17,11 +17,11 @@
 #include <direct.h>
 
 
-#ifdef WINDOWS
+#ifdef MSWINDOWS
 #pragma warning(disable:4996)
 #endif
 
-USE_XBASIC_NAMESPACE;
+USE_XBASIC_NAMESPACE
 
 SingletonApp::SingletonApp(const std::string strName)
 : m_pFile(NullPtr)
@@ -30,7 +30,7 @@ SingletonApp::SingletonApp(const std::string strName)
     if (strFile.empty())
     {
         char szMaxPath[BUF_SIZE] = "";
-#if WINDOWS
+#if MSWINDOWS
         strFile = _getcwd(szMaxPath, BUF_SIZE - 1);
 #else
         strFile = getcwd(szMaxPath, BUF_SIZE - 1);
@@ -53,7 +53,7 @@ SingletonApp::SingletonApp(const std::string strName)
         char szLine[BUF_SIZE] = "";
         unsigned long lPid = 0;
 
-#if WINDOWS
+#if MSWINDOWS
         lPid = GetCurrentProcessId();
         _snprintf(szLine, BUF_SIZE, "%ld", lPid);
 #else
