@@ -71,7 +71,7 @@
 
 #else
 
-//#define XBASICAPI
+#define XBASICAPI
 
 #endif
 

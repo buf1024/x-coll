@@ -1,47 +1,57 @@
-#include "StdAfx.h"
-#include "MD5Test.h"
+#include "TestCmmHdr.h"
+#include "Hash.h"
+#include "HashMD5Impl.h"
 
+#include <stdio.h>
 
+USE_XBASIC_NAMESPACE
 
-
-MD5Test::MD5Test(void)
-: pHash(NULL)
+class MD5Test : public ::testing::Test
 {
-}
+public:
+    void SetUp()
+    {
+        m_pHash = new Hash(new HashMD5Impl);
+        m_strTmpFile = tempnam(".", "MD5Test");
+        FILE* fp = fopen(m_strTmpFile.c_str(), "w+");
+        if (fp)
+        {
+            char* buf = "hello!!";
+            int nLen = strlen(buf);
+            for (int i=0; i<1024; i++)
+            {
+                fwrite(buf, 1, nLen, fp);
+            }
+            fclose(fp);
+        }
+    }
+    void TearDown()
+    {
+        delete m_pHash;
+    }
+protected:
+    std::string m_strTmpFile;
+    Hash* m_pHash;
+};
 
-MD5Test::~MD5Test(void)
+TEST_F(MD5Test, MD5ImplTest)
 {
-}
+    std::string strHash = m_pHash->GetStringHash("abc");
+    ASSERT(true);
 
-void MD5Test::setUp()
-{
-	pHash = new Hash(new HashMD5Impl);
+    strHash = m_pHash->GetStringHash("");
+    ASSERT(true);
+
+    strHash = m_pHash->GetStringHash(L"abc");
+    ASSERT(true);
+
+    strHash = m_pHash->GetStringHash(L"");
+    ASSERT(true);
+
+    strHash = m_pHash->GetFileHash(m_strTmpFile);
+    ASSERT(true);
+
+    strHash = m_pHash->GetFileHash("");
+    ASSERT(true);
 
 }
-void MD5Test::tearDown()
-{
-	if(pHash)
-		delete pHash;
-}
-
-void MD5Test::testString()
-{
-	StdString strValue;
-	strValue = pHash->GetStringHash("ABC");
-	strValue = pHash->GetStringHash(_T("ABC"));
-	strValue = pHash->GetStringHash("");
-}
-void MD5Test::testFile()
-{
-	//Test Existing file
-	StdString strFile(_T("C:\\WINDOWS\\system32\\cmd.exe"));
-	StdString strValue = pHash->GetFileHash(strFile);
-	strFile = _T("Z:\\a.TXT");
-	strValue = pHash->GetFileHash(strFile);
-	//Test Unexisting file
-	strFile = _T("XX.xx");
-	strValue = pHash->GetFileHash(strFile);
-	CPPUNIT_ASSERT(strValue == _T(""));
-}
-
-CPPUNIT_TEST_SUITE_REGISTRATION(MD5Test);

@@ -493,11 +493,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Src\test\CRC32Test.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Src\test\IniConfigTest.cpp"
 				>
 			</File>
 			<File
+				RelativePath="..\Src\test\LoggerTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Src\test\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\test\MD5Test.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\test\SHA1Test.cpp"
 				>
 			</File>
 			<File

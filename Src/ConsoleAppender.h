@@ -16,6 +16,7 @@ class XBASICAPI ConsoleAppender :
 {
 public:
     ConsoleAppender(void);
+    ConsoleAppender(const ConsoleAppender& other);
     virtual ~ConsoleAppender(void);
 
     virtual unsigned int Write(int nLogLevel, const std::string& strMsg);

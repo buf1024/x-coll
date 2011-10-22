@@ -18,7 +18,10 @@
 #pragma comment(lib, "gtest.lib")
 #endif
 
+#pragma warning(disable:4996)
+
 #endif
+
 
 
 #endif /* TESTCMMHDR_H_ */

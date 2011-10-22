@@ -7,27 +7,51 @@
 
 #include "Logger.h"
 #include "Locker.h"
+#include "Config.h"
+#include "IniConfig.h"
+#include "Appender.h"
 #include <stdio.h>
 
+#ifdef MSWINDOWS
+#include "WinCriticalSectionLocer.h"
 #pragma warning(disable:4996)
+#endif
+
 #define MSG_BUF 2048
 
 USE_XBASIC_NAMESPACE
 
-
-Logger* g_pGlobalPrivateLogger = NullPtr;
-
 Logger::Logger()
+: m_strName("Logger")
 {
     m_pListWrapper = new ListWrapper;
     m_eLvl = ALL;
-    m_pLocker = NullPtr;
+#ifdef MSWINDOWS
+    m_pLocker = new WinCriticalSectionLocer;
+#endif
 }
 Logger::~Logger()
 {
     delete m_pListWrapper;
+    delete m_pLocker;
 }
 
+void Logger::Init(const Section* pSec)
+{
+
+}
+void Logger::Init(const Config* pConf)
+{
+
+}
+std::string Logger::GetName() const
+{
+    return m_strName;
+}
+void Logger::SetName(const std::string strName)
+{
+    m_strName = strName;
+}
 void Logger::SetLogLevel(LogLevel eLvl)
 {
     m_eLvl = eLvl;
@@ -53,14 +77,38 @@ Locker* Logger::GetLocker() const
 
 void Logger::AddAppender(Appender* pApp)
 {
-
+    if (pApp)
+    {
+        if (GetAppender(pApp->GetName()) == NullPtr)
+        {
+            m_pListWrapper->m_lstApps.push_back(pApp);
+        }
+    }
 }
-void Logger::RemoveAppender(Appender* pApp)
+void Logger::RemoveAppender(const std::string strAppName)
 {
+
+    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
+        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    {
+        if ((*iter)->GetName() == strAppName)
+        {
+            delete *iter;
+            m_pListWrapper->m_lstApps.erase(iter);
+        }
+    }
 
 }
 Appender* Logger::GetAppender(const std::string strAppName)
 {
+    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
+        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    {
+        if ((*iter)->GetName() == strAppName)
+        {
+            return *iter;
+        }
+    }
     return NullPtr;
 }
 
@@ -140,7 +188,12 @@ void Logger::LogMessageV(LogLevel eLvl, const char* szFormat, va_list va)
 
 void Logger::Log(LogLevel eLvl, const char* szMsg, int nLen)
 {
-
+    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
+        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    {
+        Appender* pApp = *iter;
+        pApp->Write(eLvl, szMsg, nLen);
+    }
 }
 
 void Logger::Init(const char* szConf)

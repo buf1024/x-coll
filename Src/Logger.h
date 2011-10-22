@@ -19,7 +19,8 @@ XBASIC_NAMEPACE_BEGIN
 
 class Locker;
 class Appender;
-
+class Section;
+class Config;
 class XBASICAPI Logger
 {
 public:
@@ -27,6 +28,13 @@ public:
     ~Logger();
 
 public:
+
+    void Init(const Section* pSec);
+    void Init(const Config* pConf);
+
+    std::string GetName() const;
+    void SetName(const std::string strName);
+
     void SetLogLevel(LogLevel eLvl);
     LogLevel GetLogLevel() const;
 
@@ -34,7 +42,7 @@ public:
     Locker* GetLocker() const;
 
     void AddAppender(Appender* pApp);
-    void RemoveAppender(Appender* pApp);
+    void RemoveAppender(const std::string strAppName);
     Appender* GetAppender(const std::string strAppName);
 
 public:
@@ -60,6 +68,8 @@ protected:
         std::list<Appender*> m_lstApps;
     };
     ListWrapper* m_pListWrapper;
+
+    std::string m_strName;
 
 };
 

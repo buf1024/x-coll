@@ -10,8 +10,15 @@ USE_XBASIC_NAMESPACE
 
 ConsoleAppender::ConsoleAppender(void)
 {
+    m_strName = "ConsoleAppender";
 }
-
+ConsoleAppender::ConsoleAppender(const ConsoleAppender& other)
+{
+    if (this != &other)
+    {
+        this->m_strName = other.m_strName;
+    }
+}
 ConsoleAppender::~ConsoleAppender(void)
 {
 }
@@ -22,9 +29,10 @@ unsigned int ConsoleAppender::Write(int nLogLevel, const std::string& strMsg)
 }
 unsigned int ConsoleAppender::Write(int nLogLevel, const char* szMsg, unsigned int nLen)
 {
-    return 0;
+    
+    return printf("%s", szMsg);
 }
 Appender* ConsoleAppender::Clone()
 {
-    return NullPtr;
+    return new ConsoleAppender(*this);
 }

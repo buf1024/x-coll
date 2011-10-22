@@ -9,9 +9,17 @@
 USE_XBASIC_NAMESPACE
 
 FileAppender::FileAppender(void)
-{
-}
 
+{
+    m_strName = "FileAppender";
+}
+FileAppender::FileAppender(const FileAppender& other)
+{
+    if (this != &other)
+    {
+        this->m_strName = other.m_strName;
+    }
+}
 FileAppender::~FileAppender(void)
 {
 }
@@ -27,5 +35,5 @@ unsigned int FileAppender::Write(int nLogLevel, const char* szMsg, unsigned int 
 
 Appender* FileAppender::Clone()
 {
-    return NullPtr;
+    return new FileAppender(*this);
 }

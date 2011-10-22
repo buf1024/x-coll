@@ -9,59 +9,217 @@
 #include "ConsoleAppender.h"
 #include "FileAppender.h"
 #include "IniConfig.h"
+#include "ConfigApp.h"
+#include "Config.h"
+
+#include <io.h>
 
 USE_XBASIC_NAMESPACE
-
-extern Logger* g_pGlobalPrivateLogger;
 
 LogFactory* LogFactory::sm_Inst = NullPtr;
 
 LogFactory::LogFactory(void)
 {
+    m_pGlobalLogger = new Logger;
     m_pMapWrapper = new MapWrapper;
-    InitFactory();
+    InitAppenderPool();
 }
 
 LogFactory::~LogFactory(void)
 {
     delete m_pMapWrapper;
+    delete m_pGlobalLogger;
 }
-Logger* LogFactory::CreateLogger(const char* szConf)
+bool LogFactory::InitLogger(LogDestination enDest, const char* szConf)
 {
-    Logger* pLogger = new Logger;
+    Logger* pLogger = GetGlobalLogger();
 
-    Appender* pApp = NullPtr;
-
-    if(!IsConfOk(szConf)){
-        pApp = new ConsoleAppender;
-        pLogger->AddAppender(pApp);
-    }
-    else
-    {
-        std::string strConf = ToLower(szConf);
-        if (EndsWith(strConf.c_str(), ".xml"))
-        {
-        }
-        else
-        {
-
-        }
-    }
-
-    return pLogger;
-}
-bool LogFactory::IsConfOk(const char* szConf)
-{
-    if (szConf == NullPtr || szConf[0] == '\0')
+    if (pLogger == NullPtr)
     {
         return false;
     }
+
+    bool bRet = false;
+
+    switch(enDest)
+    {
+    case Console:
+        bRet = InitConsoleAppender(pLogger);
+    	break;
+    case File:
+        bRet = InitFileAppender(pLogger, szConf);
+    	break;
+    case StdConf:
+        bRet = InitStdConfAppender(pLogger, szConf);
+        break;
+    default:
+        bRet = InitConsoleAppender(pLogger);
+        break;
+    }
+
+    return bRet;
+}
+bool LogFactory::InitConsoleAppender(Logger* pLogger)
+{
+    Appender* pApp = GetAppender("ConsoleAppender");
+    if (pApp)
+    {
+        pLogger->AddAppender(pApp);
+        return true;
+    }
+    return false;
+}
+bool LogFactory::InitFileAppender(Logger* pLogger, const char* szFile)
+{
+    Appender* pApp = GetAppender("FileAppender");
+    if (pApp)
+    {
+        if (IsFileExists(szFile))
+        {
+            pApp->Init(szFile);
+            pLogger->AddAppender(pApp);
+            return true;
+        }      
+    }
+    return false;
+}
+bool LogFactory::InitStdConfAppender(Logger* pLogger, const char* szConf)
+{
+    if (IsFileExists(szConf))
+    {
+        std::string strConf = ToLower(szConf);
+        ConfigApp* pXMLConf = NullPtr;
+        IniConfig* pIniConf = NullPtr;
+        if (EndsWith(strConf, ".xml"))
+        {
+            pXMLConf = new ConfigApp;
+            pXMLConf->Load(strConf);
+        }
+        else
+        {
+            pIniConf = new IniConfig;
+            pIniConf->Load(strConf);
+        }
+        Appender* pApp = NullPtr;
+        if (pXMLConf)
+        {
+            for(ConfigApp::Iterator iter = pXMLConf->begin();
+                iter != pXMLConf->end(); ++iter)
+            {
+                std::string strName = iter->first;
+                if (strName == m_pGlobalLogger->GetName())
+                {
+                    m_pGlobalLogger->Init(iter->second);
+                }
+                else
+                {
+                    pApp = GetAppender(strName);
+                    if (pApp)
+                    {
+                        pApp->Init(iter->second);
+                        pLogger->AddAppender(pApp);
+                    }
+                }
+                
+            }
+
+            delete pXMLConf;
+        }
+        if (pIniConf)
+        {
+            for(IniConfig::Iterator iter = pIniConf->begin();
+                iter != pIniConf->end(); ++iter)
+            {
+                Section* pSec = *iter;
+                std::string strName = pSec->GetSectionName();
+                if (strName == m_pGlobalLogger->GetName())
+                {
+                    m_pGlobalLogger->Init(pSec);
+                }
+                else
+                {
+                    pApp = GetAppender(strName);
+                    if (pApp)
+                    {
+                        pApp->Init(pSec);
+                        pLogger->AddAppender(pApp);
+                    }
+                }
+                
+            }
+            delete pIniConf;
+        }
+    }
     return true;
 }
-void LogFactory::InitFactory()
+bool LogFactory::IsFileExists(const char* szFile)
 {
-    m_pMapWrapper->m_MapObjPool.insert(std::make_pair("FileAppender", new FileAppender));
-    m_pMapWrapper->m_MapObjPool.insert(std::make_pair("ConsoleAppender", new ConsoleAppender));
+    if (szFile == NullPtr || szFile[0] == '\0')
+    {
+        return false;
+    }
+    int nRet = -1;
+#ifdef MSWINDOWS
+    nRet = _access(szFile, 04); //Read
+#else
+    nRet = access(szFile, 04); //Read
+#endif
+    return nRet == 0;
+}
+bool LogFactory::RegisterAppender(Appender* pApp)
+{
+    if (pApp)
+    {
+        std::string strName = pApp->GetName();
+        AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
+        if (iter == m_pMapWrapper->m_MapObjPool.end())
+        {
+            m_pMapWrapper->m_MapObjPool.insert(std::make_pair(strName, pApp));
+        }
+        return true;
+    }
+    return false;
+}
+
+void LogFactory::UnRegisterAppender(std::string strName)
+{
+    AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
+    if (iter != m_pMapWrapper->m_MapObjPool.end())
+    {
+        delete iter->second;
+        m_pMapWrapper->m_MapObjPool.erase(iter);
+    }
+
+}
+Appender* LogFactory::GetAppender(std::string strName) const
+{
+    AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
+    if (iter == m_pMapWrapper->m_MapObjPool.end())
+    {
+        return NullPtr;
+    }
+    return iter->second->Clone();
+}
+
+Logger* LogFactory::GetGlobalLogger() const
+{
+    return m_pGlobalLogger;
+}
+
+void LogFactory::SetGlobalLogger(Logger* pLogger)
+{
+    if (m_pGlobalLogger != NullPtr)
+    {
+        delete m_pGlobalLogger;
+    }
+    m_pGlobalLogger = pLogger;
+}
+
+void LogFactory::InitAppenderPool()
+{
+    RegisterAppender(new FileAppender);
+    RegisterAppender(new ConsoleAppender);
+
 }
 LogFactory* LogFactory::GetInst()
 {
@@ -79,14 +237,10 @@ void LogFactory::ReleaseRC()
     }
 }
 
-LogWrapper::LogWrapper(const char* szConf)
+LogWrapper::LogWrapper(LogDestination enDest, const char* szConf)
 {
-    if (g_pGlobalPrivateLogger = NullPtr)
-    {
-        delete g_pGlobalPrivateLogger;
-    }
     LogFactory* pFactory = LogFactory::GetInst();
-    g_pGlobalPrivateLogger = pFactory->CreateLogger(szConf);
+    pFactory->InitLogger(enDest, szConf);
 }
 LogWrapper::~LogWrapper()
 {

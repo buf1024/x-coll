@@ -30,6 +30,8 @@ class XBASICAPI ConfigApp
 {
     typedef std::map<std::string, Config*>::iterator ConfigAppIter;
 public:
+    typedef std::map<std::string, Config*>::const_iterator Iterator;
+public:
     ConfigApp(void);
     ~ConfigApp(void);
 public:
@@ -45,6 +47,16 @@ public:
 
     void SetStandalone(std::string strStandalone);
     const std::string GetStandalone() const;    
+
+public:
+    Iterator begin() const
+    {
+        return _mapWrapper->_mapConfigAppOpt.begin();
+    }
+    Iterator end() const
+    {
+        return _mapWrapper->_mapConfigAppOpt.end();
+    }
 
 private:
     std::string GetStringFromLong(long dwValue);
