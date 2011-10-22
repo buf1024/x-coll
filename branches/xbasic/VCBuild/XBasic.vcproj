@@ -518,14 +518,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\FileService.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\FileService.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\Hash.cpp"
 			>
 		</File>

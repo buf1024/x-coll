@@ -24,11 +24,11 @@ FileAppender::~FileAppender(void)
 {
 }
 
-unsigned int FileAppender::Write(int nLogLevel, const std::string& strMsg)
+unsigned int FileAppender::Write(LogLevel eLogLevel, const std::string& strMsg)
 {
     return 0;
 }
-unsigned int FileAppender::Write(int nLogLevel, const char* szMsg, unsigned int nLen)
+unsigned int FileAppender::Write(LogLevel eLogLevel, const char* szMsg, int nLen)
 {
     return 0;
 }

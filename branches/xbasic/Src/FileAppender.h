@@ -19,8 +19,8 @@ public:
     FileAppender(const FileAppender& other);
     virtual ~FileAppender(void);
 
-    virtual unsigned int Write(int nLogLevel, const std::string& strMsg);
-    virtual unsigned int Write(int nLogLevel, const char* szMsg, unsigned int nLen = -1);
+    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg);
+    virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1);
     virtual Appender* Clone();
 };
 
