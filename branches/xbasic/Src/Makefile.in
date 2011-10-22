@@ -52,8 +52,8 @@ depend:$(XBASIC_SRC)
 install:$(XBASIC_LIB) $(XBASIC_STATIC)
 	rm -f @prefix@/lib/$(XBASIC_LIB);\
 	rm -f @prefix@/lib/$(XBASIC_STATIC);\
-	cp -f $(XBASIC_LIB) @prefix@/lib/libr5base2.$(LIB_SUFFIX);\
-	cp -f $(XBASIC_STATIC) @prefix@/lib/libr5base2_static.a;
+	cp -f $(XBASIC_LIB) @prefix@/lib/$(XBASIC_LIB);\
+	cp -f $(XBASIC_STATIC) @prefix@/lib/$(XBASIC_STATIC);
 	
 	
 	
