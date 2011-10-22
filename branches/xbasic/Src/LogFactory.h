@@ -17,24 +17,43 @@ XBASIC_NAMEPACE_BEGIN
 class Logger;
 class Appender;
 
+enum LogDestination{
+    Console,
+    File,
+    StdConf
+};
+
 class XBASICAPI LogFactory
 {
+public:
+    typedef std::map<std::string, Appender*>::iterator AppPoolIterator;
 private:
     LogFactory(void);
 
 public:
     ~LogFactory(void);
 
-    Logger* CreateLogger(const char* szConf);
-    bool IsConfOk(const char* szConf);
+    bool InitLogger(LogDestination enDest, const char* szConf = NullPtr);
+    bool IsFileExists(const char* szFile);
+
+    bool RegisterAppender(Appender* pApp);
+    void UnRegisterAppender(std::string strName);
+    Appender* GetAppender(std::string strName) const;
+
+    Logger* GetGlobalLogger() const;
+    void SetGlobalLogger(Logger* pLogger);
 
 public:
     static LogFactory* GetInst();
     static void ReleaseRC();
 
 private:
-    void InitFactory();
+    void InitAppenderPool();
+    bool InitConsoleAppender(Logger* pLogger);
+    bool InitFileAppender(Logger* pLogger, const char* szFile);
+    bool InitStdConfAppender(Logger* pLogger, const char* szConf);
 private:
+    Logger* m_pGlobalLogger;
     static LogFactory* sm_Inst;
     typedef struct MapWrapper
     {
@@ -43,11 +62,13 @@ private:
     MapWrapper* m_pMapWrapper;
 };
 
+
+
 //Internal use only
-class LogWrapper
+class XBASICAPI LogWrapper
 {
 public:
-    LogWrapper(const char* szConf);
+    LogWrapper(LogDestination enDest, const char* szConf = NullPtr);
     ~LogWrapper();
 };
 

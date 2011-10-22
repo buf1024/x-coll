@@ -16,6 +16,7 @@ class XBASICAPI FileAppender :
 {
 public:
     FileAppender(void);
+    FileAppender(const FileAppender& other);
     virtual ~FileAppender(void);
 
     virtual unsigned int Write(int nLogLevel, const std::string& strMsg);

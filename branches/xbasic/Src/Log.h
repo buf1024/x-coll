@@ -10,60 +10,101 @@
 
 #include "LogLevel.h"
 #include "LogFactory.h"
+#include "Logger.h"
 
-extern Logger* g_pGlobalPrivateLogger;
+XBASIC_NAMEPACE_BEGIN
 
 #define LOG_DEBUG(...)                                                        \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->LogMessage(DEBUG, __VA_ARGS__);                   \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->LogMessage(DEBUG, __VA_ARGS__);                                  \
 }                                                                             \
+
 
 #define LOG_INFO(...)                                                         \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->LogMessage(INFO, __VA_ARGS__);                    \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->LogMessage(INFO, __VA_ARGS__);                                   \
 }                                                                             \
+
 
 #define LOG_WARN(...)                                                         \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->LogMessage(WARN, __VA_ARGS__);                    \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->LogMessage(WARN, __VA_ARGS__);                                   \
 }                                                                             \
+
 
 #define LOG_ERROR(...)                                                        \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->LogMessage(ERR, __VA_ARGS__);                     \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->LogMessage(ERR, __VA_ARGS__);                                  \
 }                                                                             \
+
 
 #define LOG_FATAL(...)                                                        \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->LogMessage(FATAL, __VA_ARGS__);                   \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->LogMessage(FATAL, __VA_ARGS__);                                  \
 }                                                                             \
+
 
 #define SET_LOG_LEVEL(level)                                                  \
 {                                                                             \
-    ASSERT(g_pGlobalPrivateLogger != NullPtr);                                \
-    g_pGlobalPrivateLogger->SetLogLevel(level);                               \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    Logger* pLogger = pFactory->GetGlobalLogger();                            \
+    ASSERT(pLogger != NullPtr);                                               \
+    pLogger->->SetLogLevel(level);                                            \
 }                                                                             \
+
 
 #define SET_LOGGER(pLog)                                                      \
 {                                                                             \
-    ASSERT(pLog != NullPtr);                                                  \
-    if (g_pGlobalPrivateLogger != NullPtr)                                    \
-    {                                                                         \
-        delete g_pGlobalPrivateLogger;                                        \
-        g_pGlobalPrivateLogger = NullPtr;                                     \
-    }                                                                         \
-    g_pGlobalPrivateLogger = pLog;                                            \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    pFactory->SetGlobalLogger(pLog);                                          \
 }                                                                             \
 
-#define INIT_STD_LOG(szFile)                                                  \
-    LogWrapper* g_pGlobalPriviteLogWraper = new LogWrapper(szFile);           \
+
+inline Logger* GET_LOGGER()                                                   \
+{                                                                             \
+    LogFactory* pFactory = LogFactory::GetInst();                             \
+    ASSERT(pFactory != NullPtr);                                              \
+    return pFactory->GetGlobalLogger();                                       \
+} 
+
+
+#define INIT_STD_LOG(szConfFile)                                              \
+    LogWrapper* g_pGlobalPriviteSTDLogWraper =                                \
+                    new LogWrapper(StdConf, szConfFile);                      \
+
 
 #define INIT_CONSOLE_LOG()                                                    \
-    LogWrapper* g_pGlobalPriviteLogWraper = new LogWrapper(NullPtr);          \
+    LogWrapper* g_pGlobalPriviteConsoleLogWraper =                            \
+                    new LogWrapper(Console);                                  \
+
+
+#define INIT_FILE_LOG(szFile)                                                 \
+    LogWrapper* g_pGlobalPriviteFileLogWraper =                               \
+                    new LogWrapper(File, szFile);                             \
+
+
+XBASIC_NAMESPACE_END
 
 #endif /* LOG_H_ */
