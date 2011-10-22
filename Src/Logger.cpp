@@ -11,6 +11,8 @@
 #include "IniConfig.h"
 #include "Appender.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
 
 #ifdef MSWINDOWS
 #include "WinCriticalSectionLocer.h"
@@ -165,22 +167,27 @@ void Logger::LogMessageV(LogLevel eLvl, const char* szFormat, va_list va)
     ASSERT(m_pLocker != NullPtr);
     m_pLocker->Lock();
 
-    char szMsg[MSG_BUF] = {0};
-    int nLen = -1;
-    do 
+    size_t size = sizeof(char)*MSG_BUF;
+    char* szMsg = (char*)malloc(size);
+    if(szMsg)
     {
-        nLen = vsnprintf(szMsg, MSG_BUF, szFormat, va);
-        if (nLen == -1)
+        int nLen = -1;
+        while(nLen < 0)
         {
-            Log(eLvl, szMsg, MSG_BUF);
+            nLen = vsnprintf(szMsg, size, szFormat, va);
+            if (nLen < 0)
+            {
+                size += sizeof(char)*MSG_BUF;
+                szMsg = (char*)realloc(szMsg, size);
+            }
+            else
+            {
+                Log(eLvl, szMsg);
+            }
         }
-        else
-        {
-            Log(eLvl, szMsg);
-        }
-
-    } while(nLen == -1);
-
+        free(szMsg);
+    }
+    
 
 
     m_pLocker->Unlock();

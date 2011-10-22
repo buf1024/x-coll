@@ -10,7 +10,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "FileService.h"
-/*
+
 
 #include <Shlwapi.h>
 
@@ -284,4 +284,3 @@ BOOL CreateDirs (LPCTSTR lpFileName)
     }
     return CreateDirectoryNested (lpNameCopy);
 }
-*/

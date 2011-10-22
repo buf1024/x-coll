@@ -10,6 +10,7 @@
 #define APPENDER_H_
 
 #include "XBasicCore.h"
+#include "LogLevel.h"
 #include "StdString.h"
 
 XBASIC_NAMEPACE_BEGIN
@@ -22,8 +23,8 @@ public:
     virtual void Init(const char* szConf){}
     virtual void Init(const Section* pSec){}
     virtual void Init(const Config* pConf){}
-    virtual unsigned int Write(int nLogLevel, const std::string& strMsg) = 0;
-    virtual unsigned int Write(int nLogLevel, const char* szMsg, unsigned int nLen = -1) = 0;
+    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg) = 0;
+    virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1) = 0;
     virtual Appender* Clone() = 0;
 
     std::string GetName() const

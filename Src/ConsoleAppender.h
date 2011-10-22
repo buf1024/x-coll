@@ -19,9 +19,16 @@ public:
     ConsoleAppender(const ConsoleAppender& other);
     virtual ~ConsoleAppender(void);
 
-    virtual unsigned int Write(int nLogLevel, const std::string& strMsg);
-    virtual unsigned int Write(int nLogLevel, const char* szMsg, unsigned int nLen = -1);
+    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg);
+    virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1);
     virtual Appender* Clone();
+
+    void SetConsoleColor(LogLevel eLogLevel);
+
+private:
+#ifdef MSWINDOWS
+    HANDLE m_hStdOut;
+#endif
 };
 
 XBASIC_NAMESPACE_END
