@@ -20,12 +20,29 @@ class Config;
 class XBASICAPI Appender
 {
 public:
+    Appender()
+        : m_strName("Appender")
+    {
+    }
+    virtual ~Appender()
+    {
+
+    }
+public:
     virtual void Init(const char* szConf){}
-    virtual void Init(const Section* pSec){}
-    virtual void Init(const Config* pConf){}
-    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg) = 0;
+    virtual void Init(Section* pSec){}
+    virtual void Init(Config* pConf){}
+    unsigned int Write(LogLevel eLogLevel, const std::string& strMsg)
+    {
+        return Write(eLogLevel, strMsg.c_str(), strMsg.length());
+    }
     virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1) = 0;
     virtual Appender* Clone() = 0;
+    
+    virtual bool IsAppenderOK()
+    {
+        return false;
+    }
 
     std::string GetName() const
     {

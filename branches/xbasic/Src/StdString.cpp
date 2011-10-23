@@ -9,10 +9,6 @@
 #include <algorithm>
 #include <stdlib.h>
 
-#ifdef MSWINDOWS
-#pragma warning(disable:4996)
-#endif
-
 XBASIC_NAMEPACE_BEGIN
 
 
@@ -636,7 +632,7 @@ XBASICAPI std::string Replace(const std::string& strVal, const std::string strOl
 
 XBASICAPI std::string FromNumber(long lVal)
 {
-    char szTmp[8] = "";
+    char szTmp[32] = "";
 
 #ifdef MSWINDOWS
     if(lVal < 0){
@@ -661,7 +657,22 @@ XBASICAPI std::string FromNumber(int nVal)
 
 XBASICAPI std::string FromNumber(double fVal)
 {
-    return std::string("");
+    char szTmp[32] = "";
+
+#ifdef MSWINDOWS
+    if(fVal < 0){
+        _snprintf(szTmp, sizeof(szTmp), "-%lf", -fVal);
+    }else{
+        _snprintf(szTmp, sizeof(szTmp), "%lf", fVal);
+    }
+#else
+    if(fVal < 0){
+        snprintf(szTmp, sizeof(szTmp), "-%lf", -fVal);
+    }else{
+        snprintf(szTmp, sizeof(szTmp), "%lf", fVal);
+    }
+#endif
+    return szTmp;
 }
 
 XBASICAPI long ToLong(const char* szStrVal, int nBase, bool& bStat)

@@ -10,7 +10,6 @@
 #include "FileAppender.h"
 #include "IniConfig.h"
 #include "ConfigApp.h"
-#include "Config.h"
 
 #include <io.h>
 

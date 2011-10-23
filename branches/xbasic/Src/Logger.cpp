@@ -7,16 +7,16 @@
 
 #include "Logger.h"
 #include "Locker.h"
-#include "Config.h"
 #include "IniConfig.h"
 #include "Appender.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <map>
+#include <time.h>
 
 #ifdef MSWINDOWS
 #include "WinCriticalSectionLocer.h"
-#pragma warning(disable:4996)
 #endif
 
 #define MSG_BUF 2048
@@ -167,6 +167,9 @@ void Logger::LogMessageV(LogLevel eLvl, const char* szFormat, va_list va)
     ASSERT(m_pLocker != NullPtr);
     m_pLocker->Lock();
 
+    std::string strHeader = GetLogHeader(eLvl);
+    Log(eLvl, strHeader.c_str());
+
     size_t size = sizeof(char)*MSG_BUF;
     char* szMsg = (char*)malloc(size);
     if(szMsg)
@@ -199,11 +202,56 @@ void Logger::Log(LogLevel eLvl, const char* szMsg, int nLen)
         iter != m_pListWrapper->m_lstApps.end(); ++iter)
     {
         Appender* pApp = *iter;
-        pApp->Write(eLvl, szMsg, nLen);
+        if (pApp->IsAppenderOK())
+        {
+            pApp->Write(eLvl, szMsg, nLen);
+        }        
     }
 }
 
 void Logger::Init(const char* szConf)
 {
 
+}
+
+std::string Logger::GetLogHeader(LogLevel eLvl)
+{
+    std::string strRet;
+    switch(eLvl)
+    {
+    case DEBUG:
+        strRet += "[D]";
+        break;
+    case INFO:
+        strRet += "[I]";
+        break;
+    case WARN:
+        strRet += "[W]";
+        break;
+    case ERR:
+        strRet += "[E]";
+        break;
+    case FATAL:
+        strRet += "[F]";
+        break;
+    default:
+        break;
+    }
+    strRet += "[";
+    strRet += GetCurTime();
+    strRet += "] ";
+    return strRet;
+}
+
+std::string Logger::GetCurTime()
+{
+    char szBuf[BUF_SIZE] = "";
+    struct tm* psTime;
+    time_t t = time(0);
+    psTime = localtime(&t);
+
+    //yyyy-mm-dd HH:MM:SS-MISS
+    strftime(szBuf, BUF_SIZE, "%Y-%m-%d %H:%M:%S", psTime);
+
+    return szBuf;
 }

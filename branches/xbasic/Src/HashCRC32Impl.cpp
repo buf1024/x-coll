@@ -6,9 +6,6 @@
  */
 #include "HashCRC32Impl.h"
 
-#ifdef MSWINDOWS
-#pragma warning(disable:4996)
-#endif
 
 USE_XBASIC_NAMESPACE
 

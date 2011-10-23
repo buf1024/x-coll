@@ -482,14 +482,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\Config.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Config.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\ConfigApp.cpp"
 			>
 		</File>

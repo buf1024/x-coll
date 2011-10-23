@@ -15,6 +15,10 @@
 #include <Windows.h>
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(disable:4996)
+#endif
+
 #define USING_NAMESPACE
 
 // 是否使用命名空间
@@ -82,5 +86,7 @@
 
 #define MIN(a, b)           ((a)>(b)?(b):(a))
 #define MAX(a, b)           ((a)>(b)?(a):(b))
+
+#define UnRefParam(param)   ((void)(param))
 
 #endif /* XBASICCORE_H_ */

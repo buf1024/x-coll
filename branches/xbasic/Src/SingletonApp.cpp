@@ -17,10 +17,6 @@
 #include <direct.h>
 
 
-#ifdef MSWINDOWS
-#pragma warning(disable:4996)
-#endif
-
 USE_XBASIC_NAMESPACE
 
 SingletonApp::SingletonApp(const std::string strName)

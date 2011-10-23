@@ -2,7 +2,6 @@
 //
 
 #include "TestCmmHdr.h"
-#include "Config.h"
 #include "ConfigApp.h"
 
 #include <stdio.h>
