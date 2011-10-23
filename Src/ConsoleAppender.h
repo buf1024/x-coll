@@ -19,9 +19,9 @@ public:
     ConsoleAppender(const ConsoleAppender& other);
     virtual ~ConsoleAppender(void);
 
-    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg);
     virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1);
     virtual Appender* Clone();
+    virtual bool IsAppenderOK();
 
     void SetConsoleColor(LogLevel eLogLevel);
 

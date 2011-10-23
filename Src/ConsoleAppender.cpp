@@ -33,10 +33,6 @@ ConsoleAppender::~ConsoleAppender(void)
 #endif
 }
 
-unsigned int ConsoleAppender::Write(LogLevel eLogLevel, const std::string& strMsg)
-{
-    return Write(eLogLevel, strMsg.c_str(), strMsg.length());
-}
 unsigned int ConsoleAppender::Write(LogLevel eLogLevel, const char* szMsg, int nLen)
 {
     unsigned int uRet = 0;
@@ -117,4 +113,9 @@ void ConsoleAppender::SetConsoleColor(LogLevel eLogLevel)
 Appender* ConsoleAppender::Clone()
 {
     return new ConsoleAppender(*this);
+}
+
+bool ConsoleAppender::IsAppenderOK()
+{
+    return true;
 }

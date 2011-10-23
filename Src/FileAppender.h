@@ -19,9 +19,24 @@ public:
     FileAppender(const FileAppender& other);
     virtual ~FileAppender(void);
 
-    virtual unsigned int Write(LogLevel eLogLevel, const std::string& strMsg);
     virtual unsigned int Write(LogLevel eLogLevel, const char* szMsg, int nLen = -1);
     virtual Appender* Clone();
+    virtual bool IsAppenderOK();
+
+    virtual void Init(const char* szConf);
+    virtual void Init(Section* pSec);
+    virtual void Init(Config* pConf);
+
+    void SetFile(std::string strPath, std::string strMode);
+
+    std::string GetPath() const;
+    std::string GetMode() const;
+
+private:
+    std::string m_strPath;
+    std::string m_strMode;
+    FILE* m_pFile;
+
 };
 
 XBASIC_NAMESPACE_END

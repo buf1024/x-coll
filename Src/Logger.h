@@ -59,6 +59,9 @@ protected:
     void Log(LogLevel eLvl, const char* szMsg, int nLen = -1);
     void Init(const char* szConf);
 
+    std::string GetLogHeader(LogLevel eLvl);
+    std::string GetCurTime();
+
 protected:
     Locker* m_pLocker;
     LogLevel m_eLvl;

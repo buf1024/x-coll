@@ -9,10 +9,6 @@
 
 #include <stdio.h>
 
-#ifdef MSWINDOWS
-#pragma warning(disable:4996)
-#endif
-
 USE_XBASIC_NAMESPACE
 
 Section::Section(std::string strSectionName /* = "" */)

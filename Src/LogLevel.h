@@ -25,6 +25,7 @@ enum LogLevel
     OFF     = 600
 };
 
+
 XBASIC_NAMESPACE_END
 
 #endif /* LOGLEVEL_H_ */
