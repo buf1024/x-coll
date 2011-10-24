@@ -1,8 +1,8 @@
-ï»¿/*
+/*
  * File       : Hash.h
- * Description: è®¡ç®—Hashå€¼çš„æ¥å£
+ * Description: ¼ÆËãHashÖµµÄ½Ó¿Ú
  * Version    : 2010-11-9 1.0 Created
- *              2011-9 24 1.1 å¤šæ“ä½œç³»ç»Ÿæ”¯æŒ
+ *              2011-9 24 1.1 ¶à²Ù×÷ÏµÍ³Ö§³Ö
  * Author     : buf1024@gmail.com
  */
 #ifndef HASH_H_
@@ -15,43 +15,43 @@ XBASIC_NAMEPACE_BEGIN
 
 class HashImpl;
 /**
- * è®¡ç®—Hashå€¼çš„æ¥å£
+ * ¼ÆËãHashÖµµÄ½Ó¿Ú
  */
 
 class XBASICAPI Hash
 {
 public:
    /**
-     * æ„é€ å‡½æ•°ï¼Œè¦æä¾›æŸç§HASHçš„å®ç°
-     * @param pImpl æŸç§HASHçš„å®ç°
+     * ¹¹Ôìº¯Êı£¬ÒªÌá¹©Ä³ÖÖHASHµÄÊµÏÖ
+     * @param pImpl Ä³ÖÖHASHµÄÊµÏÖ
      */
 
     Hash(HashImpl* pImpl);
     ~Hash();
 public:
     /**
-     * è®¡ç®— ASCII å½¢å¼çš„å­—ç¬¦ä¸²HASHå€¼
-     * @param strValue è¦è®¡ç®—çš„å­—ç¬¦ä¸²
-     * @return HASHå€¼
+     * ¼ÆËã ASCII ĞÎÊ½µÄ×Ö·û´®HASHÖµ
+     * @param strValue Òª¼ÆËãµÄ×Ö·û´®
+     * @return HASHÖµ
      */
 
     std::string GetStringHash(std::string strValue);
     /**
-     * è®¡ç®—å®½å­—ç¬¦å½¢å¼çš„å­—ç¬¦ä¸²HASHå€¼e
-     * @param strValue è¦è®¡ç®—çš„å­—ç¬¦ä¸²
-     * @return HASHå€¼
+     * ¼ÆËã¿í×Ö·ûĞÎÊ½µÄ×Ö·û´®HASHÖµe
+     * @param strValue Òª¼ÆËãµÄ×Ö·û´®
+     * @return HASHÖµ
      */
 
     std::string GetStringHash(std::wstring strValue);
     /**
-     * è®¡ç®—æ–‡ä»¶çš„HASHå€¼
-     * @param strFile æ–‡ä»¶çš„è·¯å¾„
-     * @return HASHå€¼, å¦‚æœæ–‡ä»¶ä¸å­˜åœ¨æˆ–è€…å‡ºé”™åˆ™è¿”å›ç©ºå­—ç¬¦ä¸²
+     * ¼ÆËãÎÄ¼şµÄHASHÖµ
+     * @param strFile ÎÄ¼şµÄÂ·¾¶
+     * @return HASHÖµ, Èç¹ûÎÄ¼ş²»´æÔÚ»òÕß³ö´íÔò·µ»Ø¿Õ×Ö·û´®
      */
 
     std::string GetFileHash(std::string strFile);
 private:
-    HashImpl* m_pImpl; /*< å…·ä½“çš„å®ç°*/
+    HashImpl* m_pImpl; /*< ¾ßÌåµÄÊµÏÖ*/
 
 };
 
@@ -60,3 +60,5 @@ XBASIC_NAMESPACE_END
 
 
 #endif /* HASH_H_ */
+
+

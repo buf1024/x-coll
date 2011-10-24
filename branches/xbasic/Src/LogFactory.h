@@ -75,3 +75,4 @@ public:
 XBASIC_NAMESPACE_END
 
 #endif /* LOGFACTORY_H_ */
+

@@ -29,44 +29,32 @@ LIB_LDFLAGS=@LIB_LDFLAGS@
 ###################################################################################
 #write your own rules here                                                        #
 ###################################################################################
-XBASIC_LIB=libxbasic.so 
-XBASIC_STATIC=libxbasic_stat.a
-XBASIC_OBJ=ConfigApp.o ConsoleAppender.o FileAppender.o \
-        Hash.o HashCRC32Impl.o HashMD5Impl.o HashSHA1Impl.o \
-        IniConfig.o LogFactory.o Logger.o NIXMutexLocker.o \
-        SingletonApp.o StdString.o \
-        ../3rd/hash/md5.o ../3rd/hash/sha1.o \
-        ../3rd/tinyxml/tinystr.o ../3rd/tinyxml/tinyxml.o \
-        ../3rd/tinyxml/tinyxmlerror.o ../3rd/tinyxml/tinyxmlparser.o \
+XBASICTEST=xbasictest
+XBASICTEST_OBJ=ConfigTest.o CRC32Test.o IniConfigTest.o \
+        LoggerTest.o MD5Test.o SHA1Test.o StdStringTest.o \
+        main.o \
         
-XBASIC_SRC=$(XBASIC_OBJ:.o=.cpp)
+XBASICTEST_SRC=$(XBASIC_OBJ:.o=.cpp)
 
-EXT_CPPFLAGS = -I../3rd/hash -I../3rd/tinyxml
-EXT_LDFLAGS = -lpthread
+EXT_CPPFLAGS = -I@prefix@/3rd/hash -I@prefix@/3rd/tinyxml \
+        -I@prefix@/Src -I@prefix@/3rd/gtest-1.6.0/include
+EXT_LDFLAGS = -L@prefix@/Lib -lxbasic_stat -lgtest -lpthread
 
-all: depend $(XBASIC_LIB) $(XBASIC_STATIC)
+all: depend $(XBASICTEST)
 
-$(XBASIC_LIB):depend $(XBASIC_OBJ)
-	$(CXXCOMPILE) $(EXT_LDFLAGS) $(LIB_LDFLAGS) -o $@ $(XBASIC_OBJ)
-
-$(XBASIC_STATIC):depend $(XBASIC_OBJ)
-	$(AR) $(ARFLAGS) $@ $(XBASIC_OBJ)
+$(XBASICTEST):depend $(XBASICTEST_OBJ)
+	$(CXXCOMPILE) -o $@ $(XBASICTEST_OBJ) $(EXT_LDFLAGS)
 
 depend:$(XBASIC_SRC)
-	makedepend  $(DEFAULT_INCLUDES) $(INCLUDES) $(EXT_CPPFLAGS) $(XBASIC_SRC)  2>/dev/null
+	makedepend  $(DEFAULT_INCLUDES) $(INCLUDES) $(EXT_CPPFLAGS) $(XBASICTEST_SRC)  2>/dev/null
 
-install:$(XBASIC_LIB) $(XBASIC_STATIC)
-	rm -f @prefix@/Lib/$(XBASIC_LIB);\
-	rm -f @prefix@/Lib/$(XBASIC_STATIC);\
-	cp -f $(XBASIC_LIB) @prefix@/Lib/$(XBASIC_LIB);\
-	cp -f $(XBASIC_STATIC) @prefix@/Lib/$(XBASIC_STATIC);
-	
-	
+install:$(XBASICTEST)
+	rm -f @prefix@/Bin/$(XBASICTEST);\
+	cp -f $(XBASICTEST) @prefix@/Bin/$(XBASICTEST);
 	
 clean:
 	rm -f *.o
-	rm -f $(XBASIC_LIB)
-	rm -f $(XBASIC_STATIC)
+	rm -f $(XBASICTEST)
 
 include @prefix@/rule.mk
 

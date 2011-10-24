@@ -40,10 +40,10 @@ public:
     Config(std::string strName);
     ~Config(void);
 public:
-    bool GetBool(std::string strName, bool bDef = false);
-    std::string GetString(std::string strName, std::string strDef = "");
-    long GetDoubleWorld(std::string strName, long lDef = 0L);
-    double GetDouble(std::string strName, double fDef = 0.0);
+    bool GetBool(std::string strName, bool& bRet, bool bDef = false);
+    bool GetString(std::string strName, std::string& strRet, std::string strDef = "");
+    bool GetDoubleWorld(std::string strName, long& lRet, long lDef = 0L);
+    bool GetDouble(std::string strName, double& fRet, double fDef = 0.0);
 
     void AddBoolValue(std::string strName, bool bValue);
     void AddStringValue(std::string strName, std::string strValue);

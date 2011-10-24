@@ -582,6 +582,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\NIXMutexLocker.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\NIXMutexLocker.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\resource.h"
 			>
 		</File>
