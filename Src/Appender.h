@@ -55,3 +55,4 @@ protected:
 XBASIC_NAMESPACE_END
 
 #endif /* APPENDER_H_ */
+

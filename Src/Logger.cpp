@@ -17,6 +17,8 @@
 
 #ifdef MSWINDOWS
 #include "WinCriticalSectionLocer.h"
+#else
+#include "NIXMutexLocker.h"
 #endif
 
 #define MSG_BUF 2048
@@ -30,6 +32,8 @@ Logger::Logger()
     m_eLvl = ALL;
 #ifdef MSWINDOWS
     m_pLocker = new WinCriticalSectionLocer;
+#else
+    m_pLocker = new NIXMutexLocker;
 #endif
 }
 Logger::~Logger()

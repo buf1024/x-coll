@@ -14,8 +14,10 @@
  */
 
 #include "SingletonApp.h"
-#include <direct.h>
 
+#ifdef MSWINDOWS
+#include <direct.h>
+#endif
 
 USE_XBASIC_NAMESPACE
 

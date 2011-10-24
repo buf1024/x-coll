@@ -33,7 +33,7 @@ std::string HashSHA1Impl::GetStringHash(std::string strValue)
 	_snprintf_s(szRes, 48, 48, "%x%x%x%x%x",
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 #else
-    snprintf(szRes, 48, 48, "%x%x%x%x%x",
+    snprintf(szRes, 48, "%x%x%x%x%x",
         digest[0], digest[1], digest[2], digest[3], digest[4]);
 #endif
 	return szRes;
@@ -51,7 +51,7 @@ std::string HashSHA1Impl::GetStringHash(std::wstring strValue)
 	_snprintf_s(szRes, 48, 48, "%x%x%x%x%x",
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 #else
-    snprintf(szRes, 48, 48, "%x%x%x%x%x",
+    snprintf(szRes, 48, "%x%x%x%x%x",
         digest[0], digest[1], digest[2], digest[3], digest[4]);
 #endif
 	return szRes;

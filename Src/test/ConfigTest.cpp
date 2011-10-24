@@ -79,12 +79,16 @@ TEST_F(ConfigAppTest, ConfigApp)
 
     Config* pConf = pApp->GetConfig("ConfigA");
     ASSERT(pConf != NullPtr);
-    bRet = pConf->GetBool("bool001");
-    ASSERT(bRet == false);
-    bRet = pConf->GetBool("bool002");
+    bool bVal;
+    bRet = pConf->GetBool("bool001", bVal);
     ASSERT(bRet == true);
-    bRet = pConf->GetBool("bool003");
-    ASSERT(bRet == false);
+    ASSERT(bVal == false);
+    bRet = pConf->GetBool("bool002", bVal);
+    ASSERT(bRet == true);
+    ASSERT(bVal == true);
+    bRet = pConf->GetBool("bool003", bVal);
+    ASSERT(bRet == true);
+    ASSERT(bVal == false);
 
 
 

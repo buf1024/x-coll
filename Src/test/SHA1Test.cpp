@@ -55,3 +55,4 @@ TEST_F(SHA1Test, SHA1ImplTest)
     ASSERT(true);
 
 }
+

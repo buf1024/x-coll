@@ -16,6 +16,9 @@ XBASIC_NAMEPACE_BEGIN
 class XBASICAPI Locker
 {
 public:
+    Locker(){}
+    virtual ~Locker(){}
+public:
     virtual bool Lock() = 0;
     virtual bool TryLock() = 0;
     virtual bool Unlock() = 0;

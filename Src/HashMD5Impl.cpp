@@ -76,7 +76,7 @@ std::string HashMD5Impl::ComputeHash(const unsigned char* pBuf, unsigned long lL
 #ifdef MSWINDOWS
 		_snprintf_s(szBuf + i*2, 33 - i*2, 33 - i*2, "%x%x", nValH, nValL);
 #else
-        snprintf(szBuf + i*2, 33 - i*2, 33 - i*2, "%x%x", nValH, nValL);
+        snprintf(szBuf + i*2, 33 - i*2, "%x%x", nValH, nValL);
 #endif
 	}
 

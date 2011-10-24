@@ -35,11 +35,15 @@ XBASICAPI std::string GetAnsiString(const std::wstring strValue)
 
     int nLen = (strValue.length() + 1)*sizeof(wchar_t);
     char* pszBuf = new char[nLen];
+#ifdef MSWINDOWS
     //We don't use C Runtime convert function here
     ::WideCharToMultiByte(CP_ACP, 0L, 
         strValue.c_str(), -1, 
         pszBuf, nLen,
         NULL, NULL);
+#else
+    wcstombs(pszBuf, strValue.c_str(), strValue.length() + 1);
+#endif
     std::string strRet = pszBuf;
     delete[] pszBuf;
 
@@ -66,10 +70,14 @@ XBASICAPI std::wstring GetWideString(const std::string strValue)
 
     int nLen = strValue.length() + 1;
     wchar_t* pszBuf = new wchar_t[nLen];
+#ifdef MSWINDOWS
     //We don't use C Runtime convert function here
     ::MultiByteToWideChar(CP_ACP, 0L,
         strValue.c_str(), -1,       
         pszBuf, nLen);
+#else
+    mbstowcs(pszBuf, strValue.c_str(), strValue.length() + 1);
+#endif
     std::wstring strRet = pszBuf;
     delete[] pszBuf;
 

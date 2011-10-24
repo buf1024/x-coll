@@ -98,8 +98,10 @@ void FileAppender::Init(Config* pConf)
 {
     ASSERT(pConf != NullPtr);
 
-    std::string strPath = pConf->GetString(FILE_PATH);
-    std::string strMode = pConf->GetString(FILE_MODE, "w");
+    std::string strPath;
+    pConf->GetString(FILE_PATH, strPath);
+    std::string strMode;
+    pConf->GetString(FILE_MODE, strMode, "w");
     std::string strTmp = ToLower(strMode);
     if ( strTmp == "write")
     {

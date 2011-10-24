@@ -22,45 +22,49 @@ Config::~Config(void)
     delete _mapWrapper;
 }
 
-bool Config::GetBool(std::string strName, bool bDef)
+bool Config::GetBool(std::string strName, bool& bRet, bool bDef)
 {
-    bool bRet = bDef;
     BoolOptIter iter = _mapWrapper->_mapBoolOpt.find(strName);
     if (iter != _mapWrapper->_mapBoolOpt.end())
     {
         bRet = iter->second;
+        return true;
     }
-    return bRet;
+    bRet = bDef;
+    return false;
 }
-std::string Config::GetString(std::string strName, std::string strDef)
+bool Config::GetString(std::string strName, std::string& strRet, std::string strDef)
 {
-    std::string strRet =  strDef;
     StringOptIter iter = _mapWrapper->_mapStringOpt.find(strName);
     if (iter != _mapWrapper->_mapStringOpt.end())
     {
         strRet = iter->second;
+        return true;
     }
-    return strRet;
+    strRet = strDef;
+    return false;
 }
-long Config::GetDoubleWorld(std::string strName, long lDef)
+bool Config::GetDoubleWorld(std::string strName, long& lRet, long lDef)
 {
-    long dwRet =  lDef;
     DoubleWordOptIter iter = _mapWrapper->_mapDoubleWordOpt.find(strName);
     if (iter != _mapWrapper->_mapDoubleWordOpt.end())
     {
-        dwRet = iter->second;
+        lRet = iter->second;
+        return true;
     }
-    return dwRet;
+    lRet = lDef;
+    return false;
 }
-double Config::GetDouble(std::string strName, double fDef)
+bool Config::GetDouble(std::string strName, double& fRet, double fDef)
 {
-    double fRet =  fDef;
     DoubleOptIter iter = _mapWrapper->_mapDoubleOpt.find(strName);
     if (iter != _mapWrapper->_mapDoubleOpt.end())
     {
         fRet = iter->second;
+        return true;
     }
-    return fRet;
+    fRet = fDef;
+    return false;
 }
 
 void Config::AddBoolValue(std::string strName, bool bValue)
@@ -392,7 +396,7 @@ long ConfigApp::GetLongFromString(std::string strValue)
         return 0L;
     }
     long dwValue = 0L;
-    sscanf_s(strValue.c_str(), "%ld", &dwValue);
+    sscanf(strValue.c_str(), "%ld", &dwValue);
     return dwValue;
 }
 

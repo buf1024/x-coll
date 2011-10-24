@@ -85,3 +85,4 @@ TEST_F(IniConfigTest, IniConfig)
     pSec = ini.GetSection("SecC");
     ASSERT(pSec == NullPtr);
 }
+

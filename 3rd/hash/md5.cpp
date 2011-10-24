@@ -29,6 +29,8 @@
 
 #include "md5.h"
 
+static void MD5Transform(UWORD32 buf[4], UWORD32 const in[16]);
+
 void
 byteSwap(UWORD32 *buf, unsigned words)
 {

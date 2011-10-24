@@ -10,8 +10,11 @@
 #include "FileAppender.h"
 #include "IniConfig.h"
 #include "ConfigApp.h"
-
+#ifdef MSWINDOWS
 #include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 USE_XBASIC_NAMESPACE
 

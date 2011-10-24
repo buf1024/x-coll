@@ -15,7 +15,7 @@ USE_XBASIC_NAMESPACE
 Hash::Hash(HashImpl* pImpl)
 : m_pImpl(pImpl)
 {
-	_ASSERT(pImpl != NULL);
+	ASSERT(pImpl != NULL);
 }
 Hash::~Hash()
 {

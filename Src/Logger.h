@@ -80,3 +80,4 @@ XBASIC_NAMESPACE_END
 
 
 #endif /* Logger_H_ */
+
