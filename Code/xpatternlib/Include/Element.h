@@ -4,26 +4,26 @@
  * Version    : 2011-10-25 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef ELEMENT_H_
-#define ELEMENT_H_
+#ifndef XPATTERN_ELEMENT_H_
+#define XPATTERN_ELEMENT_H_
 
-#include "XBasicCore.h"
+#include "XpatternCore.h"
 
-XBASIC_NAMEPACE_BEGIN
+XPATTERN_NAMESPACE_BEGIN
 
 class Visitor;
-class XBASICAPI Element
+class Element
 {
 public:
     Element(void){}
     virtual ~Element(void){}
 
 public:
-    virtual void Accept(Visitor* pVisitor) = 0;
+    virtual void Accept(Visitor* pVisitor){}
 };
 
-XBASIC_NAMESPACE_END
+XPATTERN_NAMESPACE_END
 
-#endif /* ELEMENT_H_ */
+#endif /* XPATTERN_ELEMENT_H_ */
 
 
