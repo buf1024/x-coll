@@ -5,22 +5,24 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef VISITOR_H_
-#define VISITOR_H_
+#ifndef XPATTERN_VISITOR_H_
+#define XPATTERN_VISITOR_H_
 
-XBASIC_NAMEPACE_BEGIN
+#include "XpatternCore.h"
+
+XPATTERN_NAMESPACE_BEGIN
+
 class Element;
-class XBASICAPI Visitor
+class Visitor
 {
 public:
     Visitor(){}
     virtual ~Visitor(){}
-
+public:
     virtual void Visit(Element* pElem){}
 };
 
-XBASIC_NAMESPACE_END
+XPATTERN_NAMESPACE_END
 
-
-#endif /* VISITOR_H_ */
+#endif /* XPATTERN_VISITOR_H_ */
 
