@@ -172,6 +172,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\Prototype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\Singleton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\Subject.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\Visitor.h"
 				>
 			</File>

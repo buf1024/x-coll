@@ -16,10 +16,14 @@ class Composite
     : public Component
 {
 public:
-    Composite(){}
-    virtual ~Composite(){}
+    Composite()
+    {
 
-public:
+    }
+    virtual ~Composite()
+    {
+
+    }
 };
 
 XPATTERN_NAMESPACE_END

@@ -15,11 +15,20 @@ class Visitor;
 class Element
 {
 public:
-    Element(void){}
-    virtual ~Element(void){}
+    Element(void)
+    {
+
+    }
+    virtual ~Element(void)
+    {
+
+    }
 
 public:
-    virtual void Accept(Visitor* pVisitor){}
+    virtual void Accept(Visitor* pVisitor)
+    {
+
+    }
 };
 
 XPATTERN_NAMESPACE_END

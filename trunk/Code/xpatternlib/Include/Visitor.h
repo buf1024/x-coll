@@ -16,10 +16,19 @@ class Element;
 class Visitor
 {
 public:
-    Visitor(){}
-    virtual ~Visitor(){}
+    Visitor()
+    {
+
+    }
+    virtual ~Visitor()
+    {
+
+    }
 public:
-    virtual void Visit(Element* pElem){}
+    virtual void Visit(Element* pElem)
+    {
+
+    }
 };
 
 XPATTERN_NAMESPACE_END

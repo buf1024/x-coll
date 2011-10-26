@@ -16,8 +16,14 @@ class Leaf
     : public Component
 {
 public:
-    Leaf(){}
-    virtual Leaf(){}
+    Leaf()
+    {
+
+    }
+    virtual Leaf()
+    {
+
+    }
 
 };
 
