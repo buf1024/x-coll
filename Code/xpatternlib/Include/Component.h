@@ -15,8 +15,14 @@ XPATTERN_NAMESPACE_BEGIN
 class Component
 {
 public:
-    Component(){}
-    virtual ~Component(){}
+    Component()
+    {
+
+    }
+    virtual ~Component()
+    {
+
+    }
 };
 
 XPATTERN_NAMESPACE_END
