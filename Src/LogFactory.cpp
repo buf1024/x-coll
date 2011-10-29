@@ -89,10 +89,10 @@ bool LogFactory::InitStdConfAppender(Logger* pLogger, const char* szConf)
 {
     if (IsFileExists(szConf))
     {
-        std::string strConf = ToLower(szConf);
+        std::string strConf = StdString::ToLower(szConf);
         ConfigApp* pXMLConf = NullPtr;
         IniConfig* pIniConf = NullPtr;
-        if (EndsWith(strConf, ".xml"))
+        if (StdString::EndsWith(strConf, ".xml"))
         {
             pXMLConf = new ConfigApp;
             pXMLConf->Load(strConf);

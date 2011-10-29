@@ -12,7 +12,7 @@
 XBASIC_NAMEPACE_BEGIN
 
 
-
+namespace StdString {
 
 /**
  * Convert an ANSI string to ANSI string
@@ -698,6 +698,8 @@ XBASICAPI double ToDouble(const char* szStrVal, bool& bStat)
 XBASICAPI double ToDouble(const std::string& strVal, bool& bStat)
 {
     return ToDouble(strVal.c_str(), bStat);
+}
+
 }
 
 XBASIC_NAMESPACE_END

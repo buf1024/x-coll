@@ -119,7 +119,7 @@ bool Section::GetValue(const std::string strKey, bool& bValue, bool bDefault)
     std::string strVal;
     if (GetValue(strKey, strVal))
     {
-        strVal = ToLower(strVal);
+        strVal = StdString::ToLower(strVal);
         if (strVal == "1" || strVal == "true")
         {
             bValue = true;
@@ -352,11 +352,11 @@ bool IniConfig::Load(const std::string strFilePath)
         {
             break;
         }
-        std::string strTrim = Trim(szLine, " \r\n");
+        std::string strTrim = StdString::Trim(szLine, " \r\n");
         pTmp = strTrim.c_str();
 
 //        int n = StringLenth(pTmp);
-        if (StringLenth(pTmp) <= 0){
+        if (StdString::StringLenth(pTmp) <= 0){
             continue;
         }
         if (*pTmp == '#' || *pTmp == ';')
@@ -383,7 +383,7 @@ bool IniConfig::Load(const std::string strFilePath)
         if (pCurSec != NullPtr)
         {
             std::list<std::string> lstKV;
-            int nCount = Split(pTmp, "=", lstKV);
+            int nCount = StdString::Split(pTmp, "=", lstKV);
             if (nCount != 2)
             {
                 fclose(pFile);
