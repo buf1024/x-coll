@@ -6,8 +6,8 @@
  */
 
 
-#ifndef LOGLEVEL_H_
-#define LOGLEVEL_H_
+#ifndef XBASIC_LOGLEVEL_H_
+#define XBASIC_LOGLEVEL_H_
 
 #include "XBasicCore.h"
 
@@ -28,4 +28,4 @@ enum LogLevel
 
 XBASIC_NAMESPACE_END
 
-#endif /* LOGLEVEL_H_ */
+#endif /* XBASIC_LOGLEVEL_H_ */

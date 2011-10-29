@@ -4,8 +4,8 @@
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef LOGFACTORY_H_
-#define LOGFACTORY_H_
+#ifndef XBASIC_LOGFACTORY_H_
+#define XBASIC_LOGFACTORY_H_
 
 #include "XBasicCore.h"
 #include "StdString.h"
@@ -74,5 +74,5 @@ public:
 
 XBASIC_NAMESPACE_END
 
-#endif /* LOGFACTORY_H_ */
+#endif /* XBASIC_LOGFACTORY_H_ */
 

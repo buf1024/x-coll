@@ -7,8 +7,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef XBASIC_H_
-#define XBASIC_H_
+#ifndef XBASIC_XBASIC_H_
+#define XBASIC_XBASIC_H_
 
 #include "XBasicCore.h"
 

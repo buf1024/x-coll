@@ -5,8 +5,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef _HASHCRC32IMPL_H_
-#define _HASHCRC32IMPL_H_
+#ifndef XBASIC_HASHCRC32IMPL_H_
+#define XBASIC_HASHCRC32IMPL_H_
 
 
 #include "HashImpl.h"
@@ -34,4 +34,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif
+#endif /* XBASIC_HASHCRC32IMPL_H_ */

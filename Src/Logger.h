@@ -6,8 +6,8 @@
  */
 
 
-#ifndef Logger_H_
-#define Logger_H_
+#ifndef XBASIC_Logger_H_
+#define XBASIC_Logger_H_
 
 #include "XBasicCore.h"
 #include "StdString.h"
@@ -79,5 +79,5 @@ protected:
 XBASIC_NAMESPACE_END
 
 
-#endif /* Logger_H_ */
+#endif /* XBASIC_Logger_H_ */
 

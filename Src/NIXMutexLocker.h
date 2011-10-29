@@ -4,8 +4,8 @@
  * Version    : 2011-10-24 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef NIXMUTEXLOCKER_H_
-#define NIXMUTEXLOCKER_H_
+#ifndef XBASIC_NIXMUTEXLOCKER_H_
+#define XBASIC_NIXMUTEXLOCKER_H_
 
 #ifndef MSWINDOWS
 
@@ -38,4 +38,4 @@ XBASIC_NAMESPACE_END
 #endif /* MSWINDOWS */
 
 
-#endif /* NIXMUTEXLOCKER_H_ */
+#endif /* XBASIC_NIXMUTEXLOCKER_H_ */

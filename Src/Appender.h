@@ -6,8 +6,8 @@
  */
 
 
-#ifndef APPENDER_H_
-#define APPENDER_H_
+#ifndef XBASIC_APPENDER_H_
+#define XBASIC_APPENDER_H_
 
 #include "XBasicCore.h"
 #include "LogLevel.h"
@@ -54,5 +54,5 @@ protected:
 };
 XBASIC_NAMESPACE_END
 
-#endif /* APPENDER_H_ */
+#endif /* XBASIC_APPENDER_H_ */
 

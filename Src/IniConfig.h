@@ -6,6 +6,9 @@
  * Author     : buf1024@gmail.com
  */
 
+#ifndef XBASIC_INICONFIG_H_
+#define XBASIC_INICONFIG_H_
+
 #include "XBasicCore.h"
 #include "StdString.h"
 
@@ -190,3 +193,5 @@ private:
 };
 
 XBASIC_NAMESPACE_END
+
+#endif /* XBASIC_INICONFIG_H_ */

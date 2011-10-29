@@ -5,8 +5,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef LOG_H_
-#define LOG_H_
+#ifndef XBASIC_LOG_H_
+#define XBASIC_LOG_H_
 
 #include "LogLevel.h"
 #include "LogFactory.h"
@@ -107,4 +107,4 @@ inline Logger* GET_LOGGER()                                                   \
 
 XBASIC_NAMESPACE_END
 
-#endif /* LOG_H_ */
+#endif /* XBASIC_LOG_H_ */

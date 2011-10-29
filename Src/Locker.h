@@ -5,8 +5,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef LOCKER_H_
-#define LOCKER_H_
+#ifndef XBASIC_LOCKER_H_
+#define XBASIC_LOCKER_H_
 
 
 #include "XBasicCore.h"
@@ -26,5 +26,5 @@ public:
 
 XBASIC_NAMESPACE_END
 
-#endif /* LOCKER_H_ */
+#endif /* XBASIC_LOCKER_H_ */
 

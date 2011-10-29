@@ -6,8 +6,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef HASHIMPL_H_
-#define HASHIMPL_H_
+#ifndef XBASIC_HASHIMPL_H_
+#define XBASIC_HASHIMPL_H_
 
 
 #include "XBasicCore.h"
@@ -31,4 +31,4 @@ public:
 XBASIC_NAMESPACE_END
 
 
-#endif /* HASHIMPL_H_ */
+#endif /* XBASIC_HASHIMPL_H_ */
