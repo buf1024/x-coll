@@ -4,8 +4,8 @@
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef FILEAPPENDER_H_
-#define FILEAPPENDER_H_
+#ifndef XBASIC_FILEAPPENDER_H_
+#define XBASIC_FILEAPPENDER_H_
 
 #include "Appender.h"
 
@@ -41,4 +41,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif /* FILEAPPENDER_H_ */
+#endif /* XBASIC_FILEAPPENDER_H_ */

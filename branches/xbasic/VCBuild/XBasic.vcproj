@@ -590,7 +590,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\Prototype.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\resource.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\Singleton.h"
 			>
 		</File>
 		<File

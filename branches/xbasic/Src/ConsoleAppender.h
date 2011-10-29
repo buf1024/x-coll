@@ -4,8 +4,8 @@
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef CONSOLEAPPENDER_H_
-#define CONSOLEAPPENDER_H_
+#ifndef XBASIC_CONSOLEAPPENDER_H_
+#define XBASIC_CONSOLEAPPENDER_H_
 
 #include "Appender.h"
 
@@ -33,4 +33,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif /* CONSOLEAPPENDER_H_ */
+#endif /* XBASIC_CONSOLEAPPENDER_H_ */

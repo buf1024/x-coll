@@ -13,8 +13,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef SINGLETONAPP_H_
-#define SINGLETONAPP_H_
+#ifndef XBASIC_SINGLETONAPP_H_
+#define XBASIC_SINGLETONAPP_H_
 
 #include "XBasicCore.h"
 #include "StdString.h"
@@ -43,4 +43,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif /* SINGLETONAPP_H_ */
+#endif /* XBASIC_SINGLETONAPP_H_ */

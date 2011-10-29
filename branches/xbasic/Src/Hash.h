@@ -5,8 +5,8 @@
  *              2011-9 24 1.1 多操作系统支持
  * Author     : buf1024@gmail.com
  */
-#ifndef HASH_H_
-#define HASH_H_
+#ifndef XBASIC_HASH_H_
+#define XBASIC_HASH_H_
 
 #include "XBasicCore.h"
 #include "StdString.h"
@@ -59,6 +59,6 @@ private:
 XBASIC_NAMESPACE_END
 
 
-#endif /* HASH_H_ */
+#endif /* XBASIC_HASH_H_ */
 
 

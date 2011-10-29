@@ -9,8 +9,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef STDSTRING_H_
-#define STDSTRING_H_
+#ifndef XBASIC_STDSTRING_H_
+#define XBASIC_STDSTRING_H_
 
 #include "XBasicCore.h"
 #include <string>
@@ -236,4 +236,4 @@ XBASICAPI double ToDouble(const std::string& strVal, bool& bStat);
 
 XBASIC_NAMESPACE_END
 
-#endif /*STDSTRING_H_*/
+#endif /* XBASIC_STDSTRING_H_*/

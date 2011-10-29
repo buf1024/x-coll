@@ -5,8 +5,8 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef _HASHSHA1IMPL_H_
-#define _HASHSHA1IMPL_H_
+#ifndef XBASIC_HASHSHA1IMPL_H_
+#define XBASIC_HASHSHA1IMPL_H_
 
 // Test Vectors (from FIPS PUB 180-1)
 //
@@ -41,4 +41,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif
+#endif /* XBASIC_HASHSHA1IMPL_H_ */

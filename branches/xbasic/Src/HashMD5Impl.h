@@ -4,8 +4,8 @@
  * Version    : 2010-11-13 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef _HASHMD5IMPL_H_
-#define _HASHMD5IMPL_H_
+#ifndef XBASIC_HASHMD5IMPL_H_
+#define XBASIC_HASHMD5IMPL_H_
 
 #include "HashImpl.h"
 
@@ -28,4 +28,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif
+#endif /* XBASIC_HASHMD5IMPL_H_ */

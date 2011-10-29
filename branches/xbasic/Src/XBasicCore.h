@@ -4,8 +4,8 @@
  * Version    : 2011-9-24 Created
  * Author     : buf1024@gmail.com
  */
-#ifndef XBASICCORE_H_
-#define XBASICCORE_H_
+#ifndef XBASIC_XBASICCORE_H_
+#define XBASIC_XBASICCORE_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -89,4 +89,4 @@
 
 #define UnRefParam(param)   ((void)(param))
 
-#endif /* XBASICCORE_H_ */
+#endif /* XBASIC_XBASICCORE_H_ */
