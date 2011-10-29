@@ -1,0 +1,38 @@
+src_dir=Src Src/test
+cur_dir=@prefix@
+all:
+	for dir in $(src_dir);\
+	do \
+		 cd $$dir;\
+		 make;\
+		 if [ $$? -ne 0 ] ; then\
+			 exit -1;\
+		 fi; \
+		 cd ${cur_dir};\
+  	done;\
+
+install:
+	for dir in $(src_dir);\
+	do \
+		 cd $$dir;\
+		 make install;\
+		 if [ $$? -ne 0 ] ; then\
+			 exit -1;\
+		 fi; \
+		 cd ${cur_dir};\
+  	done;\
+
+
+clean:
+	for dir in $(src_dir);\
+	do \
+		 cd $$dir;\
+		 make clean;\
+		 if [ $$? -ne 0 ] ; then\
+			 exit -1;\
+		 fi; \
+		 cd ${cur_dir};\
+  	done;\
+
+
+
