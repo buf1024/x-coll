@@ -502,18 +502,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\Element.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\File.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\File.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\FileAppender.cpp"
 			>
 		</File>
@@ -619,14 +607,6 @@
 		</File>
 		<File
 			RelativePath="..\Src\StdString.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Util.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Visitor.h"
 			>
 		</File>
 		<File

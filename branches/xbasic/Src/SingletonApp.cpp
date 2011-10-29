@@ -35,8 +35,8 @@ SingletonApp::SingletonApp(const std::string strName)
 #endif
     }
 
-    strFile = Replace(strFile.c_str(), "\\", "_");
-    strFile = Replace(strFile.c_str(), "/", "_");
+    strFile = StdString::Replace(strFile.c_str(), "\\", "_");
+    strFile = StdString::Replace(strFile.c_str(), "/", "_");
     strFile.append(".pid");
 
 

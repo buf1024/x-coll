@@ -19,6 +19,8 @@
 
 XBASIC_NAMEPACE_BEGIN
 
+namespace StdString {
+
 //×Ö·û´®À©Õ¹¹¦ÄÜ
 /**
  * ½«ANSI×Ö·û´®×ª»»ÎªANSI×Ö·û´®
@@ -229,6 +231,8 @@ XBASICAPI long ToLong(const char* szStrVal, int nBase, bool& bStat);
 XBASICAPI long ToLong(const std::string& strVal, int nBase, bool& bStat);
 XBASICAPI double ToDouble(const char* szStrVal, bool& bStat);
 XBASICAPI double ToDouble(const std::string& strVal, bool& bStat);
+
+}
 
 XBASIC_NAMESPACE_END
 
