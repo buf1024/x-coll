@@ -11,7 +11,7 @@
 // Copyright(c): HEIDONG
 ////////////////////////////////////////////////////////////////////////////////////////
 /** @file FileService.h */
-#pragma once
+//#pragma once
 
 
 
@@ -41,20 +41,20 @@
  * @param lpszFileto The target
  * @return TRUE if successfully moved, FALSE otherwise*/
 
-BOOL  MyMoveFile(LPCTSTR lpszFileFrom, LPCTSTR lpszFileto);
+//BOOL  MyMoveFile(LPCTSTR lpszFileFrom, LPCTSTR lpszFileto);
  /**
  * Check whether a file is being used
  * @param szFilename The file that is being checked.
  * @return TRUE if being used, FALSE otherwise*/
 
-BOOL  IsFileUsing(LPCTSTR szFilename);
+//BOOL  IsFileUsing(LPCTSTR szFilename);
  /**
  * Get the content of the file
  * @param lpszFilename The file
  * @param pCont The content returned
  * @return TRUE if successful, FALSE otherwise*/
 
-BOOL  GetFileContents( LPCTSTR lpszFilename, BYTE* pCont);
+//BOOL  GetFileContents( LPCTSTR lpszFilename, BYTE* pCont);
  /**
  * Put content into a file
  * @param lpszFilename The file
@@ -62,29 +62,29 @@ BOOL  GetFileContents( LPCTSTR lpszFilename, BYTE* pCont);
  * @param nLen The lenght of the buffer
  * @return TRUE if successful, FALSE otherwise*/
 
-BOOL  PutFileContents(LPCTSTR lpszFilename, BYTE *pBuffer, INT nLen);
+//BOOL  PutFileContents(LPCTSTR lpszFilename, BYTE *pBuffer, INT nLen);
  /**
  * Get the size of a file
  * @param lpszFilename The file
  * @return The size of the file*/
 
-INT64 MyGetFileSize(LPCTSTR lpszFilename);
+//INT64 MyGetFileSize(LPCTSTR lpszFilename);
  /**
  * Get the size of the folder
  * @param szFolder The folder
  * @return The size of the folder*/
 
-INT64 GetFolderSize(LPCTSTR szFolder);
+//INT64 GetFolderSize(LPCTSTR szFolder);
 
  /**
  * Create nested directory
  * @param lpszDir The path
  * @return TRUE if directory is created, FALSE otherwise*/
 
-BOOL CreateDirectoryNested( LPCTSTR  lpszDir );
+//BOOL CreateDirectoryNested( LPCTSTR  lpszDir );
  /**
  * Create directory for a file
  * @param lpFileName The fully path of the file
  * @return TRUE if directory is created, FALSE otherwise*/
 
-BOOL CreateDirs (LPCTSTR lpFileName);
+//BOOL CreateDirs (LPCTSTR lpFileName);

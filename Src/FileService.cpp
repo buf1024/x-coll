@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 #include "FileService.h"
 
-
+/*
 #include <Shlwapi.h>
 
 #pragma comment(lib, "Version.lib")
@@ -283,4 +283,4 @@ BOOL CreateDirs (LPCTSTR lpFileName)
         --pend;
     }
     return CreateDirectoryNested (lpNameCopy);
-}
+}*/
