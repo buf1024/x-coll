@@ -1,0 +1,4 @@
+Import('env')
+env.Append(CPPPATH=['./../include'])
+objs = env.Object(Glob('*.cpp'))
+Return('objs')
