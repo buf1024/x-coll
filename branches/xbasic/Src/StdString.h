@@ -26,22 +26,22 @@ namespace StdString {
  * 将ANSI字符串转换为ANSI字符串
  * @return 转换的ANSI字符串
  */
-XBASICAPI std::string GetAnsiString(const std::string strValue);
+XBASICAPI std::string GetAnsiString(const std::string& strValue);
 /**
  * 将宽字符串转换为ANSI字符串
  * @return 转换的ANSI字符串
  */
-XBASICAPI std::string GetAnsiString(const std::wstring strValue);
+XBASICAPI std::string GetAnsiString(const std::wstring& strValue);
 /**
  * 将宽字符串转换为宽字符串
  * @return 转换的宽字符串
  */
-XBASICAPI std::wstring GetWideString(const std::wstring strValue);
+XBASICAPI std::wstring GetWideString(const std::wstring& strValue);
 /**
  * 将ANSI字符串转换为宽字符串
  * @return 转换的宽字符串
  */
-XBASICAPI std::wstring GetWideString(const std::string strValue);
+XBASICAPI std::wstring GetWideString(const std::string& strValue);
 
 /**
  * @param szValue 要计算的字符串
@@ -49,19 +49,19 @@ XBASICAPI std::wstring GetWideString(const std::string strValue);
  * @param nBufLen 作为传入参数时，为缓存的大小，传出参数时，为实际的长度
  * @return 缓存的地址
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::string strValue, char* pBuf, int& nBufLen);
+XBASICAPI const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nBufLen);
 /**
  * @see GetCStyleAnsiString
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::wstring strValue, char* pBuf, int& nBufLen);
+XBASICAPI const char* GetCStyleAnsiString(const std::wstring& strValue, char* pBuf, int& nBufLen);
 /**
  * @see GetCStyleAnsiString
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring strValue, wchar_t* pBuf, int& nBufLen);
+XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, int& nBufLen);
 /**
  * @see GetCStyleAnsiString
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::string strValue, wchar_t* pBuf, int& nBufLen);
+XBASICAPI const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen);
 
 
 

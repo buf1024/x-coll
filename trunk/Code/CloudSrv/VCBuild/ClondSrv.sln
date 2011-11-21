@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CloudSrv", "CloudSrv.vcproj", "{A4F1C1F8-FB15-49AA-BA62-80BEF6600766}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4F1C1F8-FB15-49AA-BA62-80BEF6600766}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A4F1C1F8-FB15-49AA-BA62-80BEF6600766}.Debug|Win32.Build.0 = Debug|Win32
+		{A4F1C1F8-FB15-49AA-BA62-80BEF6600766}.Release|Win32.ActiveCfg = Release|Win32
+		{A4F1C1F8-FB15-49AA-BA62-80BEF6600766}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

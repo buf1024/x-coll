@@ -26,7 +26,7 @@ enum LogDestination{
 class XBASICAPI LogFactory
 {
 public:
-    typedef std::map<std::string, Appender*>::iterator AppPoolIterator;
+    typedef std::map<std::string, Appender*>::const_iterator AppPoolIterator;
 private:
     LogFactory(void);
 
@@ -55,11 +55,8 @@ private:
 private:
     Logger* m_pGlobalLogger;
     static LogFactory* sm_Inst;
-    typedef struct MapWrapper
-    {
-        std::map<std::string, Appender*> m_MapObjPool;
-    };
-    MapWrapper* m_pMapWrapper;
+    std::map<std::string, Appender*> m_MapObjPool;
+
 };
 
 

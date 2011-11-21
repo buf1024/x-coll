@@ -15,8 +15,8 @@
 #include <map>
 #include <time.h>
 
-#ifdef MSWINDOWS
-#include "WinCriticalSectionLocer.h"
+#ifdef _MSC_VER
+#include "WinCSLocer.h"
 #else
 #include "NIXMutexLocker.h"
 #endif
@@ -27,10 +27,9 @@ USE_XBASIC_NAMESPACE
 
 Logger::Logger()
 : m_strName("Logger")
-{
-    m_pListWrapper = new ListWrapper;
+{;
     m_eLvl = ALL;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     m_pLocker = new WinCriticalSectionLocer;
 #else
     m_pLocker = new NIXMutexLocker;
@@ -38,7 +37,6 @@ Logger::Logger()
 }
 Logger::~Logger()
 {
-    delete m_pListWrapper;
     delete m_pLocker;
 }
 
@@ -87,28 +85,28 @@ void Logger::AddAppender(Appender* pApp)
     {
         if (GetAppender(pApp->GetName()) == NullPtr)
         {
-            m_pListWrapper->m_lstApps.push_back(pApp);
+            m_lstApps.push_back(pApp);
         }
     }
 }
 void Logger::RemoveAppender(const std::string strAppName)
 {
 
-    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
-        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    for (std::list<Appender*>::iterator iter = m_lstApps.begin();
+        iter != m_lstApps.end(); ++iter)
     {
         if ((*iter)->GetName() == strAppName)
         {
             delete *iter;
-            m_pListWrapper->m_lstApps.erase(iter);
+            m_lstApps.erase(iter);
         }
     }
 
 }
 Appender* Logger::GetAppender(const std::string strAppName)
 {
-    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
-        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    for (std::list<Appender*>::iterator iter = m_lstApps.begin();
+        iter != m_lstApps.end(); ++iter)
     {
         if ((*iter)->GetName() == strAppName)
         {
@@ -202,8 +200,8 @@ void Logger::LogMessageV(LogLevel eLvl, const char* szFormat, va_list va)
 
 void Logger::Log(LogLevel eLvl, const char* szMsg, int nLen)
 {
-    for (std::list<Appender*>::iterator iter = m_pListWrapper->m_lstApps.begin();
-        iter != m_pListWrapper->m_lstApps.end(); ++iter)
+    for (std::list<Appender*>::iterator iter = m_lstApps.begin();
+        iter != m_lstApps.end(); ++iter)
     {
         Appender* pApp = *iter;
         if (pApp->IsAppenderOK())

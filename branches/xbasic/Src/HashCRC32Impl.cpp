@@ -31,7 +31,7 @@ std::string HashCRC32Impl::GetStringHash(std::string strValue)
         nRes = -nRes;
     }
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     _snprintf_s(szBuf, 16, 16, szFormat, nRes);
 #else
     snprintf(szBuf, 16, szFormat, nRes);
@@ -52,7 +52,7 @@ std::string HashCRC32Impl::GetStringHash(std::wstring strValue)
         nRes = -nRes;
     }
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     _snprintf_s(szBuf, 16, 16, szFormat, nRes);
 #else
     snprintf(szBuf, 16, szFormat, nRes);
@@ -64,7 +64,7 @@ std::string HashCRC32Impl::GetStringHash(std::wstring strValue)
 std::string HashCRC32Impl::GetFileHash(std::string strFile)
 {
 	std::string strRet;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 	HANDLE hFile = CreateFileA(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)

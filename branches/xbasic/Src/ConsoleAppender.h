@@ -26,7 +26,7 @@ public:
     void SetConsoleColor(LogLevel eLogLevel);
 
 private:
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     HANDLE m_hStdOut;
 #endif
 };

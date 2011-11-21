@@ -1,0 +1,71 @@
+import os.path
+import os
+import sys
+
+MSVC_DEBUG_COMM = '/Od /Gm /EHsc /RTC1 /MDd /W3 /nologo /c /ZI /TP'
+MSVC_RELEASE_COMM = '/O2 /Oi /D "NDEBUG"/FD /EHsc /MD /Gy /W3 /nologo /c /Zi /TP'
+
+GCC_DEBUG_COMM = '-g '
+GCC_RELEASE_COMM = '-O2 -DNDEBUG'
+
+platform = Platform()
+build_target = ARGUMENTS.get('type', 'release').lower().strip()
+
+build_dir = 'build/%s/%s' % (platform, build_target)
+dist_dir  = '../../Lib'
+head_dir  = '../../Include/jsoncpp'
+
+build_dir = os.path.abspath(build_dir)
+dist_dir  = os.path.abspath(dist_dir)
+head_dir  = os.path.abspath(head_dir)
+
+
+if not os.path.exists(build_dir):
+    os.makedirs(build_dir)
+    
+if not os.path.exists(dist_dir):
+    os.makedirs(dist_dir)
+
+if not os.path.exists(head_dir):
+    os.makedirs(head_dir)
+
+env = Environment()
+env['PLATFORM'] = platform
+env['BUILD_TARGET'] = build_target
+
+target = 'json_stat'
+if str(platform) == 'win32':
+    if 'debug' == build_target:
+        env.Append(CXXFLAGS=MSVC_DEBUG_COMM)
+        target = 'json_statd'
+    else:
+        env.Append(CXXFLAGS=MSVC_RELEASE_COMM)
+else:
+    if 'debug' == build_target:
+        env.Append(CXXFLAGS=GCC_DEBUG_COMM)
+        target = 'json_statd'
+    else:
+        env.Append(CXXFLAGS=GCC_RELEASE_COMM)
+
+Export('env')
+
+ex_srcs = ['src']
+objs = []
+for src in ex_srcs:
+    subdir = '%s/SConscript' % src;
+    obj = SConscript(subdir)
+    objs.append(obj)
+lib = env.StaticLibrary(build_dir + '/' + target, objs)
+
+hdir = 'include/json'
+head_files = []
+for f in os.listdir(hdir):
+    if f.endswith('.h'):
+        head_files.append(hdir + '/' + f)
+env.Install(dist_dir, lib)
+env.Install(head_dir, head_files)
+env.Alias('install', [dist_dir, head_dir])
+
+
+
+

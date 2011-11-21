@@ -7,7 +7,7 @@
 #include "FileAppender.h"
 
 #include "IniConfig.h"
-#include "ConfigApp.h"
+#include "XmlConfig.h"
 
 #define FILE_PATH "Path"
 #define FILE_MODE "Mode"

@@ -66,11 +66,7 @@ protected:
     Locker* m_pLocker;
     LogLevel m_eLvl;
 
-    typedef struct ListWrapper
-    {
-        std::list<Appender*> m_lstApps;
-    };
-    ListWrapper* m_pListWrapper;
+    std::list<Appender*> m_lstApps;
 
     std::string m_strName;
 

@@ -6,7 +6,7 @@
  */
 #include "NIXMutexLocker.h"
 
-#ifndef MSWINDOWS
+#ifndef _MSC_VER
 
 USE_XBASIC_NAMESPACE;
 

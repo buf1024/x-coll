@@ -15,7 +15,7 @@
 
 #include "SingletonApp.h"
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 #include <direct.h>
 #endif
 
@@ -28,7 +28,7 @@ SingletonApp::SingletonApp(const std::string strName)
     if (strFile.empty())
     {
         char szMaxPath[BUF_SIZE] = "";
-#if MSWINDOWS
+#if _MSC_VER
         strFile = _getcwd(szMaxPath, BUF_SIZE - 1);
 #else
         strFile = getcwd(szMaxPath, BUF_SIZE - 1);
@@ -51,7 +51,7 @@ SingletonApp::SingletonApp(const std::string strName)
         char szLine[BUF_SIZE] = "";
         unsigned long lPid = 0;
 
-#if MSWINDOWS
+#if _MSC_VER
         lPid = GetCurrentProcessId();
         _snprintf(szLine, BUF_SIZE, "%ld", lPid);
 #else

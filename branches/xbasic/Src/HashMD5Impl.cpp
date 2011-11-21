@@ -35,7 +35,7 @@ std::string HashMD5Impl::GetStringHash(std::wstring strValue)
 std::string HashMD5Impl::GetFileHash(std::string strFile)
 {
 	std::string strRet;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 	HANDLE hFile = CreateFileA(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
@@ -73,7 +73,7 @@ std::string HashMD5Impl::ComputeHash(const unsigned char* pBuf, unsigned long lL
 	{
 		int nValL = digest[i]&0x0F;
 		int nValH = digest[i]>>4;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 		_snprintf_s(szBuf + i*2, 33 - i*2, 33 - i*2, "%x%x", nValH, nValL);
 #else
         snprintf(szBuf + i*2, 33 - i*2, "%x%x", nValH, nValL);

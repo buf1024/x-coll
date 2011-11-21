@@ -11,11 +11,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#ifdef MSWINDOWS
-#include <Windows.h>
-#endif
-
+// 目前在WINDOWS下面只支持MSVC
 #ifdef _MSC_VER
+#include <Windows.h>
 #pragma warning(disable:4996)
 #endif
 
@@ -24,7 +22,7 @@
 // 是否使用命名空间
 #ifdef USING_NAMESPACE
 
-#define XBASICNAMESPACE XBasic
+#define XBASICNAMESPACE xbasic
 
 #define XBASIC_NAMEPACE_BEGIN                                                            \
     namespace XBASICNAMESPACE {                                                          \
@@ -42,42 +40,7 @@
 
 #endif
 
-#ifdef MSWINDOWS
-  // 是否编译成DLL
-  #ifdef XBASICDLL
-    #define XBASICAPI __declspec(dllexport)
-  #else
-    // 是否编译成静态库
-    #ifdef XBASICSTAT
-      #define XBASICAPI
-    #else
-
-      // 使用DLL时 
-      #ifdef USEDLL
-        #define XBASICAPI __declspec(dllimport)
-        // 使用时，连接到不同的库  
-        #ifdef _DEBUG
-          #pragma comment(lib, "xbasicd.lib")
-        #else
-          #pragma comment(lib, "xbasic.lib")
-        #endif
-      #else
-        #define XBASICAPI
-        // 使用时，连接到不同的库  
-        #ifdef _DEBUG
-          #pragma comment(lib, "xbasic_statd.lib")
-        #else
-          #pragma comment(lib, "xbasic_stat.lib")
-        #endif
-      #endif
-    #endif
-  #endif
-
-#else
-
 #define XBASICAPI
-
-#endif
 
 #define NullPtr             (0)
 #define BUF_SIZE            (1024)

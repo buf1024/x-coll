@@ -9,8 +9,8 @@
 #include "ConsoleAppender.h"
 #include "FileAppender.h"
 #include "IniConfig.h"
-#include "ConfigApp.h"
-#ifdef MSWINDOWS
+#include "XmlConfig.h"
+#ifdef _MSC_VER
 #include <io.h>
 #else
 #include <unistd.h>
@@ -23,13 +23,11 @@ LogFactory* LogFactory::sm_Inst = NullPtr;
 LogFactory::LogFactory(void)
 {
     m_pGlobalLogger = new Logger;
-    m_pMapWrapper = new MapWrapper;
     InitAppenderPool();
 }
 
 LogFactory::~LogFactory(void)
 {
-    delete m_pMapWrapper;
     delete m_pGlobalLogger;
 }
 bool LogFactory::InitLogger(LogDestination enDest, const char* szConf)
@@ -90,11 +88,11 @@ bool LogFactory::InitStdConfAppender(Logger* pLogger, const char* szConf)
     if (IsFileExists(szConf))
     {
         std::string strConf = StdString::ToLower(szConf);
-        ConfigApp* pXMLConf = NullPtr;
+        XmlConfig* pXMLConf = NullPtr;
         IniConfig* pIniConf = NullPtr;
         if (StdString::EndsWith(strConf, ".xml"))
         {
-            pXMLConf = new ConfigApp;
+            pXMLConf = new XmlConfig;
             pXMLConf->Load(strConf);
         }
         else
@@ -105,7 +103,7 @@ bool LogFactory::InitStdConfAppender(Logger* pLogger, const char* szConf)
         Appender* pApp = NullPtr;
         if (pXMLConf)
         {
-            for(ConfigApp::Iterator iter = pXMLConf->begin();
+            for(XmlConfig::Iterator iter = pXMLConf->begin();
                 iter != pXMLConf->end(); ++iter)
             {
                 std::string strName = iter->first;
@@ -161,7 +159,7 @@ bool LogFactory::IsFileExists(const char* szFile)
         return false;
     }
     int nRet = -1;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     nRet = _access(szFile, 04); //Read
 #else
     nRet = access(szFile, 04); //Read
@@ -173,10 +171,10 @@ bool LogFactory::RegisterAppender(Appender* pApp)
     if (pApp)
     {
         std::string strName = pApp->GetName();
-        AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
-        if (iter == m_pMapWrapper->m_MapObjPool.end())
+        AppPoolIterator iter = m_MapObjPool.find(strName);
+        if (iter == m_MapObjPool.end())
         {
-            m_pMapWrapper->m_MapObjPool.insert(std::make_pair(strName, pApp));
+            m_MapObjPool.insert(std::make_pair(strName, pApp));
         }
         return true;
     }
@@ -185,18 +183,18 @@ bool LogFactory::RegisterAppender(Appender* pApp)
 
 void LogFactory::UnRegisterAppender(std::string strName)
 {
-    AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
-    if (iter != m_pMapWrapper->m_MapObjPool.end())
+    AppPoolIterator iter = m_MapObjPool.find(strName);
+    if (iter != m_MapObjPool.end())
     {
         delete iter->second;
-        m_pMapWrapper->m_MapObjPool.erase(iter);
+        m_MapObjPool.erase(iter);
     }
 
 }
 Appender* LogFactory::GetAppender(std::string strName) const
 {
-    AppPoolIterator iter = m_pMapWrapper->m_MapObjPool.find(strName);
-    if (iter == m_pMapWrapper->m_MapObjPool.end())
+    AppPoolIterator iter = m_MapObjPool.find(strName);
+    if (iter == m_MapObjPool.end())
     {
         return NullPtr;
     }
