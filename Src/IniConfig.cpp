@@ -14,13 +14,11 @@ USE_XBASIC_NAMESPACE
 Section::Section(std::string strSectionName /* = "" */)
 :m_strSectionName(strSectionName)
 {
-    m_pMapWrapper = new MapWrapper;
-	m_pMapWrapper->m_mapKeyValue.clear();
+	m_mapKeyValue.clear();
     
 }
 Section::~Section()
 {
-    delete m_pMapWrapper;
 }
 
 void Section::SetSectionName(const std::string strSectionName)
@@ -36,7 +34,7 @@ void Section::Insert(const std::string strKey, std::string strValue)
 {
 	if (!strKey.empty())
 	{
-		m_pMapWrapper->m_mapKeyValue[strKey] = strValue;
+		m_mapKeyValue[strKey] = strValue;
 	}
 	
 }
@@ -45,12 +43,12 @@ void Section::Insert(const std::string strKey, char chValue)
 	if (!strKey.empty())
 	{
 		char szBuf[32] = {0};
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
         _snprintf(szBuf, 32, "%c", chValue);
 #else
         snprintf(szBuf, 32, "%c", chValue);
 #endif
-		m_pMapWrapper->m_mapKeyValue[strKey] = szBuf;
+		m_mapKeyValue[strKey] = szBuf;
 	}
 }
 void Section::Insert(const std::string strKey, int nValue)
@@ -58,12 +56,12 @@ void Section::Insert(const std::string strKey, int nValue)
 	if (!strKey.empty())
 	{
 		char szBuf[32] = {0};
-#if MSWINDOWS
+#if _MSC_VER
         _snprintf(szBuf, 32, "%d", nValue);
 #else
         snprintf(szBuf, 32, "%d", nValue);
 #endif
-		m_pMapWrapper->m_mapKeyValue[strKey] = szBuf;
+		m_mapKeyValue[strKey] = szBuf;
 	}
 }
 void Section::Insert(const std::string strKey, long lValue)
@@ -71,12 +69,12 @@ void Section::Insert(const std::string strKey, long lValue)
 	if (!strKey.empty())
 	{
 		char szBuf[32] = {0};
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
         _snprintf(szBuf, 32, "%ld", lValue);
 #else
         snprintf(szBuf, 32, "%ld", lValue);
 #endif
-		m_pMapWrapper->m_mapKeyValue[strKey] = szBuf;
+		m_mapKeyValue[strKey] = szBuf;
 	}
 
 }
@@ -85,12 +83,12 @@ void Section::Insert(const std::string strKey, double dValue)
 	if (!strKey.empty())
 	{
 		char szBuf[32] = {0};
-#if MSWINDOWS
+#if _MSC_VER
         _snprintf(szBuf, 32, "%lf", dValue);
 #else
         snprintf(szBuf, 32, "%lf", dValue);
 #endif
-		m_pMapWrapper->m_mapKeyValue[strKey] = szBuf;
+		m_mapKeyValue[strKey] = szBuf;
 	}
 }
 bool Section::GetValue(const std::string strKey, std::string& strValue, std::string strDefault)
@@ -98,8 +96,8 @@ bool Section::GetValue(const std::string strKey, std::string& strValue, std::str
 	bool bRet = false;
 	if (!strKey.empty())
 	{
-		KVIterator iter = m_pMapWrapper->m_mapKeyValue.find(strKey);
-		if (iter != m_pMapWrapper->m_mapKeyValue.end())
+		KVIterator iter = m_mapKeyValue.find(strKey);
+		if (iter != m_mapKeyValue.end())
 		{
 			strValue = iter->second;
 			bRet = true;
@@ -191,10 +189,10 @@ void Section::Delete(const std::string strKey)
 {
 	if (!strKey.empty())
 	{
-		KVIterator iter = m_pMapWrapper->m_mapKeyValue.find(strKey);
-		if (iter != m_pMapWrapper->m_mapKeyValue.end())
+		KVIterator iter = m_mapKeyValue.find(strKey);
+		if (iter != m_mapKeyValue.end())
 		{
-			m_pMapWrapper->m_mapKeyValue.erase(iter);
+			m_mapKeyValue.erase(iter);
 		}
 	}
 
@@ -202,7 +200,7 @@ void Section::Delete(const std::string strKey)
 void Section::Empty()
 {
 	m_strSectionName = "";
-	m_pMapWrapper->m_mapKeyValue.clear();
+	m_mapKeyValue.clear();
 }
 
 bool Section::Save(std::string strFilePath)
@@ -225,7 +223,7 @@ bool Section::Save(FILE* pFile)
 
         fwrite(strBuf.c_str(), sizeof(char), strBuf.length(), pFile);
         
-        for (KVIterator iter = m_pMapWrapper->m_mapKeyValue.begin(); iter != m_pMapWrapper->m_mapKeyValue.end(); ++iter)
+        for (KVIterator iter = m_mapKeyValue.begin(); iter != m_mapKeyValue.end(); ++iter)
         {
             strLine = iter->first;
             strLine.append("=");
@@ -245,7 +243,6 @@ bool Section::Save(FILE* pFile)
 
 IniConfig::IniConfig(std::string strFilePath)
 {
-    m_pListWrapper = new ListWrapter;
     
     m_strFilePath = strFilePath;
     if (!m_strFilePath.empty())
@@ -257,7 +254,6 @@ IniConfig::IniConfig(std::string strFilePath)
 IniConfig::~IniConfig()
 {
 	ClearUp();
-    delete m_pListWrapper;
 }
 
 void IniConfig::SetFilePath(const std::string strFilePath)
@@ -278,7 +274,7 @@ bool IniConfig::Insert(Section* pSec)
 	{
 		if (GetSection(pSec->GetSectionName()) == NULL)
 		{
-			m_pListWrapper->m_lstSections.push_back(pSec);
+			m_lstSections.push_back(pSec);
 			bRet = true;
 		}
 	}
@@ -287,14 +283,14 @@ bool IniConfig::Insert(Section* pSec)
 }
 void IniConfig::Delete(const std::string strSection)
 {
-    for(ICIterator iter = m_pListWrapper->m_lstSections.begin();
-        iter != m_pListWrapper->m_lstSections.end();
+    for(ICIterator iter = m_lstSections.begin();
+        iter != m_lstSections.end();
         ++iter)
     {
         if ((*iter)->GetSectionName() == strSection)
         {
             delete *iter;
-            m_pListWrapper->m_lstSections.erase(iter);
+            m_lstSections.erase(iter);
             break;
         }
     }
@@ -304,8 +300,8 @@ Section* IniConfig::GetSection(const std::string strSecName)
 {
 	Section* pSec = NullPtr;
 	
-    for(ICIterator iter = m_pListWrapper->m_lstSections.begin();
-		iter != m_pListWrapper->m_lstSections.end();
+    for(ICIterator iter = m_lstSections.begin();
+		iter != m_lstSections.end();
 		++iter)
 	{
 		if ((*iter)->GetSectionName() == strSecName)
@@ -377,7 +373,7 @@ bool IniConfig::Load(const std::string strFilePath)
                 return false;
             }
             pCurSec = new Section(std::string(pNameDel, pTmp - pNameDel));
-            m_pListWrapper->m_lstSections.push_back(pCurSec);
+            m_lstSections.push_back(pCurSec);
             continue;
         }
         if (pCurSec != NullPtr)
@@ -419,8 +415,8 @@ bool IniConfig::Save(const std::string strFilePath)
         return false;
     }
 
-    for(ICIterator iter = m_pListWrapper->m_lstSections.begin();
-		iter != m_pListWrapper->m_lstSections.end();
+    for(ICIterator iter = m_lstSections.begin();
+		iter != m_lstSections.end();
 		++iter)
 	{
 		(*iter)->Save(pFile);
@@ -434,8 +430,8 @@ bool IniConfig::Save(const std::string strFilePath)
 void IniConfig::ClearUp()
 {
 	//m_strFilePath = "";
-	for(ICIterator iter = m_pListWrapper->m_lstSections.begin();
-		iter != m_pListWrapper->m_lstSections.end();
+	for(ICIterator iter = m_lstSections.begin();
+		iter != m_lstSections.end();
 		++iter)
 	{
 		delete *iter;

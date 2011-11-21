@@ -17,220 +17,6 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="ReleaseDll|Win32"
-			OutputDirectory="./../Bin"
-			IntermediateDirectory="./../Release/XBasic"
-			ConfigurationType="2"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MSWINDOWS;XBASICDLL"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\xbasic.dll"
-				LinkIncremental="1"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)\xbasic.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DebugStat|Win32"
-			OutputDirectory="./../BinD"
-			IntermediateDirectory="./../Debug/XBasic"
-			ConfigurationType="4"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\xbasic_statd.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DebugDll|Win32"
-			OutputDirectory="./../BinD"
-			IntermediateDirectory="./../Debug/XBasic"
-			ConfigurationType="2"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MSWINDOWS;XBASICDLL"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\xbasicd.dll"
-				LinkIncremental="2"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				ImportLibrary="$(OutDir)\xbasicd.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="./../Bin"
 			IntermediateDirectory="./../Release/XBasic"
@@ -357,70 +143,6 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
-		<Configuration
-			Name="ReleaseStat|Win32"
-			OutputDirectory="./../Bin"
-			IntermediateDirectory="./../Release/XBasic"
-			ConfigurationType="4"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;.\..\3rd\tinyxml&quot;;&quot;.\..\3rd\hash&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MSWINDOWS;XBASICSTAT"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\xbasic_stat.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -482,23 +204,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\ConfigApp.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\ConfigApp.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\ConsoleAppender.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\Src\ConsoleAppender.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\dllmain.cpp"
 			>
 		</File>
 		<File
@@ -594,10 +304,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\resource.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\Singleton.h"
 			>
 		</File>
@@ -618,11 +324,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\WinCriticalSectionLocer.cpp"
+			RelativePath="..\Src\WinCSLocer.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\Src\WinCriticalSectionLocer.h"
+			RelativePath="..\Src\WinCSLocer.h"
 			>
 		</File>
 		<File
@@ -630,11 +336,15 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\XBasic.rc"
+			RelativePath="..\Src\XBasicCore.h"
 			>
 		</File>
 		<File
-			RelativePath="..\Src\XBasicCore.h"
+			RelativePath="..\Src\XmlConfig.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Src\XmlConfig.h"
 			>
 		</File>
 	</Files>

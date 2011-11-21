@@ -29,7 +29,7 @@ std::string HashSHA1Impl::GetStringHash(std::string strValue)
 	unsigned int digest[5] = {0};
 	m_pSHA1->Result(digest);
 	char szRes[48] = "";
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 	_snprintf_s(szRes, 48, 48, "%x%x%x%x%x",
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 #else
@@ -47,7 +47,7 @@ std::string HashSHA1Impl::GetStringHash(std::wstring strValue)
 	unsigned int digest[5] = {0};
 	m_pSHA1->Result(digest);
 	char szRes[48] = "";
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 	_snprintf_s(szRes, 48, 48, "%x%x%x%x%x",
 		digest[0], digest[1], digest[2], digest[3], digest[4]);
 #else
@@ -60,7 +60,7 @@ std::string HashSHA1Impl::GetFileHash(std::string strFile)
 {
 	std::string strRet;
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 
 	HANDLE hFile = CreateFileA(strFile.c_str(), GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

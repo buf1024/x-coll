@@ -1,0 +1,60 @@
+import os.path
+import os
+
+MSVC_DEBUG_COMM = '/Od /D "_DEBUG" /Gm /EHsc /RTC1 /MDd /W3 /nologo /c /ZI /TP'
+MSVC_RELEASE_COMM = '/O2 /Oi /D "NDEBUG" /FD /EHsc /MD /Gy /W3 /nologo /c /Zi /TP'
+
+GCC_DEBUG_COMM = ''
+GCC_RELEASE_COMM = ''
+
+platform = Platform()
+build_target = DEFAULT_TARGETS
+if COMMAND_LINE_TARGETS:
+    build_target = COMMAND_LINE_TARGETS
+
+if build_target:
+    build_target = build_target[0].lower()
+else:
+    build_target = 'release'
+
+build_dir = 'build/%s/%s' % (platform, build_target)
+dist_dir  = 'dist/%s/%s' % (platform, build_target)
+
+if not os.path.exists(build_dir):
+    os.makedirs(build_dir)
+    
+if not os.path.exists(dist_dir):
+    os.makedirs(dist_dir)
+
+target_dir = dist_dir
+
+env = Environment()
+env['PLATFORM'] = platform
+env['BUILD_TARGET'] = build_target
+
+if str(platform) == 'win32':
+    if 'debug' in build_target:
+        env.Append(CXXFLAGS=MSVC_DEBUG_COMM)
+    elif 'release' in build_target:
+        env.Append(CXXFLAGS=MSVC_RELEASE_COMM)
+    else:
+        env.Append(CXXFLAGS=MSVC_RELEASE_COMM)
+else:
+    if 'debug' in build_target:
+        env.Append(CXXFLAGS=GCC_DEBUG_COMM)
+    elif 'release' in build_target:
+        env.Append(CXXFLAGS=GCC_RELEASE_COMM)
+    else:
+        env.Append(CXXFLAGS=GCC_RELEASE_COMM)
+
+Export('env')
+
+#ex_srcs = ['gtest-1.6.0/src', 'hash', 'tinyxml', 'bsoncpp', 'jsoncpp']
+ex_srcs = ['gtest-1.6.0/src']
+for src in ex_srcs:
+    subdir = '%s/SConscript' % src;
+    vdir = '%s/%s' % (build_dir, src)
+    target = SConscript(subdir)
+    env.Install(target_dir, target)
+
+

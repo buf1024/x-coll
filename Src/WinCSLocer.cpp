@@ -1,12 +1,12 @@
 /*
- * File       : WinCriticalSectionLocer.cpp
+ * File       : WinCSLocer.cpp
  * Description: 
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
  */
-#include "WinCriticalSectionLocer.h"
+#include "WinCSLocer.h"
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 
 USE_XBASIC_NAMESPACE
 

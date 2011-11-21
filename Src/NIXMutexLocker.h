@@ -7,7 +7,7 @@
 #ifndef XBASIC_NIXMUTEXLOCKER_H_
 #define XBASIC_NIXMUTEXLOCKER_H_
 
-#ifndef MSWINDOWS
+#ifndef _MSC_VER
 
 #include "XBasicCore.h"
 #include "Locker.h"
@@ -35,7 +35,7 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif /* MSWINDOWS */
+#endif /* _MSC_VER */
 
 
 #endif /* XBASIC_NIXMUTEXLOCKER_H_ */

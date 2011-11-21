@@ -1,3 +1,9 @@
 Import('env')
 objs = env.Object(Glob('*.cpp'))
-Return('objs')
+build_target = env['BUILD_TARGET']
+lib_name = 'tinyxml_statd'
+if build_target != 'debug':
+   lib_name = 'tinyxml_stat'
+    
+tinyxml_lib = env.StaticLibrary(lib_name, objs)
+Return('tinyxml_lib')

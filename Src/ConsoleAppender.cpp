@@ -12,7 +12,7 @@ ConsoleAppender::ConsoleAppender(void)
 {
     m_strName = "ConsoleAppender";
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     m_hStdOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
 #endif
 }
@@ -21,14 +21,14 @@ ConsoleAppender::ConsoleAppender(const ConsoleAppender& other)
     if (this != &other)
     {
         this->m_strName = other.m_strName;
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
         m_hStdOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
 #endif
     }
 }
 ConsoleAppender::~ConsoleAppender(void)
 {
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     CloseHandle(m_hStdOut);
 #endif
 }
@@ -39,7 +39,7 @@ unsigned int ConsoleAppender::Write(LogLevel eLogLevel, const char* szMsg, int n
     if (szMsg)
     {
         if(nLen < 0) nLen = strlen(szMsg);
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 
         CONSOLE_SCREEN_BUFFER_INFO csbi = {sizeof(csbi)};
         GetConsoleScreenBufferInfo(
@@ -61,7 +61,7 @@ unsigned int ConsoleAppender::Write(LogLevel eLogLevel, const char* szMsg, int n
 
 void ConsoleAppender::SetConsoleColor(LogLevel eLogLevel)
 {
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     WORD dwTextAttr = FOREGROUND_BLUE | FOREGROUND_GREEN |
         FOREGROUND_RED | FOREGROUND_INTENSITY;
     switch(eLogLevel)

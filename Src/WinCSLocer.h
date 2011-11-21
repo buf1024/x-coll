@@ -1,5 +1,5 @@
 /*
- * File       : WinCriticalSectionLocer.h
+ * File       : WinCSLocer.h
  * Description: 
  * Version    : 2011-10-14 Created
  * Author     : buf1024@gmail.com
@@ -10,7 +10,7 @@
 
 #include "Locker.h"
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
 
 XBASIC_NAMEPACE_BEGIN
 

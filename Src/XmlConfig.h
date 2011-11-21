@@ -1,10 +1,10 @@
 /*
- * File       : Config.h
- * Description: 
- * Version    : 2011-02-11 Created
- *              2011-09-29 多操作系统支持
- * Author     : buf1024@gmail.com
- */
+* File       : XmlConfig.h
+* Description: 
+* Version    : 2011-02-11 Created
+*              2011-09-29 多操作系统支持
+* Author     : buf1024@gmail.com
+*/
 #ifndef XBASIC_CONFIGAPP_H_
 #define XBASIC_CONFIGAPP_H_
 
@@ -12,7 +12,7 @@
 #include <map>
 
 
-#define CONFIG_APP_TAG    "ConfigApp"
+#define CONFIG_APP_TAG    "XmlConfig"
 #define CONFIG_TAG        "Config"
 #define CONFIG_VALUE_TAG  "Value"
 #define CONFIG_NAME_ATTR  "name"
@@ -25,7 +25,7 @@
 
 XBASIC_NAMEPACE_BEGIN
 
-class ConfigApp;
+class XmlConfig;
 
 class XBASICAPI Config
 {
@@ -34,7 +34,7 @@ class XBASICAPI Config
     typedef std::map<std::string, long>::iterator DoubleWordOptIter;
     typedef std::map<std::string, double>::iterator DoubleOptIter;
 
-    friend class ConfigApp;
+    friend class XmlConfig;
 
 public:
     Config(std::string strName);
@@ -61,27 +61,21 @@ public:
 private:
     std::string _strName;
 
-    typedef struct MapWrapper
-    {
-        std::map<std::string, bool> _mapBoolOpt;
-        std::map<std::string, std::string> _mapStringOpt;
-        std::map<std::string, long> _mapDoubleWordOpt;
-        std::map<std::string, double> _mapDoubleOpt;
-    } MapWrapper;
-
-    MapWrapper* _mapWrapper;
-
+    std::map<std::string, bool> _mapBoolOpt;
+    std::map<std::string, std::string> _mapStringOpt;
+    std::map<std::string, long> _mapDoubleWordOpt;
+    std::map<std::string, double> _mapDoubleOpt;
 };
 
 
-class XBASICAPI ConfigApp
+class XBASICAPI XmlConfig
 {
     typedef std::map<std::string, Config*>::iterator ConfigAppIter;
 public:
     typedef std::map<std::string, Config*>::const_iterator Iterator;
 public:
-    ConfigApp(void);
-    ~ConfigApp(void);
+    XmlConfig(void);
+    ~XmlConfig(void);
 public:
     Config* GetConfig(std::string strName);
     void AddConfig(Config* pConfig);
@@ -99,11 +93,11 @@ public:
 public:
     Iterator begin() const
     {
-        return _mapWrapper->_mapConfigAppOpt.begin();
+        return _mapConfigAppOpt.begin();
     }
     Iterator end() const
     {
-        return _mapWrapper->_mapConfigAppOpt.end();
+        return _mapConfigAppOpt.end();
     }
 
 private:
@@ -111,14 +105,8 @@ private:
     std::string GetStringFromDouble(double fValue);
     long GetLongFromString(std::string strValue);
     double GetDoubleFromString(std::string strValue);
-private:
-    typedef struct  MapWrapper
-    {
-        std::map<std::string, Config*> _mapConfigAppOpt;
-    }MapWrapper;
-    
-    MapWrapper* _mapWrapper;
-
+private:   
+    std::map<std::string, Config*> _mapConfigAppOpt;
     std::string _strEncoding;
     std::string _strStandalone;
     std::string _strVer;

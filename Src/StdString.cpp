@@ -18,7 +18,7 @@ namespace StdString {
  * Convert an ANSI string to ANSI string
  * @return the ANSI string
  */
-XBASICAPI std::string GetAnsiString(const std::string strValue)
+XBASICAPI std::string GetAnsiString(const std::string& strValue)
 {
     return strValue;
 }
@@ -26,7 +26,7 @@ XBASICAPI std::string GetAnsiString(const std::string strValue)
  * Convert a wide string to ANSI string
  * @return the ANSI string
  */
-XBASICAPI std::string GetAnsiString(const std::wstring strValue)
+XBASICAPI std::string GetAnsiString(const std::wstring& strValue)
 {
     if (strValue.empty())
     {
@@ -35,7 +35,7 @@ XBASICAPI std::string GetAnsiString(const std::wstring strValue)
 
     int nLen = (strValue.length() + 1)*sizeof(wchar_t);
     char* pszBuf = new char[nLen];
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     //We don't use C Runtime convert function here
     ::WideCharToMultiByte(CP_ACP, 0L, 
         strValue.c_str(), -1, 
@@ -53,7 +53,7 @@ XBASICAPI std::string GetAnsiString(const std::wstring strValue)
  * Convert a wide string to wide string
  * @return the wide string
  */
-XBASICAPI std::wstring GetWideString(const std::wstring strValue)
+XBASICAPI std::wstring GetWideString(const std::wstring& strValue)
 {
     return strValue;
 }
@@ -61,7 +61,7 @@ XBASICAPI std::wstring GetWideString(const std::wstring strValue)
  * Convert a ANSI string to wide string
  * @return the wide string
  */
-XBASICAPI std::wstring GetWideString(const std::string strValue)
+XBASICAPI std::wstring GetWideString(const std::string& strValue)
 {
     if (strValue.empty())
     {
@@ -70,7 +70,7 @@ XBASICAPI std::wstring GetWideString(const std::string strValue)
 
     int nLen = strValue.length() + 1;
     wchar_t* pszBuf = new wchar_t[nLen];
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     //We don't use C Runtime convert function here
     ::MultiByteToWideChar(CP_ACP, 0L,
         strValue.c_str(), -1,       
@@ -88,7 +88,7 @@ XBASICAPI std::wstring GetWideString(const std::string strValue)
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::string strValue, char* pBuf, int& nBufLen)
+XBASICAPI const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
     {
@@ -101,7 +101,7 @@ XBASICAPI const char* GetCStyleAnsiString(const std::string strValue, char* pBuf
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::wstring strValue, char* pBuf, int& nBufLen)
+XBASICAPI const char* GetCStyleAnsiString(const std::wstring& strValue, char* pBuf, int& nBufLen)
 {
     return GetCStyleAnsiString(
         GetAnsiString(strValue), pBuf, nBufLen);
@@ -109,7 +109,7 @@ XBASICAPI const char* GetCStyleAnsiString(const std::wstring strValue, char* pBu
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring strValue, wchar_t* pBuf, int& nBufLen)
+XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
     {
@@ -123,7 +123,7 @@ XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring strValue, wchar_
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::string strValue, wchar_t* pBuf, int& nBufLen)
+XBASICAPI const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen)
 {
     return GetCStyleWideString(
         GetWideString(strValue), pBuf, nBufLen);
@@ -642,7 +642,7 @@ XBASICAPI std::string FromNumber(long lVal)
 {
     char szTmp[32] = "";
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     if(lVal < 0){
         _snprintf(szTmp, sizeof(szTmp), "-%ld", -lVal);
     }else{
@@ -667,7 +667,7 @@ XBASICAPI std::string FromNumber(double fVal)
 {
     char szTmp[32] = "";
 
-#ifdef MSWINDOWS
+#ifdef _MSC_VER
     if(fVal < 0){
         _snprintf(szTmp, sizeof(szTmp), "-%lf", -fVal);
     }else{

@@ -1,0 +1,10 @@
+Import('env')
+env.Append(CPPPATH=['../', '../include'])
+objs = env.Object(File('gtest-all.cc'))
+build_target = env['BUILD_TARGET']
+lib_name = 'gtest_statd'
+if build_target != 'debug':
+   lib_name = 'gtest_stat'
+    
+gtest_lib = env.StaticLibrary(lib_name, objs)
+Return('gtest_lib')

@@ -107,11 +107,7 @@ public:
 
 private:
     std::string m_strSectionName;
-    typedef struct MapWrapper
-    {
-        std::map< std::string, std::string > m_mapKeyValue;
-    }MapWrapper;
-    MapWrapper* m_pMapWrapper;
+    std::map< std::string, std::string > m_mapKeyValue;
     
 };
 
@@ -174,21 +170,17 @@ public:
 
     Iterator begin() const
     {
-        return m_pListWrapper->m_lstSections.begin();
+        return m_lstSections.begin();
     }
     Iterator end() const
     {
-        return  m_pListWrapper->m_lstSections.end();
+        return  m_lstSections.end();
     }
 private:
     void ClearUp();
 private:
     std::string m_strFilePath;
-    typedef struct ListWrapter
-    {
-        std::list<Section*> m_lstSections;
-    };
-    ListWrapter* m_pListWrapper;
+    std::list<Section*> m_lstSections;
     
 };
 
