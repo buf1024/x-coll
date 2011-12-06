@@ -5,12 +5,11 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef XBASIC_SINGLETON_H_
-#define XBASIC_SINGLETON_H_
+#ifndef SINGLETON_H_
+#define SINGLETON_H_
 
-#include "XBasicCore.h"
-
-XBASIC_NAMEPACE_BEGIN 
+namespace Util
+{
 
 template <typename TheClass>
 class Singleton
@@ -61,6 +60,6 @@ TheClass* Singleton<TheClass>::sm_pInst = 0;
 #define DECL_SINGLETON(TheClass)          \
     friend class  Singleton<TheClass>;    \
 
-XBASIC_NAMESPACE_END
+}
 
-#endif /* XBASIC_SINGLETON_H_ */
+#endif /* SINGLETON_H_ */
