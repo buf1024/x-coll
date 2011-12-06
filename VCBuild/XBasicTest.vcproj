@@ -175,46 +175,18 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="XBasicTest"
+		<File
+			RelativePath="..\Test\main.cpp"
 			>
-			<File
-				RelativePath="..\Src\test\ConfigTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\CRC32Test.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\IniConfigTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\LoggerTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\MD5Test.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\SHA1Test.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\StdStringTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\test\TestCmmHdr.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\Test\StdStringTest.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Test\TestCmmHdr.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
