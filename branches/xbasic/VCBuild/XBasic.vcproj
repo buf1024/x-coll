@@ -200,59 +200,11 @@
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\Src\Appender.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\ConsoleAppender.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\ConsoleAppender.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\FileAppender.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\FileAppender.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\Hash.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\Src\Hash.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashCRC32Impl.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashCRC32Impl.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashImpl.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashMD5Impl.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashMD5Impl.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashSHA1Impl.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\HashSHA1Impl.h"
 			>
 		</File>
 		<File
@@ -264,39 +216,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\Locker.h"
+			RelativePath="..\Src\Minilog.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\Src\Log.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\LogFactory.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\LogFactory.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Logger.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\Logger.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\LogLevel.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\NIXMutexLocker.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\NIXMutexLocker.h"
+			RelativePath="..\Src\Minilog.h"
 			>
 		</File>
 		<File
@@ -324,11 +248,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\WinCSLocer.cpp"
+			RelativePath="..\Src\Util.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\Src\WinCSLocer.h"
+			RelativePath="..\Src\Util.h"
 			>
 		</File>
 		<File

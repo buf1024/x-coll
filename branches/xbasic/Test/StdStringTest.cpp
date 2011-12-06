@@ -5,9 +5,6 @@
  * Author     : buf1024@gmail.com
  */
 
-#ifndef STDSTRINGTEST_CPP_
-#define STDSTRINGTEST_CPP_
-
 #include "TestCmmHdr.h"
 #include "StdString.h"
 
@@ -260,4 +257,3 @@ TEST(StdStringTest, Split)
     ASSERT_EQ(2, nRet);
 }
 
-#endif /* STDSTRINGTEST_CPP_ */
