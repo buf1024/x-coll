@@ -170,64 +170,12 @@
 			>
 		</Filter>
 		<Filter
-			Name="Logging"
+			Name="Cmm"
 			>
 			<File
-				RelativePath="..\Src\Logging\Appender.h"
+				RelativePath="..\Src\Config\CmmHdr.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Src\Logging\ConsoleAppender.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\ConsoleAppender.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\FileAppender.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\FileAppender.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\Log.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\LogFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\LogFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\Logger.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\Logger.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\LogLevel.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\NIXMutexLocker.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Logging\NIXMutexLocker.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Config"
-			>
 		</Filter>
 		<Filter
 			Name="Clt"
@@ -236,6 +184,22 @@
 		<Filter
 			Name="Util"
 			>
+			<File
+				RelativePath="..\Src\Util\IniConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\IniConfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\Minilog.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\Minilog.h"
+				>
+			</File>
 			<File
 				RelativePath="..\Src\Util\Prototype.h"
 				>
@@ -250,6 +214,14 @@
 			</File>
 			<File
 				RelativePath="..\Src\Util\StdString.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\XmlConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\XmlConfig.h"
 				>
 			</File>
 		</Filter>

@@ -8,9 +8,8 @@
 #ifndef XBASIC_PROTOTYPE_H_
 #define XBASIC_PROTOTYPE_H_
 
-#include "XBasicCore.h"
-
-XBASIC_NAMEPACE_BEGIN
+namespace Util
+{
 
 template<typename TheClass>
 class Prototype
@@ -34,7 +33,7 @@ public:
 
 #define DECL_PROTOTYPE(TheClass)
 
-XBASIC_NAMESPACE_END
+}
 
 #endif /* XBASIC_PROTOTYPE_H_ */
 
