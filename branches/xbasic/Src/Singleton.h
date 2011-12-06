@@ -9,8 +9,7 @@
 #define XBASIC_SINGLETON_H_
 
 #include "XBasicCore.h"
-
-XBASIC_NAMEPACE_BEGIN 
+XBASIC_NAMEPACE_BEGIN
 
 template <typename TheClass>
 class Singleton

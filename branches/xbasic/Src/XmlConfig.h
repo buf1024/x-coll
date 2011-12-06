@@ -5,8 +5,8 @@
 *              2011-09-29 多操作系统支持
 * Author     : buf1024@gmail.com
 */
-#ifndef XBASIC_CONFIGAPP_H_
-#define XBASIC_CONFIGAPP_H_
+#ifndef XBASIC_XMLCONFIG_H_
+#define XBASIC_XMLCONFIG_H_
 
 #include "StdString.h"
 #include <map>
@@ -114,4 +114,4 @@ private:
 
 XBASIC_NAMESPACE_END
 
-#endif /* XBASIC_CONFIGAPP_H_ */
+#endif /* XBASIC_XMLCONFIG_H_ */

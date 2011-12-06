@@ -1,5 +1,5 @@
 /*
- * File       : std::string.cpp
+ * File       : String.cpp
  * Description: 
  * Version    : 2011-9-28 Created
  * Author     : buf1024@gmail.com
@@ -11,14 +11,13 @@
 
 XBASIC_NAMEPACE_BEGIN
 
-
 namespace StdString {
 
 /**
  * Convert an ANSI string to ANSI string
  * @return the ANSI string
  */
-XBASICAPI std::string GetAnsiString(const std::string& strValue)
+std::string GetAnsiString(const std::string& strValue)
 {
     return strValue;
 }
@@ -26,7 +25,7 @@ XBASICAPI std::string GetAnsiString(const std::string& strValue)
  * Convert a wide string to ANSI string
  * @return the ANSI string
  */
-XBASICAPI std::string GetAnsiString(const std::wstring& strValue)
+std::string GetAnsiString(const std::wstring& strValue)
 {
     if (strValue.empty())
     {
@@ -53,7 +52,7 @@ XBASICAPI std::string GetAnsiString(const std::wstring& strValue)
  * Convert a wide string to wide string
  * @return the wide string
  */
-XBASICAPI std::wstring GetWideString(const std::wstring& strValue)
+std::wstring GetWideString(const std::wstring& strValue)
 {
     return strValue;
 }
@@ -61,7 +60,7 @@ XBASICAPI std::wstring GetWideString(const std::wstring& strValue)
  * Convert a ANSI string to wide string
  * @return the wide string
  */
-XBASICAPI std::wstring GetWideString(const std::string& strValue)
+std::wstring GetWideString(const std::string& strValue)
 {
     if (strValue.empty())
     {
@@ -88,11 +87,11 @@ XBASICAPI std::wstring GetWideString(const std::string& strValue)
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nBufLen)
+const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
     {
-        nBufLen = MIN((int)strValue.length(), nBufLen);
+        nBufLen = MIN((int)strValue.length() + 1, nBufLen);
         memcpy(pBuf, strValue.c_str(), nBufLen);
         return pBuf;
     }
@@ -101,7 +100,7 @@ XBASICAPI const char* GetCStyleAnsiString(const std::string& strValue, char* pBu
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const char* GetCStyleAnsiString(const std::wstring& strValue, char* pBuf, int& nBufLen)
+const char* GetCStyleAnsiString(const std::wstring& strValue, char* pBuf, int& nBufLen)
 {
     return GetCStyleAnsiString(
         GetAnsiString(strValue), pBuf, nBufLen);
@@ -109,7 +108,7 @@ XBASICAPI const char* GetCStyleAnsiString(const std::wstring& strValue, char* pB
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, int& nBufLen)
+const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
     {
@@ -123,7 +122,7 @@ XBASICAPI const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar
 /**
  * @see GetCStylestd::string
  */
-XBASICAPI const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen)
+const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen)
 {
     return GetCStyleWideString(
         GetWideString(strValue), pBuf, nBufLen);
@@ -135,7 +134,7 @@ XBASICAPI const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_
  * @param szStrValue 要计算的字符串
  * @return 字符个数，如果出错则返回负数
  */
-XBASICAPI int StringLenth(const char* szStrVal)
+int StringLenth(const char* szStrVal)
 {
     if (szStrVal == NullPtr)
     {
@@ -150,7 +149,7 @@ XBASICAPI int StringLenth(const char* szStrVal)
     return (int)(pChar - szStrVal);
     
 }
-XBASICAPI int Split(const char* szStrValue, const char* szStrDelim, std::vector<std::string>& rgpRet)
+int Split(const char* szStrValue, const char* szStrDelim, std::vector<std::string>& rgpRet)
 {
     
     std::list<std::string> lstRet;
@@ -167,7 +166,7 @@ XBASICAPI int Split(const char* szStrValue, const char* szStrDelim, std::vector<
     return nRet;
     
 }
-XBASICAPI int Split(const std::string& strValue, const std::string& strDelim, std::vector<std::string>& rgpRet)
+int Split(const std::string& strValue, const std::string& strDelim, std::vector<std::string>& rgpRet)
 {
     return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
 }
@@ -178,7 +177,7 @@ XBASICAPI int Split(const std::string& strValue, const std::string& strDelim, st
  * @param szStrDelim 结果集合
  * @return 结果集的个数，如果出错则返回负数
  */
-XBASICAPI int Split(const char* szStrValue, const char* szStrDelim, std::list<std::string>& rgpRet)
+int Split(const char* szStrValue, const char* szStrDelim, std::list<std::string>& rgpRet)
 {
     if(szStrValue == NullPtr ||
             szStrDelim == NullPtr || *szStrDelim == '\0')
@@ -214,7 +213,7 @@ XBASICAPI int Split(const char* szStrValue, const char* szStrDelim, std::list<st
  * @param rgpRet 结果集合
  * @return 结果集的个数
  */
-XBASICAPI int Split(const std::string& strValue, const std::string& strDelim, std::list<std::string>& rgpRet)
+int Split(const std::string& strValue, const std::string& strDelim, std::list<std::string>& rgpRet)
 {
     return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
 }
@@ -227,7 +226,7 @@ XBASICAPI int Split(const std::string& strValue, const std::string& strDelim, st
  * @see TrimRight
  * @see Trim
  */
-XBASICAPI std::string TrimLeft(const char* szStrValue, const char* szStrDelim)
+std::string TrimLeft(const char* szStrValue, const char* szStrDelim)
 {
     if (szStrValue == NullPtr ||
         szStrDelim == NullPtr)
@@ -259,7 +258,7 @@ XBASICAPI std::string TrimLeft(const char* szStrValue, const char* szStrDelim)
  * @see TrimRight
  * @see Trim
  */
-XBASICAPI std::string TrimLeft(const std::string& strValue, const std::string& strDelim)
+std::string TrimLeft(const std::string& strValue, const std::string& strDelim)
 {
     return TrimLeft(strValue.c_str(), strDelim.c_str());
 }
@@ -273,7 +272,7 @@ XBASICAPI std::string TrimLeft(const std::string& strValue, const std::string& s
  * @see TrimLeft
  * @see Trim
  */
-XBASICAPI std::string TrimRight(const char* szStrValue, const char* szStrDelim)
+std::string TrimRight(const char* szStrValue, const char* szStrDelim)
 {
     if (szStrValue == NullPtr ||
         szStrDelim == NullPtr)
@@ -302,7 +301,7 @@ XBASICAPI std::string TrimRight(const char* szStrValue, const char* szStrDelim)
  * @see TrimLeft
  * @see Trim
  */
-XBASICAPI std::string TrimRight(const std::string& strValue, const std::string& strDelim)
+std::string TrimRight(const std::string& strValue, const std::string& strDelim)
 {
     return TrimRight(strValue.c_str(), strDelim.c_str());
 }
@@ -314,7 +313,7 @@ XBASICAPI std::string TrimRight(const std::string& strValue, const std::string& 
  * @see TrimLeft
  * @see TrimRight
  */
-XBASICAPI std::string Trim(const char* szStrValue, const char* szStrDelim)
+std::string Trim(const char* szStrValue, const char* szStrDelim)
 {
     std::string strLeft = TrimLeft(szStrValue, szStrDelim);
     return TrimRight(strLeft.c_str(), szStrDelim);
@@ -327,7 +326,7 @@ XBASICAPI std::string Trim(const char* szStrValue, const char* szStrDelim)
  * @see TrimLeft
  * @see TrimRight
  */
-XBASICAPI std::string Trim(const std::string& strValue, const std::string& strDelim)
+std::string Trim(const std::string& strValue, const std::string& strDelim)
 {
     return Trim(strValue.c_str(), strDelim.c_str());
 }
@@ -338,7 +337,7 @@ XBASICAPI std::string Trim(const std::string& strValue, const std::string& strDe
  * @param strSubStr 开始的字符串B
  * @return false 字符串A不是以字符串B开始或者出借, true 查字符串是以字符串B开始
  */
-XBASICAPI bool StartsWith(const char* szStrValue, const char*szStrSubStr)
+bool StartsWith(const char* szStrValue, const char*szStrSubStr)
 {
     if (szStrValue == NullPtr || szStrSubStr == NullPtr)
     {
@@ -370,7 +369,7 @@ XBASICAPI bool StartsWith(const char* szStrValue, const char*szStrSubStr)
  * @param strSubStr 开始的字符串B
  * @return false 字符串A不是以字符串B开始或者出借, true 查字符串是以字符串B开始
  */
-XBASICAPI bool StartsWith(const std::string& strValue, const std::string& strSubStr)
+bool StartsWith(const std::string& strValue, const std::string& strSubStr)
 {
     return StartsWith(strValue.c_str(), strSubStr.c_str());
 }
@@ -380,7 +379,7 @@ XBASICAPI bool StartsWith(const std::string& strValue, const std::string& strSub
  * @param strSubStr 结束的字符串
  * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
  */
-XBASICAPI bool EndsWith(const char* szStrValue, const char*szStrSubStr)
+bool EndsWith(const char* szStrValue, const char*szStrSubStr)
 {
 
     if (szStrValue == NullPtr || szStrSubStr == NullPtr)
@@ -418,12 +417,12 @@ XBASICAPI bool EndsWith(const char* szStrValue, const char*szStrSubStr)
  * @param strSubStr 结束的字符串
  * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
  */
-XBASICAPI bool EndsWith(const std::string& strValue, const std::string& strSubStr)
+bool EndsWith(const std::string& strValue, const std::string& strSubStr)
 {
     return EndsWith(strValue.c_str(), strSubStr.c_str());
 }
 
-XBASICAPI bool Contains(const char* szStrValue, const char ch)
+bool Contains(const char* szStrValue, const char ch)
 {
     if (szStrValue == NullPtr)
     {
@@ -432,7 +431,7 @@ XBASICAPI bool Contains(const char* szStrValue, const char ch)
     return strchr(szStrValue, ch)  != NullPtr;
     
 }
-XBASICAPI bool Contains(const std::string& strValue, const char ch)
+bool Contains(const std::string& strValue, const char ch)
 {
     return Contains(strValue.c_str(), ch);
 }
@@ -443,7 +442,7 @@ XBASICAPI bool Contains(const std::string& strValue, const char ch)
  * @param strSubStr 包含的字符串
  * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
  */
-XBASICAPI bool Contains(const char* szStrValue, const char* szStrSubStr)
+bool Contains(const char* szStrValue, const char* szStrSubStr)
 {
     return FirstPosition(szStrValue, szStrSubStr) != NullPtr;
 }
@@ -454,12 +453,12 @@ XBASICAPI bool Contains(const char* szStrValue, const char* szStrSubStr)
  * @param strSubStr 包含的字符串
  * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
  */
-XBASICAPI bool Contains(const std::string& strValue, const std::string& strSubStr)
+bool Contains(const std::string& strValue, const std::string& strSubStr)
 {
     return Contains(strValue.c_str(), strSubStr.c_str());
 }
 
-XBASICAPI const char* FirstPosition(const char* szStrValue, const char* szStrSubStr)
+const char* FirstPosition(const char* szStrValue, const char* szStrSubStr)
 {
     if(szStrValue == NullPtr ||
         szStrSubStr == NullPtr)
@@ -492,7 +491,7 @@ XBASICAPI const char* FirstPosition(const char* szStrValue, const char* szStrSub
     return NullPtr;
 
 }
-XBASICAPI const char* FirstPosition(const char* szStrVal, const char ch)
+const char* FirstPosition(const char* szStrVal, const char ch)
 {
     if (szStrVal == NullPtr)
     {
@@ -560,7 +559,7 @@ bool IsDigit(const char* szStr)
 {
     if (szStr == NullPtr)
     {
-        return "";
+        return false;
     }
     const char* pStr = szStr;
     while(*pStr != '\0')
@@ -601,7 +600,7 @@ bool IsAlpha(const std::string& strStr)
     return IsAlpha(strStr.c_str());
 }
 
-XBASICAPI std::string Replace(const char* szStrVal, const char* szStrOld, const char* szStrNew)
+std::string Replace(const char* szStrVal, const char* szStrOld, const char* szStrNew)
 {
     if (szStrVal == NullPtr || *szStrVal == '\0')
     {
@@ -633,12 +632,12 @@ XBASICAPI std::string Replace(const char* szStrVal, const char* szStrOld, const 
     return strRet;
     
 }
-XBASICAPI std::string Replace(const std::string& strVal, const std::string strOld, const std::string strNew)
+std::string Replace(const std::string& strVal, const std::string strOld, const std::string strNew)
 {
     return Replace(strVal.c_str(), strOld.c_str(), strNew.c_str());
 }
 
-XBASICAPI std::string FromNumber(long lVal)
+std::string FromNumber(long lVal)
 {
     char szTmp[32] = "";
 
@@ -658,12 +657,12 @@ XBASICAPI std::string FromNumber(long lVal)
     return szTmp;
 }
 
-XBASICAPI std::string FromNumber(int nVal)
+std::string FromNumber(int nVal)
 {
     return FromNumber((long)nVal);
 }
 
-XBASICAPI std::string FromNumber(double fVal)
+std::string FromNumber(double fVal)
 {
     char szTmp[32] = "";
 
@@ -683,19 +682,19 @@ XBASICAPI std::string FromNumber(double fVal)
     return szTmp;
 }
 
-XBASICAPI long ToLong(const char* szStrVal, int nBase, bool& bStat)
+long ToLong(const char* szStrVal, int nBase, bool& bStat)
 {
     return 0L;
 }
-XBASICAPI long ToLong(const std::string& strVal, int nBase, bool& bStat)
+long ToLong(const std::string& strVal, int nBase, bool& bStat)
 {
     return ToLong(strVal.c_str(), nBase, bStat);
 }
-XBASICAPI double ToDouble(const char* szStrVal, bool& bStat)
+double ToDouble(const char* szStrVal, bool& bStat)
 {
     return 0.0;
 }
-XBASICAPI double ToDouble(const std::string& strVal, bool& bStat)
+double ToDouble(const std::string& strVal, bool& bStat)
 {
     return ToDouble(strVal.c_str(), bStat);
 }

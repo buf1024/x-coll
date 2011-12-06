@@ -40,6 +40,16 @@
 
 #endif
 
+#ifndef XBASICSTAT
+#ifdef _MSC_VER
+#ifdef _DEBUG
+#pragma comment(lib, "xbasic_statd.lib")
+#else
+#pragma comment(lib, "xbasic_stat.lib")
+#endif
+#endif
+#endif
+
 #define XBASICAPI
 
 #define NullPtr             (0)
@@ -49,7 +59,6 @@
 
 #define MIN(a, b)           ((a)>(b)?(b):(a))
 #define MAX(a, b)           ((a)>(b)?(a):(b))
-
 #define UnRefParam(param)   ((void)(param))
 
 #endif /* XBASIC_XBASICCORE_H_ */
