@@ -176,7 +176,15 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\Test\IniConfigTest.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\Test\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Test\MiniLogTest.cpp"
 			>
 		</File>
 		<File
@@ -185,6 +193,10 @@
 		</File>
 		<File
 			RelativePath="..\Test\TestCmmHdr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Test\UtilTest.cpp"
 			>
 		</File>
 	</Files>

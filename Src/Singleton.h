@@ -11,6 +11,9 @@
 #include "XBasicCore.h"
 XBASIC_NAMEPACE_BEGIN
 
+namespace Util
+{
+
 template <typename TheClass>
 class Singleton
 {
@@ -57,9 +60,10 @@ template <typename TheClass>
 TheClass* Singleton<TheClass>::sm_pInst = 0;
 
 
-#define DECL_SINGLETON(TheClass)          \
-    friend class  Singleton<TheClass>;    \
+#define DECL_SINGLETON(TheClass)                \
+	friend class  Util::Singleton<TheClass>;    \
 
+}
 XBASIC_NAMESPACE_END
 
 #endif /* XBASIC_SINGLETON_H_ */

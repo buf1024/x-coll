@@ -82,7 +82,6 @@ public:
     * @return true if find the specific key, otherwise false
     */
     bool GetValue(const std::string strKey, std::string& strValue, std::string strDefault = "");
-
     bool GetValue(const std::string strKey, bool& bValue, bool bDefault = false);
     bool GetValue(const std::string strKey, int& nValue, int nDefault = 0);
     bool GetValue(const std::string strKey, long& lValue, long lDefault = 0L);

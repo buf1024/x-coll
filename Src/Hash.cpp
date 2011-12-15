@@ -11,6 +11,13 @@
 
 #include "md5.h"
 #include "sha1.h"
+#ifndef _MSC_VER
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#endif
 
 USE_XBASIC_NAMESPACE
 
@@ -85,10 +92,22 @@ std::string HashMD5Impl::GetFileHash(std::string strFile)
             UnmapViewOfFile(pByte);
             CloseHandle(hMapping);
         }
-        else
+        CloseHandle(hFile);
+    }
+#else
+    int fd = open(strFile.c_str(), O_RDONLY);
+    if(fd != -1){
+        lseek(fd, 0, SEEK_SET);
+        off_t len = lseek(fd, 0, SEEK_END);
+        void* pAddr = mmap(NullPtr, len, PROT_READ, MAP_PRIVATE, fd, 0);
+        
+        if (pAddr != MAP_FAILED)
         {
-            CloseHandle(hFile);
+            strRet = ComputeHash((const unsigned char*)pAddr, len);
+            munmap(pAddr, len);
         }
+
+        close(fd);
     }
 #endif
     return strRet;
@@ -195,10 +214,27 @@ std::string HashSHA1Impl::GetFileHash(std::string strFile)
             UnmapViewOfFile(pByte);
             CloseHandle(hMapping);
         }
-        else
+        CloseHandle(hFile);
+    }
+#else
+    int fd = open(strFile.c_str(), O_RDONLY);
+    if(fd != -1){
+        lseek(fd, 0, SEEK_SET);
+        off_t len = lseek(fd, 0, SEEK_END);
+        void* pAddr = mmap(NullPtr, len, PROT_READ, MAP_PRIVATE, fd, 0);
+        if (pAddr != MAP_FAILED)
         {
-            CloseHandle(hFile);
+            m_pSHA1->Reset();
+            m_pSHA1->Input((const char*)pAddr, len);
+            unsigned int digest[5] = {0};
+            m_pSHA1->Result(digest);
+            char szRes[48] = "";
+            snprintf(szRes, 48, "%x%x%x%x%x",
+                digest[0], digest[1], digest[2], digest[3], digest[4]);
+            strRet = szRes;
+            munmap(pAddr, len);
         }
+        close(fd);
     }
 #endif
 
@@ -286,10 +322,29 @@ std::string HashCRC32Impl::GetFileHash(std::string strFile)
             UnmapViewOfFile(pByte);
             CloseHandle(hMapping);
         }
-        else
+        CloseHandle(hFile);
+    }
+#else
+    int fd = open(strFile.c_str(), O_RDONLY);
+    if(fd != -1){
+        lseek(fd, 0, SEEK_SET);
+        off_t len = lseek(fd, 0, SEEK_END);
+        void* pAddr = mmap(NullPtr, len, PROT_READ, MAP_PRIVATE, fd, 0);
+        if (pAddr != MAP_FAILED)
         {
-            CloseHandle(hFile);
+            int nRes = Get_CRC((const unsigned char*)pAddr, len);
+            char szBuf[16] = "";
+            char szFormat[8] = "%x";
+            if (nRes < 0)
+            {
+                strcpy(szFormat, "-%x");
+                nRes = -nRes;
+            }
+            snprintf(szBuf, 16, szFormat, nRes);
+            strRet = szBuf;
+            munmap(pAddr, len);
         }
+        close(fd);
     }
 #endif
     return strRet;

@@ -4,72 +4,76 @@ import os
 WIN_DEBUG_COMM = '/Od /D "WIN32" /D "_DEBUG" /Gm /EHsc /RTC1 /MDd /W3 /nologo /c /ZI /TP'
 WIN_RELEASE_COMM = '/O2 /Oi /GL /D "WIN32" /D "NDEBUG" /FD /EHsc /MD /Gy /W3 /nologo /c /Zi /TP'
 
+GCC_DEBUG_COMM = '-g'
+GCC_RELEASE_COMM = '-O2'
+
 platform = Platform()
-build_ver = ARGUMENTS.get('ver', 'release').lower()
-build_type = ARGUMENTS.get('type', 'lib').lower()
+build_ver = 'release'
+for build in COMMAND_LINE_TARGETS:
+    if build.lower() == 'debug':
+        build_ver = 'debug'
+        break
 
-build_dir = 'build/%s/%s' % (platform, build_ver)
-dist_dir  = 'dist/%s/%s' % (platform, build_ver)
+dist_dir = 'dist'
+dist_lib_dir  = 'dist/lib'
+dist_header_dir = 'dist/include'
+dist_bin_dir = 'dist/bin'
+  
+if not os.path.exists(dist_lib_dir):
+    os.makedirs(dist_lib_dir)
 
-if not os.path.exists(build_dir):
-    os.makedirs(build_dir)
+if not os.path.exists(dist_header_dir):
+    os.makedirs(dist_header_dir)
+
+if not os.path.exists(dist_bin_dir):
+    os.makedirs(dist_bin_dir)
     
-if not os.path.exists(dist_dir):
-    os.makedirs(dist_dir)
-    
-target = dist_dir
-
 env = Environment()
 env['PLATFORM'] = platform
 env['BUILD_VER'] = build_ver
-env['BUILD_TYPE'] = build_type
 
+target = ''
 if str(platform) == 'win32':
-    env.Append(CXXFLAGS='/D "MSWINDOWS"')
     if build_ver == 'debug':
-        env.Append(CXXFLAGS=WIN_DEBUG_COMM)        
-        if build_type == 'lib':
-            env.Append(CXXFLAGS='/D "_LIB" /D "XBASICSTAT"')
-            target = target + '/xbasic_statd'
-        else:
-            env.Append(CXXFLAGS='/D "_USRDLL" /D "_WINDLL" /D "XBASICDLL"')
-            target = target + '/xbasicd'
+        env.Append(CXXFLAGS=WIN_DEBUG_COMM)
+        target = 'xbasic_statd'
     else:
         env.Append(CXXFLAGS=WIN_RELEASE_COMM)
-        if build_type == 'lib':
-            env.Append(CXXFLAGS='/D "_LIB" /D "XBASICSTAT"')
-            target = target + '/xbasic_stat'
-        else:
-            env.Append(CXXFLAGS='/D "_USRDLL" /D "_WINDLL" /D "XBASICDLL"')
-            target = target + '/xbasic'
+        target = target + 'xbasic_stat'
 else:
     if build_ver == 'debug':
-        pass
+        env.Append(CXXFLAGS=GCC_DEBUG_COMM)
+        target = target + 'xbasic_statd'
     else:
-        pass
+        env.Append(CXXFLAGS=GCC_RELEASE_COMM)
+        target = target + 'xbasic_stat'
 
 Export('env')
 
 ex_srcs = ['3rd/tinyxml', '3rd/hash', 'Src']
-
 lib_objs = []
 for src in ex_srcs:
-    subdir = '%s/SConscript' % src;
-    vdir = '%s/%s' % (build_dir, src)
-    obj = SConscript(subdir, variant_dir = vdir, duplicate=0)
+    subdir = '%s/SConscript' % src
+    #vdir = '%s/%s' % (build_dir, src)
+    obj = SConscript(subdir)#, variant_dir = vdir, duplicate=0)
     lib_objs.append(obj)
 
-lib = None
-if build_type == 'lib':
-    lib = env.StaticLibrary(target, lib_objs)
-else:
-    lib = env.SharedLibrary(target, lib_objs)
-    
-    '''
-src = 'Src/test'   
-vdir = '%s/%s' % (build_dir, src)
+lib = env.StaticLibrary(target, lib_objs)
+env.Alias(build_ver, lib)
 
-obj = SConscript(test, variant_dir = vdir, duplicate=0)
-test = env.Program(dist_dir + 'test', obj)
+headers = []
+for src in ex_srcs:
+    headers.append(Glob(src + '/*.h'))
+  
+dist_h = env.Install(dist_header_dir, headers)
+dist_l = env.Install(dist_lib_dir, lib)
+env.Alias('install', dist_dir)
+env.Depends(dist_header_dir, dist_lib_dir)
 
-env.Depend(test, lib)'''
+src = 'Test/SConscript'
+program = SConscript(src)
+env.Depends(program, [dist_l, dist_h])
+env.Install(dist_bin_dir, program)
+env.Alias('test', program)
+env.Alias('install', program)
+

@@ -100,11 +100,6 @@ public:
         return _mapConfigAppOpt.end();
     }
 
-private:
-    std::string GetStringFromLong(long dwValue);
-    std::string GetStringFromDouble(double fValue);
-    long GetLongFromString(std::string strValue);
-    double GetDoubleFromString(std::string strValue);
 private:   
     std::map<std::string, Config*> _mapConfigAppOpt;
     std::string _strEncoding;

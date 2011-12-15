@@ -17,6 +17,87 @@
 
 XBASIC_NAMEPACE_BEGIN
 
+#define LOG_DEBUG(...)                                               \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.Debug(__VA_ARGS__);                                         \
+}                                                                    \
+
+#define LOG_INFO(...)                                                \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.Info(__VA_ARGS__);                                          \
+}                                                                    \
+
+#define LOG_WARN(...)                                                \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.Warn(__VA_ARGS__);                                          \
+}                                                                    \
+
+#define LOG_ERROR(...)                                               \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.Error(__VA_ARGS__);                                         \
+}                                                                    \
+
+#define LOG_FATAL(...)                                               \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.Fatal(__VA_ARGS__);                                         \
+}  
+
+#define SET_FILE_LOG_LEVEL(lvl)                                      \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+    sLog.SetFileLogLevel(Minilog::GetMapLevel(nLvl));                \
+}                                                                    \
+
+
+#define SET_CONSOLE_LOG_LEVEL(lvl)                                   \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.SetConsoleLogLevel(Minilog::GetMapLevel(nLvl));             \
+}                                                                    \
+
+#define SET_LOG_LEVEL(lvl)                                          \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+    sLog.SetConsoleLogLevel(Minilog::GetMapLevel(lvl));              \
+	sLog.SetFileLogLevel(Minilog::GetMapLevel(lvl));                 \
+}                                                                    \
+
+
+#define SET_LOG_PATH(szPath)                                         \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.SetLogPath(szPath);                                         \
+}                                                                    \
+
+#define SET_LOG_FILE_FIXED(szFile)                                   \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.SetLogFile(szFile, false);                                  \
+}                                                                    \
+
+#define SET_LOG_FILE(szFile)                                         \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.SetLogFile(szFile);                                         \
+}                                                                    \
+
+#define FLUSH_LOG()                                                  \
+{                                                                    \
+	Minilog& sLog = Minilog::GetInst();                              \
+	sLog.FlushLog();                                                 \
+}                                                                    \
+
+#define RELEASE_LOG()                                                \
+{                                                                    \
+	Minilog::ReleaseRC();                                            \
+}                                                                    \
+
+
 enum LogLevel
 {
     ALL     = 0,
@@ -28,9 +109,10 @@ enum LogLevel
     OFF     = 600
 };
 
+
 // 单进程单线程使用，不进行同步操作
 class Minilog
-    : public Singleton<Minilog>
+	: public Util::Singleton<Minilog>
 {
     DECL_SINGLETON(Minilog)
 private:
@@ -49,29 +131,44 @@ public:
     void SetConsoleLogLevel(LogLevel eLvl);
     LogLevel GetConsoleLogLevel() const;
 
-    void SetFilePath(const char* szPath);
-    std::string GetFilePath() const;
+    void SetLogPath(const char* szPath);
+    std::string GetLogPath() const;
+
+	void SetLogFile(const char* szFile, bool bAppDate = true);
+	std::string GetLogFile() const;
 
     void FlushLog();
 
-    void Log(LogLevel eLvl, const char* szMsg, int nLen = -1);
+	void LogConsole(LogLevel eLvl, const char* szMsg, int nLen = -1);
+	void LogFile(LogLevel eLvl, const char* szMsg, int nLen = -1);
 
-protected:
+	static LogLevel GetMapLevel(int nLvl);
+	static LogLevel GetMapLevel(const char* szLvl);
+
+protected:	
     void LogMessageV(LogLevel eLvl, const char* szFormat, va_list va); 
     std::string GetLogHeader(LogLevel eLvl);
+
+	void SetConsoleColor(LogLevel eLogLevel);
 
 private:
     LogLevel m_eFileLvl;
     LogLevel m_eConsoleLvl;
     
     std::string m_strPath;
+	std::string m_strFile;
     FILE* m_pFile;
+
+	static const unsigned int MSG_BUF = 4096;
+	char m_szMsgBuf[MSG_BUF];
+
+#ifdef _MSC_VER
+	HANDLE m_hStdOut;
+#endif
 };
 
 XBASIC_NAMESPACE_END
  
 #endif /* XBASIC_MINILOG_H_ */
- 
- 
- 
- 
+
+

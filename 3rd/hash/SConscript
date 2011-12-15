@@ -1,9 +1,3 @@
 Import('env')
 objs = env.Object(Glob('*.cpp'))
-build_target = env['BUILD_TARGET']
-lib_name = 'hash_statd'
-if build_target != 'debug':
-   lib_name = 'hash_stat'
-    
-hash_lib = env.StaticLibrary(lib_name, objs)
-Return('hash_lib')
+Return('objs')
