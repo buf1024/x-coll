@@ -24,27 +24,26 @@ namespace StdString {
 
 //字符串扩展功能
 /**
- * 将ANSI字符串转换为ANSI字符串
- * @return 转换的ANSI字符串
+ * 将ANSI/宽字符串转换为ANSI/宽字符串
+ * @param strValue 要转换的ANSI/宽字符串
+ * @return 已转换的ANSI/宽字符串
  */
 std::string GetAnsiString(const std::string& strValue);
 /**
- * 将宽字符串转换为ANSI字符串
- * @return 转换的ANSI字符串
+ * @see GetAnsiString
  */
 std::string GetAnsiString(const std::wstring& strValue);
 /**
- * 将宽字符串转换为宽字符串
- * @return 转换的宽字符串
- */
-std::wstring GetWideString(const std::wstring& strValue);
-/**
- * 将ANSI字符串转换为宽字符串
- * @return 转换的宽字符串
+ * @see GetAnsiString
  */
 std::wstring GetWideString(const std::string& strValue);
+/**
+ * @see GetAnsiString
+ */
+std::wstring GetWideString(const std::wstring& strValue);
 
 /**
+ * 获取C风格的字符串
  * @param szValue 要计算的字符串
  * @param pBuf 结果缓存
  * @param nBufLen 作为传入参数时，为缓存的大小，传出参数时，为实际的长度
@@ -64,8 +63,11 @@ const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, 
  */
 const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen);
 
-
-
+/**
+ * 计算字符串的长度
+ * @param szStrValue 要计算的字符串
+ * @return 字符个数，如果出错则返回负数
+ */
 int StringLenth(const char* szStrVal);
 /**
  * 将给出的字符串分割到组里
@@ -76,27 +78,15 @@ int StringLenth(const char* szStrVal);
  */
 int Split(const char* szStrValue, const char* szStrDelim, std::vector<std::string>& rgpRet);
 /**
- * 将给出的字符串分割到组里
- * @param strValue 要分割的字符串
- * @param strDelim 分割符
- * @param rgpRet 结果集合
- * @return 结果集的个数
+ * @see Split
  */
 int Split(const std::string& strValue, const std::string& strDelim, std::vector<std::string>& rgpRet);
 /**
- * 将给出的字符串分割到组里
- * @param szStrValue 要分割的字符串
- * @param strDelim 分割符
- * @param szStrDelim 结果集合
- * @return 结果集的个数，如果出错则返回负数
+ * @see Split
  */
 int Split(const char* szStrValue, const char* szStrDelim, std::list<std::string>& rgpRet);
 /**
- * 将给出的字符串分割到组里
- * @param strValue 要分割的字符串
- * @param strDelim 分割符
- * @param rgpRet 结果集合
- * @return 结果集的个数
+ * @see Split
  */
 int Split(const std::string& strValue, const std::string& strDelim, std::list<std::string>& rgpRet);
 
@@ -111,12 +101,7 @@ int Split(const std::string& strValue, const std::string& strDelim, std::list<st
 std::string TrimLeft(const char* szStrValue, const char* szStrDelim);
 
 /**
- * 去掉字符串A左边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 已经去掉字符串A左边包含字符串B的部分
- * @see TrimRight
- * @see Trim
+ * @see TrimLeft
  */
 std::string TrimLeft(const std::string& strValue, const std::string& strDelim);
 
@@ -131,12 +116,7 @@ std::string TrimLeft(const std::string& strValue, const std::string& strDelim);
  */
 std::string TrimRight(const char* szStrValue, const char* szStrDelim);
 /**
- * 去掉字符串A右边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 已经去掉字符串A右边包含字符串B的部分
- * @see TrimLeft
- * @see Trim
+ * @see TrimRight
  */
 std::string TrimRight(const std::string& strValue, const std::string& strDelim);
 /**
@@ -149,27 +129,19 @@ std::string TrimRight(const std::string& strValue, const std::string& strDelim);
  */
 std::string Trim(const char* szStrValue, const char* szStrDelim);
 /**
- * 去掉字符串A左边和右边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 去掉字符串A左边和右边包含字符串B的部分
- * @see TrimLeft
- * @see TrimRight
+ * @see Trim
  */
 std::string Trim(const std::string& strValue, const std::string& strDelim);
 
 /**
- * Check whether a string is starts with another string
- * @param strValue the string that will be checked
- * @param strSubStr the started string
- * @return true is a string is starts with another string, false otherwise
+ * 检查字符串A是否以字符串B开始
+ * @param strValue 被检查的字符串A
+ * @param strSubStr 开始的字符串B
+ * @return false 字符串A不是以字符串B开始或者出借, true 查字符串是以字符串B开始
  */
 bool StartsWith(const char* szStrValue, const char*szStrSubStr);
 /**
- * Check whether a string is starts with another string
- * @param strValue the string that will be checked
- * @param strSubStr the started string
- * @return true is a string is starts with another string, false otherwise
+ * @see StartsWith
  */
 bool StartsWith(const std::string& strValue, const std::string& strSubStr);
 /**
@@ -181,32 +153,40 @@ bool StartsWith(const std::string& strValue, const std::string& strSubStr);
 bool EndsWith(const char* szStrValue, const char*szStrSubStr);
 
 /**
- * 测试A字符串是否以B字符串结束
- * @param strValue 被测试的字符串
- * @param strSubStr 结束的字符串
- * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
+ * @see EndsWith
  */
 bool EndsWith(const std::string& strValue, const std::string& strSubStr);
 
-
+/**
+ * 测试A字符串是否包含B字符
+ * @param strValue 被测试的字符串
+ * @param ch B字符
+ * @return true 字符串A包含B字符串, false 字符串A不包含B字符
+ */
 bool Contains(const char* szStrValue, const char ch);
+/**
+ * @see EndsWith
+ */
 bool Contains(const std::string& strValue, const char ch);
 /**
- * 测试A字符串是否包括B字符串
- * @param strValue 被测试的字符串
- * @param strSubStr 包含的字符串
- * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
+ * @see EndsWith
  */
 bool Contains(const char* szStrValue, const char* szStrSubStr);
 /**
- * 测试A字符串是否包括B字符串
- * @param strValue 被测试的字符串
- * @param strSubStr 包含的字符串
- * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
+ * @see EndsWith
  */
 bool Contains(const std::string& strValue, const std::string& strSubStr);
+/**
+ * 找出A字符串里以B字符串开始的地址
+ * @param szStrVal A字符串
+ * @param szSubVal B字符串
+ */
 const char* FirstPosition(const char* szStrVal, const char* szSubVal);
+/**
+ * @see FirstPosition
+ */
 const char* FirstPosition(const char* szStrVal, const char ch);
+
 
 std::string ToUpper(const char* szStr);
 std::string ToUpper(const std::string& strStr);
@@ -227,9 +207,12 @@ std::string FromNumber(long lVal);
 std::string FromNumber(int nVal);
 std::string FromNumber(double fVal);
 
+long ToLong(const char* szStrVal, bool& bStat);
+long ToLong(const std::string& strVal, bool& bStat);
 
-long ToLong(const char* szStrVal, int nBase, bool& bStat);
-long ToLong(const std::string& strVal, int nBase, bool& bStat);
+long ToInt(const char* szStrVal, bool& bStat);
+long ToInt(const std::string& strVal, bool& bStat);
+
 double ToDouble(const char* szStrVal, bool& bStat);
 double ToDouble(const std::string& strVal, bool& bStat);
 

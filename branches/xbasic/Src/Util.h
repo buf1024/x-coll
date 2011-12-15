@@ -5,16 +5,16 @@
  * Author     : buf1024@gmail.com
  */
 
-#include "XBasicCore.h"
-
 #ifndef XBASIC_UTIL_H_
 #define XBASIC_UTIL_H_
+
+#include "XBasicCore.h"
 
 XBASIC_NAMEPACE_BEGIN
 
 namespace Util
 {
-bool IsAppInstRuning();
+    long IsAppInstRuning(const char* szAppID);
 }
 
 XBASIC_NAMESPACE_END

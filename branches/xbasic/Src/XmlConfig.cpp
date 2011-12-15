@@ -259,11 +259,22 @@ bool XmlConfig::Load(std::string strFileName)
             }
             else if (std::string(szType) == CONFIG_DWORD_OPT)
             {
-                pConfig->AddDWORDValue(strName, GetLongFromString(strValue));
+				bool bStat = false;
+				long lVal = StdString::ToLong(strValue, bStat);
+				if (bStat)
+				{
+					pConfig->AddDWORDValue(strName, lVal);
+				}			
+				
             }
-            else if (std::string(szType) == "Double")
+            else if (std::string(szType) == CONFIG_DOUBLE_OPT)
             {
-                pConfig->AddDoubleValue(strName, GetDoubleFromString(strValue));
+				bool bStat = false;
+				double dVal = StdString::ToDouble(strValue, bStat);
+				if (bStat)
+				{
+					pConfig->AddDoubleValue(strName, dVal);
+				}
             }
             else
             {
@@ -320,7 +331,7 @@ bool XmlConfig::Save(std::string strFileName)
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
             pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
             pDW->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_DWORD_OPT);
-            TiXmlText* pText = new TiXmlText(GetStringFromLong(dwIter->second));
+			TiXmlText* pText = new TiXmlText(StdString::FromNumber(dwIter->second));
             pDW->LinkEndChild(pText);
             pConfElem->LinkEndChild(pDW);
         }
@@ -332,7 +343,7 @@ bool XmlConfig::Save(std::string strFileName)
             TiXmlElement* pDW = new TiXmlElement(CONFIG_VALUE_TAG);
             pDW->SetAttribute(CONFIG_NAME_ATTR, dwIter->first);
             pDW->SetAttribute(CONFIG_TYPE_ATTR, CONFIG_DOUBLE_OPT);
-            TiXmlText* pText = new TiXmlText(GetStringFromDouble(dwIter->second));
+			TiXmlText* pText = new TiXmlText(StdString::FromNumber(dwIter->second));
             pDW->LinkEndChild(pText);
             pConfElem->LinkEndChild(pDW);
         }
@@ -364,46 +375,4 @@ const std::string XmlConfig::GetStandalone() const
     return _strStandalone;
 }
 
-std::string XmlConfig::GetStringFromLong(long dwValue)
-{
-    char szBuf[32] = {0};
-#ifndef _MSC_VER
-    snprintf(szBuf, 32, "%ld", dwValue);
-#else
-    _snprintf_s(szBuf, 32, 32, "%ld", dwValue);
-#endif
-    return szBuf;
-}
-std::string XmlConfig::GetStringFromDouble(double fValue)
-{
-    char szBuf[32] = {0};
-#ifndef _MSC_VER
-    snprintf(szBuf, 32, "%lf", fValue);
-#else
-    _snprintf_s(szBuf, 32, 32, "%lf", fValue);
-#endif
-    return szBuf;
-}
-
-long XmlConfig::GetLongFromString(std::string strValue)
-{
-    if (strValue.empty())
-    {
-        return 0L;
-    }
-    long dwValue = 0L;
-    sscanf(strValue.c_str(), "%ld", &dwValue);
-    return dwValue;
-}
-
-double XmlConfig::GetDoubleFromString(std::string strValue)
-{
-    if (strValue.empty())
-    {
-        return 0L;
-    }
-    double fValue = 0.0;
-    sscanf(strValue.c_str(), "%lf", &fValue);
-    return fValue;
-}
 

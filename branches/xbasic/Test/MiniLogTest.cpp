@@ -1,17 +1,21 @@
-#include "Log.h"
 #include "TestCmmHdr.h"
-
+#include "Minilog.h"
 
 USE_XBASIC_NAMESPACE
 
 
-INIT_STD_LOG("y.xml");
-
-TEST(LoggerTest, LoggerTest)
+TEST(MinilogTest, Minilog)
 {
-    //Logger* pLogger = GET_LOGGER();
 
-    LOG_DEBUG("LOG_DEBUG LOG\n");
+	SET_LOG_PATH("E:\\");
+    SET_LOG_FILE("hello");
+	SET_LOG_LEVEL("WArn");
+	LOG_DEBUG("%s %d\n", "hello", 207)
+	LOG_INFO("%s %d\n", "hello", 207)
+	LOG_WARN("%s %d\n", "hello", 207)
+	LOG_ERROR("%s %d\n", "hello", 207)
+	LOG_FATAL("%s %d\n", "hello", 207)
+
     //LOG_INFO("LOG_INFO LOG %s\n", "我是中国人， 你TMD是谁？");
     //
     //LOG_WARN("LOG_WARN LOG\n");

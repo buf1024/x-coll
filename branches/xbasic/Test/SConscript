@@ -1,4 +1,10 @@
 Import('env')
-env.Append(CPPPATH=['./..'])
-env.Object(Glob('*.cpp'))
-Return('objs')
+env.Append(CPPPATH=['./../dist/include'])
+env.Append(LIBPATH=['./../dist/lib', './../Lib', './../LibD'])
+env.Append(CPPPATH=['./../3rd/gtest-1.6.0/include'])
+if env['BUILD_VER'] == 'release':
+    env.Append(LIBS=['gtest', 'xbasic_stat'])
+else:
+    env.Append(LIBS=['gtestd', 'xbasic_statd'])
+program = env.Program(['main.cpp', 'MiniLogTest.cpp', 'StdStringTest.cpp'])#(Glob('*.cpp'))
+Return('program')

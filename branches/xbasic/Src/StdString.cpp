@@ -13,18 +13,12 @@ XBASIC_NAMEPACE_BEGIN
 
 namespace StdString {
 
-/**
- * Convert an ANSI string to ANSI string
- * @return the ANSI string
- */
+
 std::string GetAnsiString(const std::string& strValue)
 {
     return strValue;
 }
-/**
- * Convert a wide string to ANSI string
- * @return the ANSI string
- */
+
 std::string GetAnsiString(const std::wstring& strValue)
 {
     if (strValue.empty())
@@ -48,18 +42,12 @@ std::string GetAnsiString(const std::wstring& strValue)
 
     return strRet;
 }
-/**
- * Convert a wide string to wide string
- * @return the wide string
- */
+
 std::wstring GetWideString(const std::wstring& strValue)
 {
     return strValue;
 }
-/**
- * Convert a ANSI string to wide string
- * @return the wide string
- */
+
 std::wstring GetWideString(const std::string& strValue)
 {
     if (strValue.empty())
@@ -84,9 +72,6 @@ std::wstring GetWideString(const std::string& strValue)
 }
 
 
-/**
- * @see GetCStylestd::string
- */
 const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
@@ -97,17 +82,13 @@ const char* GetCStyleAnsiString(const std::string& strValue, char* pBuf, int& nB
     }
     return NullPtr;
 }
-/**
- * @see GetCStylestd::string
- */
+
 const char* GetCStyleAnsiString(const std::wstring& strValue, char* pBuf, int& nBufLen)
 {
     return GetCStyleAnsiString(
         GetAnsiString(strValue), pBuf, nBufLen);
 }
-/**
- * @see GetCStylestd::string
- */
+
 const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, int& nBufLen)
 {
     if (nBufLen > 0)
@@ -119,9 +100,6 @@ const wchar_t* GetCStyleWideString(const std::wstring& strValue, wchar_t* pBuf, 
     return NullPtr;
 }
 
-/**
- * @see GetCStylestd::string
- */
 const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, int& nBufLen)
 {
     return GetCStyleWideString(
@@ -129,11 +107,6 @@ const wchar_t* GetCStyleWideString(const std::string& strValue, wchar_t* pBuf, i
 }
 
 
-/**
- * 计算字符串的长度
- * @param szStrValue 要计算的字符串
- * @return 字符个数，如果出错则返回负数
- */
 int StringLenth(const char* szStrVal)
 {
     if (szStrVal == NullPtr)
@@ -170,13 +143,7 @@ int Split(const std::string& strValue, const std::string& strDelim, std::vector<
 {
     return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
 }
-/**
- * 将给出的字符串分割到组里
- * @param szStrValue 要分割的字符串
- * @param strDelim 分割符
- * @param szStrDelim 结果集合
- * @return 结果集的个数，如果出错则返回负数
- */
+
 int Split(const char* szStrValue, const char* szStrDelim, std::list<std::string>& rgpRet)
 {
     if(szStrValue == NullPtr ||
@@ -206,26 +173,13 @@ int Split(const char* szStrValue, const char* szStrDelim, std::list<std::string>
 
     return rgpRet.size();
 }
-/**
- * 将给出的字符串分割到组里
- * @param strValue 要分割的字符串
- * @param strDelim 分割符
- * @param rgpRet 结果集合
- * @return 结果集的个数
- */
+
 int Split(const std::string& strValue, const std::string& strDelim, std::list<std::string>& rgpRet)
 {
     return Split(strValue.c_str(), strDelim.c_str(), rgpRet);
 }
 
-/**
- * 去掉字符串A左边包含字符串B的部分
- * @param szStrValue 要处理的字符串
- * @param szStrDelim 包含的字符串
- * @return 已经去掉字符串A左边包含字符串B的部分
- * @see TrimRight
- * @see Trim
- */
+
 std::string TrimLeft(const char* szStrValue, const char* szStrDelim)
 {
     if (szStrValue == NullPtr ||
@@ -250,28 +204,12 @@ std::string TrimLeft(const char* szStrValue, const char* szStrDelim)
     return std::string(pStr);
 }
 
-/**
- * 去掉字符串A左边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 已经去掉字符串A左边包含字符串B的部分
- * @see TrimRight
- * @see Trim
- */
+
 std::string TrimLeft(const std::string& strValue, const std::string& strDelim)
 {
     return TrimLeft(strValue.c_str(), strDelim.c_str());
 }
 
-
-/**
- * 去掉字符串A右边包含字符串B的部分
- * @param szStrValue 要处理的字符串
- * @param szStrDelim 包含的字符串
- * @return 已经去掉字符串A右边包含字符串B的部分
- * @see TrimLeft
- * @see Trim
- */
 std::string TrimRight(const char* szStrValue, const char* szStrDelim)
 {
     if (szStrValue == NullPtr ||
@@ -293,50 +231,24 @@ std::string TrimRight(const char* szStrValue, const char* szStrDelim)
     }
     return std::string(szStrValue, pStr - szStrValue);
 }
-/**
- * 去掉字符串A右边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 已经去掉字符串A右边包含字符串B的部分
- * @see TrimLeft
- * @see Trim
- */
+
 std::string TrimRight(const std::string& strValue, const std::string& strDelim)
 {
     return TrimRight(strValue.c_str(), strDelim.c_str());
 }
-/**
- * 去掉字符串A左边和右边包含字符串B的部分
- * @param szStrValue 要处理的字符串
- * @param szStrDelim 包含的字符串
- * @return 去掉字符串A左边和右边包含字符串B的部分
- * @see TrimLeft
- * @see TrimRight
- */
+
 std::string Trim(const char* szStrValue, const char* szStrDelim)
 {
     std::string strLeft = TrimLeft(szStrValue, szStrDelim);
     return TrimRight(strLeft.c_str(), szStrDelim);
 }
-/**
- * 去掉字符串A左边和右边包含字符串B的部分
- * @param strValue 要处理的字符串
- * @param strDelim 包含的字符串
- * @return 去掉字符串A左边和右边包含字符串B的部分
- * @see TrimLeft
- * @see TrimRight
- */
+
 std::string Trim(const std::string& strValue, const std::string& strDelim)
 {
     return Trim(strValue.c_str(), strDelim.c_str());
 }
 
-/**
- * 检查字符串A是否以字符串B开始
- * @param strValue 被检查的字符串A
- * @param strSubStr 开始的字符串B
- * @return false 字符串A不是以字符串B开始或者出借, true 查字符串是以字符串B开始
- */
+
 bool StartsWith(const char* szStrValue, const char*szStrSubStr)
 {
     if (szStrValue == NullPtr || szStrSubStr == NullPtr)
@@ -363,22 +275,12 @@ bool StartsWith(const char* szStrValue, const char*szStrSubStr)
     return false;
     
 }
-/**
- * 检查字符串A是否以字符串B开始
- * @param strValue 被检查的字符串A
- * @param strSubStr 开始的字符串B
- * @return false 字符串A不是以字符串B开始或者出借, true 查字符串是以字符串B开始
- */
+
 bool StartsWith(const std::string& strValue, const std::string& strSubStr)
 {
     return StartsWith(strValue.c_str(), strSubStr.c_str());
 }
-/**
- * 测试A字符串是否以B字符串结束
- * @param strValue 被测试的字符串
- * @param strSubStr 结束的字符串
- * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
- */
+
 bool EndsWith(const char* szStrValue, const char*szStrSubStr)
 {
 
@@ -410,13 +312,6 @@ bool EndsWith(const char* szStrValue, const char*szStrSubStr)
     return true;
 }
 
-
-/**
- * 测试A字符串是否以B字符串结束
- * @param strValue 被测试的字符串
- * @param strSubStr 结束的字符串
- * @return true 字符串A以B字符串结束, false 字符串A不以B字符串结束
- */
 bool EndsWith(const std::string& strValue, const std::string& strSubStr)
 {
     return EndsWith(strValue.c_str(), strSubStr.c_str());
@@ -436,23 +331,13 @@ bool Contains(const std::string& strValue, const char ch)
     return Contains(strValue.c_str(), ch);
 }
 
-/**
- * 测试A字符串是否包括B字符串
- * @param strValue 被测试的字符串
- * @param strSubStr 包含的字符串
- * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
- */
+
 bool Contains(const char* szStrValue, const char* szStrSubStr)
 {
     return FirstPosition(szStrValue, szStrSubStr) != NullPtr;
 }
 
-/**
- * 测试A字符串是否包括B字符串
- * @param strValue 被测试的字符串
- * @param strSubStr 包含的字符串
- * @return true 字符串A包括B字符串, false 字符串A不包括B字符串
- */
+
 bool Contains(const std::string& strValue, const std::string& strSubStr)
 {
     return Contains(strValue.c_str(), strSubStr.c_str());
@@ -682,17 +567,70 @@ std::string FromNumber(double fVal)
     return szTmp;
 }
 
-long ToLong(const char* szStrVal, int nBase, bool& bStat)
+long ToLong(const char* szStrVal, bool& bStat)
 {
-    return 0L;
+	long lVal = 0L;
+	bStat = true;
+	if (szStrVal == NullPtr)
+	{
+		bStat = false;
+	}
+	else
+	{
+		int nRet = -1;
+		nRet = sscanf(szStrVal, "%ld", &lVal);
+		if (nRet == -1)
+		{
+			bStat = false;
+		}
+	}
+    return lVal;
 }
-long ToLong(const std::string& strVal, int nBase, bool& bStat)
+long ToLong(const std::string& strVal, bool& bStat)
 {
-    return ToLong(strVal.c_str(), nBase, bStat);
+    return ToLong(strVal.c_str(), bStat);
+}
+long ToInt(const char* szStrVal, bool& bStat)
+{
+	int nVal = 0;
+	bStat = true;
+	if (szStrVal == NullPtr)
+	{
+		bStat = false;
+	}
+	else
+	{
+		int nRet = -1;
+		nRet = sscanf(szStrVal, "%i", &nVal);
+		if (nRet == -1)
+		{
+			bStat = false;
+		}
+	}
+	return nVal;
+}
+long ToInt(const std::string& strVal, bool& bStat)
+{
+	return ToInt(strVal.c_str(), bStat);
 }
 double ToDouble(const char* szStrVal, bool& bStat)
 {
-    return 0.0;
+	double dVal = 0.0;
+	bStat = true;
+	if (szStrVal == NullPtr)
+	{
+		bStat = false;
+	}
+	else
+	{
+		int nRet = -1;
+		nRet = sscanf(szStrVal, "%f", &dVal);
+		if (nRet == -1)
+		{
+			bStat = false;
+		}
+	}
+	return dVal;
 }
 double ToDouble(const std::string& strVal, bool& bStat)
 {

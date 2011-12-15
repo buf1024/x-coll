@@ -54,3 +54,4 @@ int CRC32::Get_CRC(const unsigned char* buffer, int nLen)
 	// Exclusive OR the result with the beginning value.
 	return ulCRC ^ 0xffffffff;
 }
+

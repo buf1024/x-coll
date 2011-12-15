@@ -232,14 +232,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Src\SingletonApp.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Src\SingletonApp.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Src\StdString.cpp"
 			>
 		</File>
