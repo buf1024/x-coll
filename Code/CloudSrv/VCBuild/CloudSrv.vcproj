@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;..\Include\xbasic&quot;;&quot;..\Include\jsoncpp&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -168,60 +169,32 @@
 		<Filter
 			Name="Srv"
 			>
-		</Filter>
-		<Filter
-			Name="Cmm"
-			>
 			<File
-				RelativePath="..\Src\Config\CmmHdr.h"
+				RelativePath="..\Src\Svr\Cryptic.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\Src\Svr\Cryptic.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Util"
+			>
+		</Filter>
+		<Filter
+			Name="3rd"
+			>
 		</Filter>
 		<Filter
 			Name="Clt"
 			>
 		</Filter>
 		<Filter
-			Name="Util"
+			Name="Cmm"
 			>
 			<File
-				RelativePath="..\Src\Util\IniConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\IniConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\Minilog.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\Minilog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\Prototype.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\Singleton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\StdString.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\StdString.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\XmlConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Src\Util\XmlConfig.h"
+				RelativePath="..\Src\Config\CmmHdr.h"
 				>
 			</File>
 		</Filter>
