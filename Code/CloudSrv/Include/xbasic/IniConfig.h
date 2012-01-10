@@ -2,7 +2,8 @@
  * File       : IniConfig.h
  * Description: Ini配置文件
  * Version    : 2010-10-16 Created
- *              2011-9 24 1.1 多操作系统支持
+ *              2011-09-24 1.1 多操作系统支持
+ *              2011-12-16 1.2 增加环境变量解析
  * Author     : buf1024@gmail.com
  */
 
