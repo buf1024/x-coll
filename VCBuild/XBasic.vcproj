@@ -224,6 +224,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Src\ProcCtrl.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Src\Prototype.h"
 			>
 		</File>

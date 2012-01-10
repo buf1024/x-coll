@@ -14,7 +14,7 @@ public:
         m_strTmpFile = tempnam(".", "IniConfig");
         Section* pSec = new Section("SecA");
         pSec->Insert("num", 100);
-        pSec->Insert("str", "hello");
+        pSec->Insert("str", "\\$abc/$PYTHON/he\\$llo/$_/$PYTHON/$GVIM");
         pSec->Insert("bool", "true");
         ini.Insert(pSec);
         
