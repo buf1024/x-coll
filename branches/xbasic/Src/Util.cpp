@@ -114,6 +114,7 @@ long IsAppInstRuning(const char* szAppID)
         fseek(pFile, 0, SEEK_SET);
         fwrite(&lFilePID, sizeof(lFilePID), 1, pFile);
         fclose(pFile);
+        lFilePID = 0;
     }
     return lFilePID;
 }

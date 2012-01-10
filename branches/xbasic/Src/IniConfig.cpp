@@ -2,7 +2,8 @@
  * File       : IniConfig.cpp
  * Description: Ini配置文件
  * Version    : 2010-10-16 Created
- *              2011-9 24 1.1 多操作系统支持
+ *              2011-09-24 1.1 多操作系统支持
+ *              2011-12-16 1.2 增加环境变量解析
  * Author     : buf1024@gmail.com
  */
 #include "IniConfig.h"
@@ -34,7 +35,62 @@ void Section::Insert(const std::string strKey, std::string strValue)
 {
 	if (!strKey.empty())
 	{
-		m_mapKeyValue[strKey] = strValue;
+        if (!strValue.empty())
+        {
+            const char* szPos = strValue.c_str();
+            while((szPos = StdString::FirstPosition(szPos, '$')) != NullPtr)
+            {
+                if (szPos != strValue.c_str())
+                {
+                    // 转义
+                    if (*(szPos-1) == '\\')
+                    {
+                        szPos++;
+                        continue;
+                    }
+                    
+                }
+                
+                const char* pStart = szPos + 1;
+                const char* pEnd = pStart;
+                while (*pEnd)
+                {
+                    if ((*pEnd >= 'a' && *pEnd <= 'z') ||
+                        (*pEnd >= 'A' && *pEnd <= 'Z') ||
+                        (*pEnd >= '0' && *pEnd <= '9') ||
+                        *pEnd == '_')
+                    {
+                        pEnd++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (pEnd != pStart)
+                {
+                    char szVal[BUF_SIZE] = "";
+                    const char* pEnv = NullPtr;
+                    strncpy(szVal, pStart, pEnd - pStart);
+                    pEnv = getenv(szVal);
+                    if (pEnv)
+                    {
+                        szVal[0] ='$';
+                        strncpy(szVal+1, pStart, pEnd - pStart);
+                        int nPos = pStart - strValue.c_str() - 1;
+                        strValue = StdString::Replace(strValue.c_str(), szVal, pEnv);
+                        szPos = strValue.c_str() + nPos + StdString::StringLenth(pEnv);
+                    }
+                    else
+                    {
+                        szPos++;
+                    }
+                }
+            }
+            
+            m_mapKeyValue[strKey] = strValue;
+        }
+        
 	}
 	
 }

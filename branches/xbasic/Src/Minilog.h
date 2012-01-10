@@ -50,14 +50,14 @@ XBASIC_NAMEPACE_BEGIN
 #define SET_FILE_LOG_LEVEL(lvl)                                      \
 {                                                                    \
 	Minilog& sLog = Minilog::GetInst();                              \
-    sLog.SetFileLogLevel(Minilog::GetMapLevel(nLvl));                \
+    sLog.SetFileLogLevel(Minilog::GetMapLevel(lvl));                 \
 }                                                                    \
 
 
 #define SET_CONSOLE_LOG_LEVEL(lvl)                                   \
 {                                                                    \
 	Minilog& sLog = Minilog::GetInst();                              \
-	sLog.SetConsoleLogLevel(Minilog::GetMapLevel(nLvl));             \
+	sLog.SetConsoleLogLevel(Minilog::GetMapLevel(lvl));              \
 }                                                                    \
 
 #define SET_LOG_LEVEL(lvl)                                          \
@@ -111,7 +111,7 @@ enum LogLevel
 
 
 // 单进程单线程使用，不进行同步操作
-class Minilog
+class XBASICAPI Minilog
 	: public Util::Singleton<Minilog>
 {
     DECL_SINGLETON(Minilog)
