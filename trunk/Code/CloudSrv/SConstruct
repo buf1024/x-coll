@@ -1,0 +1,55 @@
+import os.path
+import os
+
+GCC_DEBUG_COMM = '-g'
+GCC_RELEASE_COMM = '-O2'
+
+build_ver = 'release'
+for build in COMMAND_LINE_TARGETS:
+    if build.lower() == 'debug':
+        build_ver = 'debug'
+        break
+
+dist_dir = 'Bin'
+  
+if not os.path.exists(dist_dir):
+    os.makedirs(dist_dir)
+    
+env = Environment()
+env['BUILD_VER'] = build_ver
+
+srv_target = ''
+clt_target = ''
+if build_ver == 'debug':
+    env.Append(CXXFLAGS=GCC_DEBUG_COMM)
+    env.Append(LIBS=['xbasic_statd'])
+    srv_target = 'CloudSrvD'
+    clt_target = 'CloudCltD'
+else:
+    env.Append(CXXFLAGS=GCC_RELEASE_COMM)
+    env.Append(LIBS=['xbasic_stat'])
+    srv_target = 'CloudSrv'
+    clt_target = 'CloudClt'
+env.Append(LIBPATH=['Lib'])
+Export('env')
+
+srv_srcs = ['Src/Srv']
+srv_objs = []
+for src in srv_srcs:
+    subdir = '%s/SConscript' % src
+    obj = SConscript(subdir)
+    srv_objs.append(obj)
+srv = env.Program(srv_target, srv_objs)
+'''
+clt_srcs = ['Src/Clt']
+clt_objs = []
+for src in clt_srcs:
+    subdir = '%s/SConscript' % src
+    obj = SConscript(subdir)
+    clt_objs.append(obj)
+clt = env.Program(clt_target, clt_objs)
+
+env.Alias(build_ver, srv)
+env.Alias(build_ver, clt)
+'''
+

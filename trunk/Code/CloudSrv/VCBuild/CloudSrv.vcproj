@@ -170,17 +170,37 @@
 			Name="Srv"
 			>
 			<File
-				RelativePath="..\Src\Svr\Cryptic.cpp"
+				RelativePath="..\Src\Svr\CloudSrv.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Src\Svr\Cryptic.h"
+				RelativePath="..\Src\Svr\CloudSrvData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Svr\CmmSrvHdr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Svr\Singnal.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Svr\Singnal.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Util"
 			>
+			<File
+				RelativePath="..\Src\Util\Cryptic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Util\Cryptic.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="3rd"
@@ -194,7 +214,7 @@
 			Name="Cmm"
 			>
 			<File
-				RelativePath="..\Src\Config\CmmHdr.h"
+				RelativePath="..\Src\Cmm\CmmHdr.h"
 				>
 			</File>
 		</Filter>

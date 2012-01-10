@@ -59,4 +59,3 @@ bool CrypticEmptyImpl::Decrypt(const char* pSrc, char* pDest, unsigned int& nLen
     return true;
 }
 
-
