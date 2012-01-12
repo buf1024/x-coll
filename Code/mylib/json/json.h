@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 namespace json
 {
@@ -31,6 +32,7 @@ namespace json
 #define E_NOT_JSON_SYNTAX       640
 #define E_BRACKET_MISSING       650
 #define E_ENKNOW_NUMBER         660
+#define E_EXTRAL_CHARACTERS     670
 
 #define DEFAULT_ARR_CAPACITY    16
 #define FORMAT_SPACE            4
@@ -46,21 +48,29 @@ enum
     NullType    = 70
 };
 
-const char* getErrMsg(int nErrCode);
+const char* GetErrMsg(int nErrCode);
 
 class JsonException
     : std::exception
 {
 public:
     JsonException(const char* szMsg)
-        : std::exception(szMsg)
+    {
+        if (szMsg)
+        {
+            _strMsg = szMsg;
+        }
+    }
+    ~JsonException() throw()
     {
 
     }
-    ~JsonException()
+    const char* what() const throw()
     {
-
+        return _strMsg.c_str();
     }
+private:
+    std::string _strMsg;
 };
 
 class JsonValue;
@@ -73,25 +83,23 @@ public:
 
     JsonArray& operator = (const JsonArray& sRight);
 public:
-    int set(int nIndex, JsonValue& sVal);
-    JsonValue* get(int nIndex) const;
+//    int Set(int nIndex, JsonValue& sVal);
+    JsonValue& Get(int nIndex) const;
     
     JsonValue& operator[](int nIndex);
     const JsonValue& operator[](int nIndex) const;
     
-    int add(JsonValue& sVal);
+    int Add(JsonValue& sVal);
     
-    int getSize() const;
-    int getCapacity() const;
+    int GetSize() const;
+    int GetCapacity() const;
 
 private:
-    void freeRes();
-    void assign(const JsonArray& sRight);
+    void FreeRes();
+    void Assign(const JsonArray& sRight);
         
 private:
-    int _nIndex;
-    int _nCap;
-    JsonValue* _pArray;
+    std::vector<JsonValue*> _vArray;
 };
 
 class Json;
@@ -147,17 +155,17 @@ public:
     operator JsonArray();
 
 private:
-    void freeRes();
-    void assign(const JsonValue& sRight);
-    void assign(bool bVal);
-    void assign(const char* szVal);
-    void assign(int nVal);
-    void assign(long long llVal);
-    void assign(float fVal);
-    void assign(double fVal);
-    void assign(const Json& sVal);
-    void assign(const JsonArray& sArr);
-    void assign(const JsonVariant& sRight);
+    void FreeRes();
+    void Assign(const JsonValue& sRight);
+    void Assign(bool bVal);
+    void Assign(const char* szVal);
+    void Assign(int nVal);
+    void Assign(long long llVal);
+    void Assign(float fVal);
+    void Assign(double fVal);
+    void Assign(const Json& sVal);
+    void Assign(const JsonArray& sArr);
+    void Assign(const JsonVariant& sRight);
 
 private:
     JsonVariant _sVal;
@@ -172,14 +180,15 @@ public:
     JsonValueItem(const JsonValueItem& sRight);
     ~JsonValueItem();
     JsonValueItem& operator = (const JsonValueItem& sRight);
-    void freeRes();
-    void assign(const JsonValueItem& sRight);
+    void FreeRes();
+    void Assign(const JsonValueItem& sRight);
     
-    int setKey(const char* szKey);
-    const char* getKey() const;
+    int SetKey(const char* szKey);
+    std::string GetKey() const;
 
 private:
-    char* _szKey;
+    //char* _szKey;
+    std::string _strKey;
     JsonValue* _pVal;
     JsonValueItem* _pNextVal;
 };
@@ -193,36 +202,36 @@ public:
     
     Json& operator = (const Json& sRight);
 public:
-    int parse(const char* pBuf);
-    int load(const char* pFilePath);
-    int save(const char* pFilePath);
+    static int Parse(Json*& pJson, const char* pBuf);
+    static int Load(Json*& pJson, const char* pFilePath);
+    int Save(const char* pFilePath);
     
-    JsonValue* set(const char* szKey, JsonValue& sVal);
-    JsonValue* get(const char* szKey) const;
+    JsonValue* Set(const char* szKey, JsonValue& sVal);
+    JsonValue* Get(const char* szKey) const;
         
-    void dump(std::string& strDump) const;
-    void dumpFormat(std::string& strDump, int nSpace = FORMAT_SPACE) const;
+    void Dump(std::string& strDump) const;
+    void DumpFormat(std::string& strDump, int nSpace = FORMAT_SPACE) const;
 
-    unsigned getItemSize() const { return _nLen;}
+    unsigned GetItemSize() const { return _nLen;}
 
 public:
     JsonValue& operator [] (const char* szKey);
     const JsonValue& operator [] (const char* szKey) const;
 
 private:    
-    void dumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpace) const;
-    void dumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const;
-    void dumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const;
+    void DumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpace) const;
+    void DumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const;
+    void DumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const;
     
-    void freeRes();
-    void assign(const Json& sRight);
+    void FreeRes();
+    void Assign(const Json& sRight);
 
-    inline void skipSpaces(const char*& szBuf);
-    inline bool eofBuffer(const char*& szBuf);
-    int parseKey(const char*& szBuf, const char*& pStart, int& nLen);
-    int parseJson(Json*& pJS, const char*& szBuf);
-    int parseJsonValue(JsonValue*& pJV, const char*& szBuf);
-    int parseJsonArray(JsonArray*& pJArr, const char*& szBuf);
+    static inline void SkipSpaces(const char*& szBuf);
+    static inline bool EofBuffer(const char*& szBuf);
+    static int ParseKey(const char*& szBuf, const char*& pStart, int& nLen);
+    static int ParseJson(Json*& pJS, const char*& szBuf);
+    static int ParseJsonValue(JsonValue*& pJV, const char*& szBuf);
+    static int ParseJsonArray(JsonArray*& pJArr, const char*& szBuf);
 private:
     JsonValueItem* _pGrpVal;
     unsigned int _nLen;
