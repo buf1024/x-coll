@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4996)
@@ -43,11 +44,12 @@ static ErrMsg _gErrMsg[] = {
     { E_STRING_VALUE_ERROR, "String Value error"},
     { E_NOT_JSON_SYNTAX, "Unexpected json syntax"},
     { E_BRACKET_MISSING, "Bracket missing"},
-    { E_ENKNOW_NUMBER, "Unknown number"}
+    { E_ENKNOW_NUMBER, "Unknown number"},
+    { E_EXTRAL_CHARACTERS, "Unexpect extral characters"}
 };
 
 
-const char* getErrMsg(int nErrCode)
+const char* GetErrMsg(int nErrCode)
 {
     const char* szMsg = NullPtr;
     int nLow = 0;
@@ -88,32 +90,58 @@ static NumberType detectNumberType(const char* szStrVal)
     if (szStrVal != NullPtr && *szStrVal != '\0')
     {
         const char* pStart = szStrVal;
-        bool bHashDot = false;
+        bool bHasDot = false;
+        bool bCanHasDot = false;
         while(*pStart != 0)
         {
             if (*pStart < '0' || *pStart > '9')
             {
                 if (*pStart == '.')
                 {
-                    if (bHashDot)
+                    if (bHasDot)
                     {
                         type = Unkown;
                         break;
                     }
                     else
                     {
-                        bHashDot = true;
-                        type = Double;
+                        if (bCanHasDot)
+                        {
+                            bHasDot = true;
+                            type = Double;
+                        }
+                        else
+                        {
+                            type = Unkown;
+                        }
                     }
                 }
+                else
+                {
+                    type = Unkown;
+                    break;
+                }
             }
-            pStart++;
-        }
-        if (type == Unkown)
-        {
-            type = Int;
+            else
+            {
+                bCanHasDot = true;
+                pStart++;
+                if (!bHasDot)
+                {
+                    type = Int;
+                }
+            }
+            
         }
     }
+    if (type == Int)
+    {
+        if (*szStrVal == '0')
+        {
+            type = Unkown;
+        }        
+    }
+    
     return type;
 }
 
@@ -159,108 +187,97 @@ static double toDouble(const char* szStrVal, bool& bStat)
 ////////////////////////////////////////
 // JsonArray
 JsonArray::JsonArray(int nCap)
-: _nIndex(0)
-, _nCap(nCap)
-, _pArray(NullPtr)
 {
-    if(nCap <= 0)
+    if(nCap > 0)
     {
-        assert(false);
-        _nCap = DEFAULT_ARR_CAPACITY;
+        _vArray.reserve(nCap);
     }
-    _pArray = new JsonValue[_nCap];
 }
 JsonArray::JsonArray(const JsonArray& sRight)
 {
-    assign(sRight);
+    Assign(sRight);
 
 }
 JsonArray::~JsonArray()
 {
-    freeRes();
+    FreeRes();
 }
-void JsonArray::assign(const JsonArray& sRight)
+void JsonArray::Assign(const JsonArray& sRight)
 {
-    _nCap = sRight._nCap;
-    _nIndex = sRight._nIndex;
-    _pArray = new JsonValue[_nCap];
-    for (int i=0; i<_nCap; i++)
+    _vArray.reserve(sRight._vArray.size());
+    for (std::vector<JsonValue*>::const_iterator iter = sRight._vArray.begin();
+        iter != sRight._vArray.end(); ++iter)
     {
-        _pArray[i] = sRight._pArray[i];
+        JsonValue* pJV = *iter;
+        _vArray.push_back(new JsonValue(*pJV));
     }
+    
 }
-void JsonArray::freeRes()
+void JsonArray::FreeRes()
 {
-    if(_pArray)
+    for(std::vector<JsonValue*>::iterator iter = _vArray.begin();
+        iter != _vArray.end(); ++iter)
     {
-        delete[] _pArray;
-        _pArray = NullPtr;
+        delete *iter;
     }
+    _vArray.clear();
 }
 JsonArray& JsonArray::operator = (const JsonArray& sRight)
 {
     if (this != &sRight)
     {
-        freeRes();
-        assign(sRight);
+        FreeRes();
+        Assign(sRight);
     }
     return *this;
 }
-int JsonArray::set(int nIndex, JsonValue& sVal)
+JsonValue& JsonArray::Get(int nIndex) const
 {
-    if(nIndex < 0 || nIndex >= _nCap)
+    if(nIndex < 0 || nIndex >= (int)(_vArray.size()))
     {
-        throw JsonException(getErrMsg(E_OUTOF_INDEX));
+        throw JsonException(GetErrMsg(E_OUTOF_INDEX));
     }
-    _pArray[nIndex] = sVal;
-    
-    return E_SUCCESS;
-}
-JsonValue* JsonArray::get(int nIndex) const
-{
-    if(nIndex < 0 || nIndex >= _nCap)
-    {
-        throw JsonException(getErrMsg(E_OUTOF_INDEX));
-    }
-    return &_pArray[nIndex];
+    return *_vArray[nIndex];
 }
 JsonValue& JsonArray::operator[](int nIndex)
 {
-    JsonValue* pJV = get(nIndex);
-    if (pJV)
+    if(nIndex < 0 || nIndex >= (int)(_vArray.size()))
     {
-        _nIndex++;
+        if (nIndex == (int)(_vArray.size()))
+        {
+            JsonValue* pJV = new JsonValue;
+            _vArray.push_back(pJV);
+            return *pJV;
+        }
+        else
+        {
+            throw JsonException(GetErrMsg(E_OUTOF_INDEX));
+        }
         
     }
-    return *pJV;
+    return *_vArray[nIndex];;
 }
 const JsonValue& JsonArray::operator[](int nIndex) const
 {
-    return *get(nIndex);
-}
-int JsonArray::add(JsonValue& sVal)
-{
-    if (_nIndex >= _nCap)
-    {        
-        JsonValue* pVal = new JsonValue[_nCap + DEFAULT_ARR_CAPACITY];
-        for (int i=0; i<_nCap; i++)
-        {
-            pVal[i] = _pArray[i];
-        }
-        _nCap += DEFAULT_ARR_CAPACITY;
-        freeRes();
-        _pArray = pVal;
+    if(nIndex < 0 || nIndex >= (int)(_vArray.size()))
+    {
+        throw JsonException(GetErrMsg(E_OUTOF_INDEX));
     }
-    _pArray[_nIndex++] = sVal;
+    return *_vArray[nIndex];
+}
+int JsonArray::Add(JsonValue& sVal)
+{
+    JsonValue* pJV = new JsonValue(sVal);
+    _vArray.push_back(pJV);
     return E_SUCCESS;
 }
-int JsonArray::getSize() const
+int JsonArray::GetSize() const
 {
-    return _nIndex;
+    return _vArray.size();
 }
-int JsonArray::getCapacity() const
+int JsonArray::GetCapacity() const
 {
-    return _nCap;
+    return _vArray.capacity();
 }
 
 
@@ -273,119 +290,119 @@ JsonValue::JsonValue()
 }
 JsonValue::JsonValue(bool bVal)
 {
-    assign(bVal);
+    Assign(bVal);
 }
 JsonValue::JsonValue(const char* szVal)
 {
-    assign(szVal);
+    Assign(szVal);
 }
 JsonValue::JsonValue(int nVal)
 {
-    assign((long long)nVal);
+    Assign((long long)nVal);
 }
 JsonValue::JsonValue(long long llVal)
 {
-    assign(llVal);
+    Assign(llVal);
 }
 JsonValue::JsonValue(float fVal)
 {
-    assign((double)fVal);
+    Assign((double)fVal);
 }
 JsonValue::JsonValue(double fVal)
 {
-    assign(fVal);
+    Assign(fVal);
 }
 JsonValue::JsonValue(const Json& sVal)
 {
-    assign(sVal);
+    Assign(sVal);
 }
 JsonValue::JsonValue(const JsonArray& sArr)
 {
-    assign(sArr);
+    Assign(sArr);
 }
 JsonValue::JsonValue(const JsonValue& sRight)
 {
-    assign(sRight);
+    Assign(sRight);
 }
 JsonValue::~JsonValue()
 {
-    freeRes();
+    FreeRes();
 }
 JsonValue& JsonValue::operator = (const JsonValue& sRight)
 {
     if (this != &sRight)
     {
-        freeRes();
-        assign(sRight);
+        FreeRes();
+        Assign(sRight);
     }
     return *this;
 }
 
 JsonValue& JsonValue::operator = (bool bVal)
 {
-    freeRes();
-    assign(bVal);
+    FreeRes();
+    Assign(bVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (const char* szVal)
 {
-    freeRes();
-    assign(szVal);
+    FreeRes();
+    Assign(szVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (int nVal)
 {
-    freeRes();
-    assign((long long)nVal);
+    FreeRes();
+    Assign((long long)nVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (long long llVal)
 {
-    freeRes();
-    assign(llVal);
+    FreeRes();
+    Assign(llVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (float fVal)
 {
-    freeRes();
-    assign((double)fVal);
+    FreeRes();
+    Assign((double)fVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (double fVal)
 {
-    freeRes();
-    assign(fVal);
+    FreeRes();
+    Assign(fVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (const Json& sVal)
 {
-    freeRes();
-    assign(sVal);
+    FreeRes();
+    Assign(sVal);
     return *this;
 }
 JsonValue& JsonValue::operator = (const JsonArray& sArr)
 {
-    freeRes();
-    assign(sArr);
+    FreeRes();
+    Assign(sArr);
     return *this;
 }
 JsonValue& JsonValue::operator [] (const char* szKey)
 {
     if (szKey == NullPtr)
     {
-        throw JsonException(getErrMsg(E_NULL_PTR));
+        throw JsonException(GetErrMsg(E_NULL_PTR));
     }
     if (_nType != ObjectType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     Json* pJS = _sVal._pJsonVal;
 
-    JsonValue* pJV = pJS->get(szKey);
+    JsonValue* pJV = pJS->Get(szKey);
     if (pJV == NullPtr)
     {
         JsonValue jv;
-        pJV = pJS->set(szKey, jv);
+        pJV = pJS->Set(szKey, jv);
     }
     return *pJV;
 }
@@ -393,22 +410,22 @@ const JsonValue& JsonValue::operator [] (const char* szKey) const
 {
     if (szKey == NullPtr)
     {
-        throw JsonException(getErrMsg(E_NULL_PTR));
+        throw JsonException(GetErrMsg(E_NULL_PTR));
     }
     if (_nType != ObjectType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     Json* pJS = _sVal._pJsonVal;
 
-    JsonValue* pJV = pJS->get(szKey);
+    JsonValue* pJV = pJS->Get(szKey);
     if (pJV == NullPtr)
     {
-        throw JsonException(getErrMsg(E_KEY_NOT_EXISTS));
+        throw JsonException(GetErrMsg(E_KEY_NOT_EXISTS));
     }
     return *pJV;
 }
-void JsonValue::freeRes()
+void JsonValue::FreeRes()
 {
     switch(_nType)
     {
@@ -442,12 +459,12 @@ void JsonValue::freeRes()
     memset(&_sVal, 0, sizeof(_sVal));
 }
 
-void JsonValue::assign(const JsonValue& sRight)
+void JsonValue::Assign(const JsonValue& sRight)
 {
     _nType = sRight._nType;
-    assign(sRight._sVal);
+    Assign(sRight._sVal);
 }
-void JsonValue::assign(const JsonVariant& sRight)
+void JsonValue::Assign(const JsonVariant& sRight)
 {
     memset(&_sVal, 0, sizeof(_sVal));
     switch(_nType)
@@ -480,12 +497,12 @@ void JsonValue::assign(const JsonVariant& sRight)
         break;
     }
 }
-void JsonValue::assign(bool bVal)
+void JsonValue::Assign(bool bVal)
 {
     _nType = BoolType;
     _sVal._boolVal = bVal;
 }
-void JsonValue::assign(const char* szVal)
+void JsonValue::Assign(const char* szVal)
 {
     if(szVal == NullPtr)
     {
@@ -500,22 +517,22 @@ void JsonValue::assign(const char* szVal)
         memcpy(_sVal._strVal, szVal, nLen + 1);
     }
 }
-void JsonValue::assign(long long llVal)
+void JsonValue::Assign(long long llVal)
 {
     _nType = IntegerType;
     _sVal._llVal = llVal;
 }
-void JsonValue::assign(double fVal)
+void JsonValue::Assign(double fVal)
 {
     _nType = DoubleType;
     _sVal._fVal = fVal;
 }
-void JsonValue::assign(const Json& sVal)
+void JsonValue::Assign(const Json& sVal)
 {
     _nType = ObjectType;
     _sVal._pJsonVal = new Json(sVal);
 }
-void JsonValue::assign(const JsonArray& sArr)
+void JsonValue::Assign(const JsonArray& sArr)
 {
     _nType = ArrayType;
     _sVal._pArrVal = new JsonArray(sArr);
@@ -524,7 +541,7 @@ JsonValue::operator const char*()
 {
     if (_nType != StringType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return _sVal._strVal;
 }
@@ -532,7 +549,7 @@ JsonValue::operator char*()
 {
     if (_nType != StringType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return _sVal._strVal;
 }
@@ -540,7 +557,7 @@ JsonValue::operator int()
 {
     if (_nType != IntegerType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return (int)_sVal._llVal;
 }
@@ -548,7 +565,7 @@ JsonValue::operator long long()
 {
     if (_nType != IntegerType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return _sVal._llVal;
 }
@@ -556,7 +573,7 @@ JsonValue::operator float()
 {
     if (_nType != DoubleType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return (float)_sVal._fVal;
 }
@@ -564,7 +581,7 @@ JsonValue::operator double()
 {
     if (_nType != DoubleType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return (float)_sVal._fVal;
 }
@@ -572,7 +589,7 @@ JsonValue::operator Json()
 {
     if (_nType != ObjectType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return *(_sVal._pJsonVal);
 }
@@ -580,7 +597,7 @@ JsonValue::operator JsonArray()
 {
     if (_nType != ArrayType)
     {
-        throw JsonException(getErrMsg(E_BAD_TYPE_CAST));
+        throw JsonException(GetErrMsg(E_BAD_TYPE_CAST));
     }
     return *(_sVal._pArrVal);
 }
@@ -588,13 +605,12 @@ JsonValue::operator JsonArray()
 ////////////////////////////////////////
 // JsonValueItem
 JsonValueItem::JsonValueItem(const char* szKey, JsonValue* pJV)
-: _szKey(0)
-, _pVal(0)
+: _pVal(0)
 , _pNextVal(0)
 {
     if (szKey)
     {
-        setKey(szKey);
+        SetKey(szKey);
     }
     if(pJV)
     {
@@ -603,22 +619,22 @@ JsonValueItem::JsonValueItem(const char* szKey, JsonValue* pJV)
 }
 JsonValueItem::JsonValueItem(const JsonValueItem& sRight)
 {
-    assign(sRight);
+    Assign(sRight);
 }
 JsonValueItem::~JsonValueItem()
 {
-    freeRes();
+    FreeRes();
 }
 JsonValueItem& JsonValueItem::operator = (const JsonValueItem& sRight)
 {
     if (this != &sRight)
     {
-        freeRes();
-        assign(sRight);
+        FreeRes();
+        Assign(sRight);
     }
     return *this;
 }
-void JsonValueItem::freeRes()
+void JsonValueItem::FreeRes()
 {
     if (_pVal)
     {
@@ -630,13 +646,8 @@ void JsonValueItem::freeRes()
         delete _pNextVal;
         _pNextVal = NullPtr;
     }
-    if(_szKey)
-    {
-        delete[] _szKey;
-        _szKey = NullPtr;
-    }
 }
-void JsonValueItem::assign(const JsonValueItem& sRight)
+void JsonValueItem::Assign(const JsonValueItem& sRight)
 {
     if (sRight._pVal != NullPtr)
     {
@@ -654,31 +665,19 @@ void JsonValueItem::assign(const JsonValueItem& sRight)
     {
         _pNextVal = NullPtr;
     }
-    if(sRight._szKey != NullPtr)
-    {
-        int nLen = strlen(sRight._szKey);
-        _szKey = new char[nLen + 1];
-        memcpy(_szKey, sRight._szKey, nLen + 1);
-    }
-    else
-    {
-        _szKey = NullPtr;
-    }
+    _strKey = sRight._strKey;
 }
-int JsonValueItem::setKey(const char* szKey)
+int JsonValueItem::SetKey(const char* szKey)
 {
     if (szKey != NullPtr)
     {
-        if(_szKey != NullPtr) delete[] _szKey;
-        int nLen = strlen(szKey);
-        _szKey = new char[nLen + 1];
-        memcpy(_szKey, szKey, nLen + 1);
+        _strKey = szKey;
     }
-    return E_SUCCESS;
+    return E_NULL_PTR;
 }
-const char* JsonValueItem::getKey() const
+std::string JsonValueItem::GetKey() const
 {
-    return _szKey;
+    return _strKey;
 }
 ////////////////////////////////////////
 // Json
@@ -689,46 +688,57 @@ Json::Json()
 }
 Json::~Json()
 {
-    freeRes();
+    FreeRes();
 }
 Json::Json(const Json& sRight)
 {
-    assign(sRight);
+    Assign(sRight);
 }
 Json& Json::operator = (const Json& sRight)
 {
     if (this != &sRight)
     {
-        freeRes();
-        assign(sRight);
+        FreeRes();
+        Assign(sRight);
     }
     return *this;
 }
-int Json::parse(const char* pBuf)
+int Json::Parse(Json*& pJson, const char* pBuf)
 {
+    pJson = NullPtr;
     if (pBuf == NullPtr)
     {
         return E_NULL_PTR;
     }
 
     
-    skipSpaces(pBuf);
-    if (!eofBuffer(pBuf))
+    SkipSpaces(pBuf);
+    if (!EofBuffer(pBuf))
     {
-        Json* pJS = NullPtr;
-        int nRet = parseJson(pJS, pBuf);
+        int nRet = ParseJson(pJson, pBuf);
         if (nRet == E_SUCCESS)
         {
-            freeRes();
-            assign(*pJS);
+            SkipSpaces(pBuf);
+            if (!EofBuffer(pBuf))
+            {
+                if (pJson)
+                {
+                    delete pJson;
+                    pJson = NullPtr;
+                }
+                
+                nRet = E_EXTRAL_CHARACTERS;
+            }
+            
         }
         return nRet;
         
     }
     return E_EMPTY_STRING;
 }
-int Json::load(const char* pFilePath)
+int Json::Load(Json*& pJson, const char* pFilePath)
 {
+    pJson = NullPtr;
     if (pFilePath == NullPtr)
     {
         return E_NULL_PTR;
@@ -761,10 +771,10 @@ int Json::load(const char* pFilePath)
     fclose(pFile);
 
 
-    return parse(str.c_str());
+    return Parse(pJson, str.c_str());
 }
 
-int Json::save(const char* pFilePath)
+int Json::Save(const char* pFilePath)
 {
     if (pFilePath == NullPtr)
     {
@@ -777,7 +787,7 @@ int Json::save(const char* pFilePath)
     }
 
     std::string strDump;
-    dumpFormat(strDump);
+    DumpFormat(strDump);
 
     int nLen = strDump.length();
     int wr = 0;
@@ -795,11 +805,11 @@ int Json::save(const char* pFilePath)
     return E_SUCCESS;
 }
 
-JsonValue* Json::set(const char* szKey, JsonValue& sVal)
+JsonValue* Json::Set(const char* szKey, JsonValue& sVal)
 {
     if (szKey == NullPtr)
     {
-        throw JsonException(getErrMsg(E_NULL_PTR));
+        throw JsonException(GetErrMsg(E_NULL_PTR));
     }
     JsonValue* pRet = NullPtr;
     if (_pGrpVal == NullPtr)
@@ -815,7 +825,7 @@ JsonValue* Json::set(const char* szKey, JsonValue& sVal)
         while(pGrpCur != NullPtr)
         {
             pJV = pGrpCur->_pVal;
-            int nCmp = strcmp(szKey, pGrpCur->_szKey);
+            int nCmp = strcmp(szKey, pGrpCur->_strKey.c_str());
             if ( nCmp == 0)
             {
                 return NullPtr;
@@ -849,7 +859,7 @@ JsonValue* Json::set(const char* szKey, JsonValue& sVal)
     _nLen++; 
     return pRet;
 }
-JsonValue* Json::get(const char* szKey) const
+JsonValue* Json::Get(const char* szKey) const
 {
     JsonValue* pJV = NullPtr;
     if (szKey)
@@ -857,7 +867,7 @@ JsonValue* Json::get(const char* szKey) const
         JsonValueItem* pJVI = _pGrpVal;
         while(pJVI)
         {
-            if (strcmp(szKey, pJVI->_szKey) == 0)
+            if (strcmp(szKey, pJVI->_strKey.c_str()) == 0)
             {
                 pJV = pJVI->_pVal;
                 break;;
@@ -868,16 +878,16 @@ JsonValue* Json::get(const char* szKey) const
     return pJV;
 }
 
-void Json::dump(std::string& strDump) const
+void Json::Dump(std::string& strDump) const
 {
-    dumpValueGroup(_pGrpVal, strDump, 0);
+    DumpValueGroup(_pGrpVal, strDump, 0);
 }
-void Json::dumpFormat(std::string& strDump, int nSpace) const
+void Json::DumpFormat(std::string& strDump, int nSpace) const
 {
-    dumpValueGroup(_pGrpVal, strDump, nSpace);
+    DumpValueGroup(_pGrpVal, strDump, nSpace);
 }
 
-void Json::dumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpace) const
+void Json::DumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpace) const
 {
     strDump += "{";
     if (nSpace > 0)
@@ -893,10 +903,10 @@ void Json::dumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpac
             strDump += " ";
         }
         strDump += "\"";
-        strDump += pGrp->_szKey;
+        strDump += pGrp->_strKey;
         strDump += "\" : ";
         
-        dumpValue(pJV, strDump, nSpace);
+        DumpValue(pJV, strDump, nSpace);
         
         pGrp = pGrp->_pNextVal;
         if (pGrp != NullPtr)
@@ -923,7 +933,7 @@ void Json::dumpValueGroup(JsonValueItem* pGroup, std::string& strDump, int nSpac
     
     strDump += "}";
 }
-void Json::dumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const
+void Json::DumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const
 {
     if (pArr)
     {
@@ -932,15 +942,15 @@ void Json::dumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const
         {
             strDump += "\n";
         }
-        int nSize = pArr->getSize() - 1;
+        int nSize = pArr->GetSize() - 1;
         for(int i=0; i <= nSize; i++)
         {
-            JsonValue* pJV = pArr->get(i);
+            JsonValue& pJV = pArr->Get(i);
             for (int j=0; j<nSpace; j++)
             {
                 strDump += " ";
             }
-            dumpValue(pJV, strDump, nSpace);
+            DumpValue(&pJV, strDump, nSpace);
             if (i != nSize)
             {
                 if (nSpace > 0)
@@ -965,7 +975,7 @@ void Json::dumpArray(JsonArray* pArr, std::string& strDump, int nSpace) const
         strDump += "]";
     }
 }
-void Json::dumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
+void Json::DumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
 {
     if (pJV)
     {
@@ -1013,7 +1023,7 @@ void Json::dumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
         case ObjectType:
             if (pJV->_sVal._pJsonVal != NullPtr)
             {
-                pJV->_sVal._pJsonVal->dumpValueGroup(
+                pJV->_sVal._pJsonVal->DumpValueGroup(
                     pJV->_sVal._pJsonVal->_pGrpVal, strDump, nSpace >0 ? nSpace + FORMAT_SPACE : nSpace);
             }
             else
@@ -1024,7 +1034,7 @@ void Json::dumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
         case ArrayType:
             if (pJV->_sVal._pArrVal != NullPtr)
             {
-                dumpArray(pJV->_sVal._pArrVal, strDump, nSpace >0 ? nSpace + FORMAT_SPACE : nSpace);
+                DumpArray(pJV->_sVal._pArrVal, strDump, nSpace >0 ? nSpace + FORMAT_SPACE : nSpace);
             }
             else
             {
@@ -1035,7 +1045,7 @@ void Json::dumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
     }
 }
 
-void Json::freeRes()
+void Json::FreeRes()
 {
     if (_pGrpVal)
     {
@@ -1043,7 +1053,7 @@ void Json::freeRes()
         _pGrpVal = NullPtr;
     }
 }
-void Json::assign(const Json& sRight)
+void Json::Assign(const Json& sRight)
 {
     if (sRight._pGrpVal)
     {
@@ -1059,13 +1069,13 @@ JsonValue& Json::operator [] (const char* szKey)
 {
     if (szKey == NullPtr)
     {
-        throw JsonException(getErrMsg(E_NULL_PTR));
+        throw JsonException(GetErrMsg(E_NULL_PTR));
     }
-    JsonValue* pJV = get(szKey);
+    JsonValue* pJV = Get(szKey);
     if (pJV == NullPtr)
     {
         JsonValue jv;
-        pJV = set(szKey, jv);
+        pJV = Set(szKey, jv);
     }
     return *pJV;
 }
@@ -1073,19 +1083,19 @@ const JsonValue& Json::operator [] (const char* szKey) const
 {
     if (szKey == NullPtr)
     {
-        throw JsonException(getErrMsg(E_NULL_PTR));
+        throw JsonException(GetErrMsg(E_NULL_PTR));
     }
-    JsonValue* pJV = get(szKey);
+    JsonValue* pJV = Get(szKey);
     if (pJV == NullPtr)
     {
-        throw JsonException(getErrMsg(E_KEY_NOT_EXISTS));
+        throw JsonException(GetErrMsg(E_KEY_NOT_EXISTS));
     }
     return *pJV;
 }
 
-void Json::skipSpaces(const char*& szBuf)
+void Json::SkipSpaces(const char*& szBuf)
 {
-    while(eofBuffer(szBuf) == false)
+    while(EofBuffer(szBuf) == false)
     {
         if (*szBuf == ' ' ||
             *szBuf == '\t' ||
@@ -1113,7 +1123,7 @@ void Json::skipSpaces(const char*& szBuf)
             }
             if (bSkipCmt)
             {
-                while(eofBuffer(szBuf) == false)
+                while(EofBuffer(szBuf) == false)
                 {
                     szBuf++;
                     if(*szBuf == '\n')
@@ -1130,7 +1140,7 @@ void Json::skipSpaces(const char*& szBuf)
         }
     }
 }
-bool Json::eofBuffer(const char*& szBuf)
+bool Json::EofBuffer(const char*& szBuf)
 {
     if (szBuf == NullPtr || *szBuf == '\0')
     {
@@ -1138,7 +1148,7 @@ bool Json::eofBuffer(const char*& szBuf)
     }
     return false;
 }
-int Json::parseJson(Json*& pJS, const char*& szBuf)
+int Json::ParseJson(Json*& pJS, const char*& szBuf)
 {
     if (szBuf == NullPtr)
     {
@@ -1154,15 +1164,15 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
     bool bEndBrace = false;
     bool bHasVal = false;
     szBuf++;
-    skipSpaces(szBuf);
-    while(!eofBuffer(szBuf))
+    SkipSpaces(szBuf);
+    while(!EofBuffer(szBuf))
     {
         nRet = E_SUCCESS;
         if (*szBuf == '\"')
         {
             int nStrLen = 0;
             const char* pStart = NullPtr;
-            nRet = parseKey(szBuf, pStart, nStrLen);
+            nRet = ParseKey(szBuf, pStart, nStrLen);
             if ( nRet != E_SUCCESS)
             {
                 break;
@@ -1172,8 +1182,8 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
                 nRet = E_KEY_MISSING;
                 break;
             }
-            skipSpaces(szBuf);
-            if (eofBuffer(szBuf))
+            SkipSpaces(szBuf);
+            if (EofBuffer(szBuf))
             {
                 nRet = E_COLON_MISSING;
                 break;
@@ -1186,15 +1196,15 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
             }
 
             szBuf++;
-            skipSpaces(szBuf);
-            if (eofBuffer(szBuf))
+            SkipSpaces(szBuf);
+            if (EofBuffer(szBuf))
             {
                 nRet = E_KEY_MISSING;
                 break;
             }
 
             JsonValue* pJV = NullPtr;
-            nRet = parseJsonValue(pJV, szBuf);
+            nRet = ParseJsonValue(pJV, szBuf);
             if (nRet != E_SUCCESS)
             {
                 nRet = E_PARSE_JASON_VALUE;
@@ -1205,15 +1215,12 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
             {
                 pJS = new Json;                       
             }
-            char* szKey = new char[nStrLen + 1];
-            memset(szKey, 0, nStrLen + 1);
-            memcpy(szKey, pStart, nStrLen);
-            if (!pJS->set(szKey, *pJV))
+            std::string strKey(pStart, nStrLen);
+            if (!pJS->Set(strKey.c_str(), *pJV))
             {
                 nRet = E_DUPLICATE_KEY;
                 break;
             }
-            delete[] szKey;
             bHasVal = true;
         }
         else if (*szBuf == ',')
@@ -1240,17 +1247,17 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
             {
                 bEndBrace = true;
                 szBuf++;
+                SkipSpaces(szBuf);
             }            
             break;
         }
         else
         {
             nRet = E_KEY_MISSING;
-            printf("xxx");
             break;
         }
   //      szBuf++;
-        skipSpaces(szBuf);
+        SkipSpaces(szBuf);
     }
     if (!bEndBrace)
     {
@@ -1266,7 +1273,7 @@ int Json::parseJson(Json*& pJS, const char*& szBuf)
     }
     return nRet;
 }
-int Json::parseKey(const char*& szBuf, const char*& pStart, int& nLen)
+int Json::ParseKey(const char*& szBuf, const char*& pStart, int& nLen)
 {
     nLen = 0;
     if (szBuf == NullPtr)
@@ -1280,7 +1287,7 @@ int Json::parseKey(const char*& szBuf, const char*& pStart, int& nLen)
     szBuf++;
     pStart = szBuf;
     const char* pEnd = NullPtr;
-    while(!eofBuffer(szBuf))
+    while(!EofBuffer(szBuf))
     {
         if (*szBuf == '\"')
         {
@@ -1297,19 +1304,19 @@ int Json::parseKey(const char*& szBuf, const char*& pStart, int& nLen)
     nLen = (int)(pEnd - pStart);
     return E_SUCCESS;
 }
-int Json::parseJsonValue(JsonValue*& pJV, const char*& szBuf)
+int Json::ParseJsonValue(JsonValue*& pJV, const char*& szBuf)
 {
     if (szBuf == NullPtr)
     {
         return E_NULL_PTR;
     }
     int nRet = E_SUCCESS;
-    if (!eofBuffer(szBuf))
+    if (!EofBuffer(szBuf))
     {
         if (*szBuf == '{')
         {
             Json* pJS = NullPtr;
-            nRet = parseJson(pJS, szBuf);
+            nRet = ParseJson(pJS, szBuf);
             if (nRet != E_SUCCESS)
             {
                 nRet = E_PARSE_JASON_OBJECT;
@@ -1326,7 +1333,7 @@ int Json::parseJsonValue(JsonValue*& pJV, const char*& szBuf)
         else if (*szBuf == '[')
         {
             JsonArray* pJArr = NullPtr;
-            nRet = parseJsonArray(pJArr, szBuf);
+            nRet = ParseJsonArray(pJArr, szBuf);
             if (nRet != E_SUCCESS)
             {
                 nRet = E_PARSE_JASON_ARRAY;
@@ -1392,19 +1399,17 @@ int Json::parseJsonValue(JsonValue*& pJV, const char*& szBuf)
         {
             int nStrLen = 0;
             const char* pStart = NullPtr;
-            nRet = parseKey(szBuf, pStart, nStrLen);
+            nRet = ParseKey(szBuf, pStart, nStrLen);
             if(nRet != E_SUCCESS)
             {
                 nRet = E_STRING_VALUE_ERROR;
             }
             else
             {
-                char* szVal = new char[nStrLen + 1];
-                memset(szVal, 0, nStrLen + 1);
-                memcpy(szVal, pStart, nStrLen);
+                std::string strVal(pStart, nStrLen);
                 if (pJV == NullPtr)
                 {
-                    pJV = new JsonValue(szVal);
+                    pJV = new JsonValue(strVal.c_str());
                 }
             }
         }
@@ -1412,7 +1417,7 @@ int Json::parseJsonValue(JsonValue*& pJV, const char*& szBuf)
         {
             // integer&double
             const char* pStart = szBuf;
-            while(!eofBuffer(szBuf))
+            while(!EofBuffer(szBuf))
             {
                 if (*szBuf == ' ' ||
                     *szBuf == '\t' ||
@@ -1482,7 +1487,7 @@ int Json::parseJsonValue(JsonValue*& pJV, const char*& szBuf)
 
     return nRet;
 }
-int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
+int Json::ParseJsonArray(JsonArray*& pJArr, const char*& szBuf)
 {
     if (szBuf == NullPtr)
     {
@@ -1497,8 +1502,8 @@ int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
     bool bEndBrace = false;
     bool bHasVal = false;
     szBuf++;
-    skipSpaces(szBuf);
-    while (!eofBuffer(szBuf))
+    SkipSpaces(szBuf);
+    while (!EofBuffer(szBuf))
     {
         if (*szBuf == ',')
         {
@@ -1529,7 +1534,7 @@ int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
         else if (*szBuf == '[')
         {
             JsonArray* pNewJArr = NullPtr;
-            nRet = parseJsonArray(pNewJArr, szBuf);
+            nRet = ParseJsonArray(pNewJArr, szBuf);
             if(nRet != E_SUCCESS)
             {
                 break;
@@ -1539,7 +1544,7 @@ int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
                 pJArr = new JsonArray;
             }
             JsonValue jv(*pNewJArr);
-            pJArr->add(jv);
+            pJArr->Add(jv);
 
             bHasVal = true;
             nComma = false;
@@ -1547,7 +1552,7 @@ int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
         else
         {
             JsonValue* pNewJV = NullPtr;
-            nRet = parseJsonValue(pNewJV, szBuf);
+            nRet = ParseJsonValue(pNewJV, szBuf);
             if(nRet != E_SUCCESS)
             {
                 break;
@@ -1556,11 +1561,11 @@ int Json::parseJsonArray(JsonArray*& pJArr, const char*& szBuf)
             {
                 pJArr = new JsonArray;
             }
-            pJArr->add(*pNewJV);
+            pJArr->Add(*pNewJV);
             bHasVal = true;
             nComma = false;
         }
-        skipSpaces(szBuf);
+        SkipSpaces(szBuf);
     }
     if (!bEndBrace)
     {

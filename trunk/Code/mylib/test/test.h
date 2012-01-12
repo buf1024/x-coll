@@ -1,46 +1,188 @@
-/*
- * File       : Test.h
- * Description: Very Very Simple Test
- * Version    : 2011-9-1 Created
- * Author     : Luo Guochun
- */
+#ifndef X_TEST_H_
+#define X_TEST_H_
 
-#ifndef TEST_H_
-#define TEST_H_
-
-#include <list>
 #include <string>
+#include <vector>
 #include <map>
-#include <iostream>
-#include <string.h>
+#include <algorithm>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <iostream>
+#include <time.h>
 
-class Util
+///////////////////////////////////////
+// Util
+class TheUtilThatAssummingUsingOnlyHereSoThisClassNameIsVeryVeryVeryBoringLongLongLongLong
 {
 public:
-    static long long GetCurTimeMS()
+    //static long long GetCurTimeMS()
+    //{
+    //    struct timeval tp;
+    // //   gettimeofday(&tp, 0);
+    //    long long m = (tp.tv_usec + tp.tv_sec * 1000000);
+    //    return m;
+    //}
+    static std::string ToLower(const char* szStr)
     {
-        struct timeval tp;
-        gettimeofday(&tp, 0);
-        long long m = (tp.tv_usec + tp.tv_sec * 1000000);
-        return m;
+        if (szStr == 0)
+        {
+            return "";
+        }
+        const char* pStr = szStr;
+        const int nDiff = 'z' - 'Z';
+        std::string strLower;
+        char ch;
+        while(*pStr != '\0')
+        {
+            ch = *pStr;
+            if (ch >= 'A' && ch <= 'Z')
+            {
+                ch += nDiff;
+            }
+            strLower += ch;
+            pStr++;
+        }
+        return strLower;
+    }
+    /*
+    * Routine to see if a text string is matched by a wildcard pattern.
+    * Returns true if the text is matched, or false if it is not matched
+    * or if the pattern is invalid.
+    *  *		matches zero or more characters
+    *  ?		matches a single character
+    *  [abc]	matches 'a', 'b' or 'c'
+    *  \c		quotes character c
+    *  Adapted from code written by Ingo Wilken.
+    */
+    static bool Match(const char * text, const char * pattern)
+    {
+        const char *	retryPat;
+        const char *	retryText;
+        int		ch;
+        bool		found;
+
+        retryPat = NULL;
+        retryText = NULL;
+
+        while (*text || *pattern)
+        {
+            ch = *pattern++;
+
+            switch (ch)
+            {
+            case '*':
+                retryPat = pattern;
+                retryText = text;
+                break;
+
+            case '[':
+                found = false;
+
+                while ((ch = *pattern++) != ']')
+                {
+                    if (ch == '\\')
+                        ch = *pattern++;
+
+                    if (ch == '\0')
+                        return false;
+
+                    if (*text == ch)
+                        found = true;
+                }
+
+                if (!found)
+                {
+                    pattern = retryPat;
+                    text = ++retryText;
+                }
+
+                /* fall into next case */
+
+            case '?':
+                if (*text++ == '\0')
+                    return false;
+
+                break;
+
+            case '\\':
+                ch = *pattern++;
+
+                if (ch == '\0')
+                    return false;
+
+                /* fall into next case */
+
+            default:
+                if (*text == ch)
+                {
+                    if (*text)
+                        text++;
+                    break;
+                }
+
+                if (*text)
+                {
+                    pattern = retryPat;
+                    text = ++retryText;
+                    break;
+                }
+
+                return false;
+            }
+
+            if (pattern == NULL)
+                return false;
+        }
+
+        return true;
     }
 };
 
+#define THEUTILCLASSNAME                                                                 \
+    TheUtilThatAssummingUsingOnlyHereSoThisClassNameIsVeryVeryVeryBoringLongLongLongLong
 
+
+class Environment
+{
+public:
+    Environment(){}
+    ~Environment(){}
+public:
+    virtual void SetUp(){}
+    virtual void TearDown(){}
+};
+
+
+class TestFixtrue;
 class Test
 {
 protected:
     Test()
+        : m_pTF((TestFixtrue*)0)
     {
     }
 public:
-    virtual ~Test()
+    Test(TestFixtrue* pTF, std::string strName)
+        : m_pTF(pTF)
+        , m_strName(strName)
+    {
+    }
+
+    ~Test()
     {
     }
 
 public:
+    virtual void Run()
+    {
+
+    }
+    static void SetUpTestCase()
+    {
+    }
+    static void TearDownTestCase()
+    {
+
+    }
     virtual void SetUp()
     {
 
@@ -49,284 +191,642 @@ public:
     {
 
     }
-    virtual void Run()
-    {
-    }
-
     std::string GetName() const
     {
         return m_strName;
     }
-    std::string GetTestCaseName() const
+    std::string SetName(std::string strName)
     {
-        return m_strTCName;
+        m_strName = strName;
+    }
+    TestFixtrue* GetFixture() const
+    {
+        return m_pTF;
     }
 
 protected:
+    TestFixtrue* m_pTF;
     std::string m_strName;
-    std::string m_strTCName;
-
 };
 
-class TestCase
+typedef void (*FixturePrepareFunc)();
+
+class TestFixtrue
 {
 public:
-    TestCase(std::string strName) :
-            m_strName(strName)
+    typedef std::map<std::string, Test*> TestCaseMap;
+    typedef std::map<std::string, Test*>::iterator TestCaseMapIterator;
+public:
+    TestFixtrue(std::string strName)
+        : m_strName(strName)
+        , m_pFunSetup(0)
+        , m_pFunTearDown(0)
     {
-
     }
-    virtual ~TestCase()
+    virtual ~TestFixtrue()
     {
-
     }
-
 
 public:
+
     std::string GetName() const
     {
         return m_strName;
     }
-    std::map<std::string, Test*>& GetTests()
+    std::string SetName(std::string strName)
     {
-        return m_mapTests;
+        m_strName = strName;
     }
-    void AddTest(Test* pTest)
+    Test* Get(std::string strName)
     {
-        m_mapTests.insert(std::make_pair(pTest->GetName(), pTest));
+        for (TestCaseMapIterator iter = m_mapTestCase.begin();
+            iter != m_mapTestCase.end(); ++iter)
+        {
+            if (iter->first == strName)
+            {
+                return iter->second;
+            }            
+        }
+        return (Test*)0;
+    }
+    Test* Add(Test* pTC)
+    {
+        if (pTC)
+        {
+            m_mapTestCase.insert(std::make_pair(pTC->GetName(), pTC));
+        }
+        return pTC;
+    }
+    void Remove(Test* pTC)
+    {
+        if (pTC)
+        {
+            TestCaseMapIterator iter =
+                m_mapTestCase.find(pTC->GetName());
+            if (iter != m_mapTestCase.end())
+            {
+                m_mapTestCase.erase(iter);
+            }          
+        }
+        
+    }
+    TestCaseMapIterator begin()
+    {
+        return m_mapTestCase.begin();
+    }
+    TestCaseMapIterator end()
+    {
+        return m_mapTestCase.end();
+    }
+    void SetSetUp(FixturePrepareFunc pFun)
+    {
+        m_pFunSetup = pFun;
+    }
+    void SetTearDown(FixturePrepareFunc pFun)
+    {
+        m_pFunTearDown = pFun;
+    }
+    void SetUp()
+    {
+        if (m_pFunSetup)
+        {
+            (*m_pFunSetup)();
+        }        
+    }
+    void TearDown()
+    {
+        if (m_pFunTearDown)
+        {
+            (*m_pFunTearDown)();
+        }
+        
+    }
+    int GetCaseCount() const
+    {
+        return m_mapTestCase.size();
     }
 private:
     std::string m_strName;
-    std::map<std::string, Test*> m_mapTests;
+    TestCaseMap m_mapTestCase;
+
+
+    FixturePrepareFunc m_pFunSetup;
+    FixturePrepareFunc m_pFunTearDown;
 };
 
 class TestManager
 {
-private:
-    TestManager(){}
+    enum
+    {
+        HelpOpt,
+        ListTestOpt,
+        RunTestOpt,
+        InvalidOpt
+    };
+    struct Pattern
+    {
+        bool m_bNeg;
+        std::string m_strPat;
+    };
 public:
+    typedef std::map<std::string, TestFixtrue*> FixtureMap;
+    typedef std::map<std::string, TestFixtrue*>::iterator FixtureIterator; 
+    typedef std::vector<Pattern> PatternVec;
+    typedef std::vector<Pattern>::iterator PatternIterator;
+private:
+    TestManager()
+        : m_pGlobalEnv(0)
+        , m_nOpt(RunTestOpt)
+        , m_pLastFailedTC(0)
+    {
+
+    }
+public:
+    ~TestManager()
+    {
+        CleanUp();
+    }
+
+public:
+    void Help()
+    {
+        std::cout <<
+            "Very Very Simple Test Framework Help Message\n\n"
+            "--help\n"
+            "   Print this help messages\n\n"
+            "--list_tests\n"
+            "   List the names of all tests instead of running them. The name of\n"
+            "   TEST(Foo, Bar) is \"Foo.Bar\".\n\n"
+            "--filter=POSTIVE_PATTERNS[-NEGATIVE_PATTERNS]\n"
+            "   Run only the tests whose name matches one of the positive patterns but\n"
+            "   none of the negative patterns. '?' matches any single character; '*'\n"
+            "   matches any substring; ':' separates two patterns.\n";
+    }
+    void ListTests()
+    {
+        if (m_mapTestFixture.size() > 0)
+        {
+            std::cout << "Following is all the tests\n";
+            std::cout << "====================================\n\n";
+        }
+        else
+        {
+            std::cout << "There is no test!!\n";
+        }
+        
+        for (FixtureIterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
+        {
+            TestFixtrue* pTF = iter->second;
+            std::cout << pTF->GetName() << ".\n"; 
+            for (TestFixtrue::TestCaseMapIterator iter = pTF->begin();
+                iter != pTF->end(); ++iter)
+            {
+                Test* pTC = iter->second;
+                std::cout << "  " << pTC->GetName() << "\n";
+            }
+            std::cout << std::endl;
+        }
+    }
     static TestManager* GetInst()
     {
-        static TestManager* pInst = NULL;
-        if(pInst == NULL){
-            pInst = new TestManager;
-            printf ("xx");
+        if (sm_pMnger == (TestManager*)0)
+        {
+            sm_pMnger = new TestManager;
         }
-        return pInst;
+        return sm_pMnger;
     }
-public:
+    void SetGlobalEnvironment(Environment* pEnv)
+    {
+        m_pGlobalEnv = pEnv;
+    }
+    TestFixtrue* Get(std::string strFixtureName)
+    {
+        for (FixtureIterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
+        {
+            if (iter->first == strFixtureName)
+            {
+                return iter->second;
+            }            
+        }
+        return (TestFixtrue*)0;        
+    }
+    TestFixtrue* Add(TestFixtrue* pTF)
+    {
+        if (pTF)
+        {
+            m_mapTestFixture.insert(std::make_pair(pTF->GetName(), pTF));
+        }       
+        return pTF;        
+    }
+    TestFixtrue* EnsureGet(std::string strFixtureName)
+    {
+        TestFixtrue* pTF = Get(strFixtureName);
+        if (pTF == (TestFixtrue*)0)
+        {
+            pTF = new TestFixtrue(strFixtureName);
+            Add(pTF);
+        }        
+        return pTF;        
+    }
+    FixtureIterator begin()
+    {
+        return m_mapTestFixture.begin();
+    }
+    FixtureIterator end()
+    {
+        return m_mapTestFixture.end();
+    }
+
     void InitTest(int argc, char** argv)
     {
-        for(int i=1; i<argc; i++){
-            m_strFilter = argv[i];
+        for (int i=1; i<argc; i++)
+        {
+            std::string strOpt = argv[i];
+            int idx = strOpt.find('=');  
+            if (idx != std::string::npos)
+            {
+                std::string strPat = strOpt.substr(idx + 1);
+                std::string runOpt = strOpt.substr(0, idx);
+                runOpt = THEUTILCLASSNAME::ToLower(runOpt.c_str());
+                if (runOpt != "--filter")
+                {
+                    m_nOpt = InvalidOpt;
+                }
+                else
+                {
+                    if (strPat.empty() || strPat == "-")
+                    {
+                        m_nOpt = InvalidOpt;
+                    }
+                    else
+                    {
+                        std::cout << "XXXXXXXX!!!PLEASE NOTE!!!XXXXXXXX ==> "
+                            << runOpt << "=" << strPat << std::endl; 
+                        m_nOpt = RunTestOpt;
+                        while((idx = strPat.find(':')) != std::string::npos)
+                        {
+                            strOpt = strPat.substr(0, idx);
+                            strPat = strPat.substr(idx + 1);
+                            
+                            Pattern pat;
+                            pat.m_bNeg = false;
+                            if (strOpt.at(0) == '-')
+                            {
+                                pat.m_bNeg = true;
+                                strOpt = strOpt.substr(1);
+                            }
+                            if (!strOpt.empty())
+                            {
+                                pat.m_strPat = strOpt;
+                                m_vecPat.push_back(pat);
+                            } 
+                        }
+                        if (!strPat.empty())
+                        {
+                            Pattern pat;
+                            pat.m_bNeg = false;
+                            if (strPat.at(0) == '-')
+                            {
+                                pat.m_bNeg = true;
+                                strPat = strPat.substr(1);
+                            }
+                            if (!strPat.empty())
+                            {
+                                pat.m_strPat = strPat;
+                                m_vecPat.push_back(pat);
+                            }
+                            
+                        }                       
+                                             
+                    }
+                }
+            }
+            else
+            {
+                strOpt = THEUTILCLASSNAME::ToLower(strOpt.c_str());
+                if (strOpt == "--help")
+                {
+                    m_nOpt = HelpOpt;
+                }
+                else if (strOpt == "--list_tests")
+                {
+                    m_nOpt = ListTestOpt;
+                }
+                else
+                {
+                    m_nOpt = InvalidOpt;
+                }
+                
+            }
+            
         }
+        
     }
-    void RegTest(Test* pTest)
+    int Run()
     {
-        TestCase* pTC = GetTestCase(pTest->GetTestCaseName());
-        pTC->AddTest(pTest);
+        int nRet = 0;
+        switch(m_nOpt)
+        {
+        case HelpOpt:
+            Help();
+            break;
+        case ListTestOpt:
+            ListTests();
+            break;
+        case RunTestOpt:
+            nRet = RunAllTest();
+            break;
+        default:
+            std::cout << "Invalid Option! Please reference the following help message\n\n";
+            Help();
+            break;
+        }
+        return nRet;
     }
     int RunAllTest()
     {
-        if(!m_strFilter.empty()){
-            std::cout << "!!!NOTE!!! FILTER=" << m_strFilter << std::endl;
-        }
-        int nSuccess = 0;
-        int nCount = 0;
-        long long t1 = Util::GetCurTimeMS();
-        for(std::map<std::string, TestCase*>::iterator iter = m_mapTestCases.begin();
-                iter != m_mapTestCases.end(); ++iter){
-            TestCase* pTC = iter->second;
-            if (MatchFilter(pTC)) {
-                std::list<Test*> lstTests;
-                for (std::map<std::string, Test*>::iterator iterTest =
-                        pTC->GetTests().begin();
-                        iterTest != pTC->GetTests().end(); ++iterTest) {
-                    Test* pTest = iterTest->second;
-                    if (MatchFilter(pTest)) {
-                        lstTests.push_back(pTest);
-                    }
-                }
-                if (lstTests.size() > 0) {
-                    std::cout << "[=========] " << "Run testcase "
-                            << pTC->GetName() << std::endl;
-                    long long tc1 = Util::GetCurTimeMS();
-                    for (std::list<Test*>::iterator iterTest = lstTests.begin();
-                            iterTest != lstTests.end(); ++iterTest) {
-                        Test* pTest = *iterTest;
-                        nCount++;
-                        std::cout << "[ RUN     ] " << pTC->GetName() << "."
-                                << pTest->GetName() << std::endl;
-                        long long tt1 = Util::GetCurTimeMS();
-                        pTest->Run();
-                        long long tt2 = Util::GetCurTimeMS();
-                        if (!IsTestPass(pTest)) {
-                            std::cout << "[ FAILED  ] " << pTC->GetName() << "."
-                                    << pTest->GetName() << " "
-                                    << (tt2 - tt1) / 1000.0 << "ms"
-                                    << std::endl;
-                        } else {
-                            std::cout << "[      OK ] " << pTC->GetName() << "."
-                                    << pTest->GetName() << " "
-                                    << (tt2 - tt1) / 1000.0 << "ms"
-                                    << std::endl;
-                            nSuccess++;
-                        }
+        ApplyFilter();
 
-                    }
-                    long long tc2 = Util::GetCurTimeMS();
-                    std::cout << "[=========] " << "Run testcase "
-                            << pTC->GetName() << " " << (tc2 - tc1) / 1000.0
-                            << "ms" << std::endl << std::endl;
+
+        int nCaseCount = GetCaseCount();
+        int nFixtureCount = GetFixtureCount();
+        clock_t topb = clock();
+        std::cout << "[==========] Running " << nCaseCount << " tests from "<<
+            nFixtureCount<<" test cases.\n";
+
+        if (m_pGlobalEnv)
+        {
+            std::cout << "[----------] Custom global test environment set-up\n";
+            m_pGlobalEnv->SetUp(); 
+        }
+
+        for (FixtureIterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
+        {
+            TestFixtrue* pTF = iter->second;
+            int nTFCount =  pTF->GetCaseCount();
+            std::string strTFName = pTF->GetName();
+            std::cout << "[----------] "<< nTFCount << " tests from " << strTFName << "\n";
+            clock_t fb = clock();
+           
+            pTF->SetUp();          
+            for (TestFixtrue::TestCaseMapIterator iter = pTF->begin();
+                iter != pTF->end(); ++iter)
+            {
+                Test* pTC = iter->second;
+                std::string strFullName = GetTestCaseFullName(pTC);
+                std::cout << "[ RUN      ] "<< strFullName <<"\n";
+                
+                clock_t tb = clock();
+                pTC->SetUp();
+                pTC->Run();
+                pTC->TearDown();
+                clock_t te = clock();               
+                if (IsLastTestFail(pTC))
+                {
+                    std::cout << "[   FAILED ] "<< strFullName << " ( " << te - tb << " ms)\n";
                 }
+                else
+                {
+                    std::cout << "[       OK ] "<< strFullName << " ( " << te - tb << " ms)\n";
+                }
+                
+                  
+            }
+            pTF->TearDown();
+            
+            clock_t fe = clock();
+            std::cout << "[----------] " << nTFCount << " tests from " << strTFName << 
+                " (" << fe - fb << " ms total)\n\n";
+
+            
+            
+            
+        }
+        if (m_pGlobalEnv)
+        {
+            std::cout << "[----------] Custom global test environment tear-down\n";
+            m_pGlobalEnv->TearDown(); 
+        }
+        clock_t tope = clock();
+        std::cout << "[==========] " <<  nCaseCount <<" tests from " << 
+            nFixtureCount << " test case ran. ( " << tope - topb << " ms total)\n";
+        if (nCaseCount > 0)
+        {
+            int nFailed = m_vecFailed.size();
+            std::cout << "[  PASSED  ] " << nCaseCount - nFailed << " tests\n";
+            if (nFailed > 0)
+            {
+                std::cout << "[  FAILED  ] " << nFailed << " tests\n";
+                for (std::vector<Test*>::iterator iter = m_vecFailed.begin();
+                    iter != m_vecFailed.end(); ++iter)
+                {
+                    std::cout << "[  FAILED  ] " << GetTestCaseFullName(*iter) << "\n";
+                }
+                
+            }
+            
+        }
+        
+        return m_vecFailed.size();
+        
+    }
+    void ApplyFilter()
+    {
+        std::vector<Test*> vecRemove;
+        std::vector<TestFixtrue*> vecFixRemove;
+        for (FixtureIterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
+        {
+            TestFixtrue* pTF = iter->second;
+            int nCountRm = 0;
+            for (TestFixtrue::TestCaseMapIterator iter = pTF->begin();
+                iter != pTF->end(); ++iter)
+            {
+                Test* pTC = iter->second;
+                if (!MatchFilter(pTC))
+                {
+                    vecRemove.push_back(pTC);
+                    nCountRm ++;
+                }               
 
             }
-        }
-        long long t2 = Util::GetCurTimeMS();
-        std::cout << "[=========] " << "Run " << nCount << " test(s) " <<
-                (t2 - t1)/1000.0 << "ms"<< std::endl;
-        if(nSuccess > 0){
-            std::cout << "[ PASSED  ] " << nSuccess <<" test(s)" << std::endl;
-        }
-        if(nCount - nSuccess > 0){
-            std::cout << "[ FAILED  ] " << nCount - nSuccess <<" test(s) list bellow" << std::endl;
-            for(std::map<std::string, Test*>::iterator iter = m_mapFailedTests.begin();
-                    iter != m_mapFailedTests.end(); ++iter){
-                Test* pTest = iter->second;
-                std::cout << "[ FAILED  ] " << pTest->GetTestCaseName() << "." <<
-                        pTest->GetName() << std::endl;
+            if (pTF->GetCaseCount() == nCountRm)
+            {
+                vecFixRemove.push_back(pTF);
             }
-
+            
         }
-        std::cout << "[=========] " << "Finish" << std::endl;
+        for (std::vector<Test*>::iterator iter = vecRemove.begin();
+            iter != vecRemove.end(); ++iter)
+        {
+            Test* pTC = (*iter);
+            TestFixtrue* pTF = pTC->GetFixture();
+            pTF->Remove(pTC);
+            delete pTC;
+        }
+        for (std::vector<TestFixtrue*>::iterator iter = vecFixRemove.begin();
+            iter != vecFixRemove.end(); ++iter)
+        {
+            TestFixtrue* pTF = *iter;
+            FixtureIterator fiter = m_mapTestFixture.find(pTF->GetName());
+            if (fiter != m_mapTestFixture.end())
+            {
+                m_mapTestFixture.erase(fiter);
+                delete pTF;
+            }
+            
+        }
+        
+    }
+    bool MatchFilter(Test* pTC)
+    {
+        bool bRet = false;
+        if (pTC)
+        {
+            if (m_vecPat.size() == 0)
+            {
+                bRet = true;
+            }
+            else
+            {
+                std::string strName = GetTestCaseFullName(pTC);
 
-        if(nCount == 0) return 0;
-        if(nCount == nSuccess) return 0;
-        return nCount - nSuccess;
+                for (PatternIterator iter = m_vecPat.begin();
+                    iter != m_vecPat.end(); ++iter)
+                {
+                    bRet = THEUTILCLASSNAME::Match(strName.c_str(), iter->m_strPat.c_str());
+                    if (iter->m_bNeg)
+                    {
+                        bRet = !bRet;
+                    }
+                    if (bRet)
+                    {
+                        break;
+                    }
+
+                }
+            }
+        }
+        
+        return bRet;
     }
     void CleanUp()
     {
-        for(std::map<std::string, TestCase*>::iterator iter = m_mapTestCases.begin();
-                iter != m_mapTestCases.end(); ++iter)
+        for (FixtureIterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
         {
             delete iter->second;
         }
-        m_mapTestCases.clear();
-        m_mapFailedTests.clear();
-    }
-
-    void AddFailedTest(Test* pTest)
-    {
-        std::string strKey = pTest->GetTestCaseName() + "." + pTest->GetName();
-        m_mapFailedTests.insert(std::make_pair(strKey, pTest));
-    }
-
-private:
-    TestCase* GetTestCase(std::string strName)
-    {
-        TestCase* pTC = NULL;
-        std::map<std::string, TestCase*>::iterator iter = m_mapTestCases.find(strName);
-        if(iter == m_mapTestCases.end()){
-            pTC = new TestCase(strName);
-            m_mapTestCases.insert(std::make_pair(strName, pTC));
-        }else{
-            pTC = iter->second;
-        }
-        return pTC;
-    }
-    bool MatchFilter(Test* pTest)
-    {
-        if(m_strFilter.empty()){
-            return true;
-        }
-        std::string strKey = pTest->GetTestCaseName() + "." + pTest->GetName();
-        std::string::size_type idx = m_strFilter.find('*');
-        if(idx == std::string::npos){
-            if(m_strFilter == strKey){
-                return true;
-            }
-        }else{
-            std::string strFilterPref = m_strFilter.substr(0, idx);
-            if(pTest->GetTestCaseName() + "." == strFilterPref){
-                return true;
-            }
-        }
-        return false;
-    }
-    bool MatchFilter(TestCase* pTest)
-    {
-        if(m_strFilter.empty()){
-            return true;
-        }
-        std::string strKey = pTest->GetName() + ".";
-        std::string::size_type idx = m_strFilter.find('*');
-        if(idx != std::string::npos){
-            std::string strFilterPref = m_strFilter.substr(0, idx);
-            if(strKey == strFilterPref){
-                return true;
-            }
-        }else{
-            return true;
-        }
-        return false;
-    }
-    bool IsTestPass(Test* pTest)
-    {
-        std::string strKey = pTest->GetTestCaseName() + "." + pTest->GetName();
-        std::map<std::string, Test*>::iterator iter = m_mapFailedTests.find(strKey);
-        if(iter != m_mapFailedTests.end())
+        m_mapTestFixture.clear();
+        m_vecFailed.clear();
+        if (m_pGlobalEnv)
         {
-            return false;
-        }
-        return true;
+            delete m_pGlobalEnv;
+            m_pGlobalEnv = 0;
+        }        
     }
+    void AddFailedTest(Test* pTC)
+    {
+        m_pLastFailedTC = pTC;
+        if (std::find(m_vecFailed.begin(), m_vecFailed.end(), pTC) == m_vecFailed.end())
+        {
+            m_vecFailed.push_back(pTC);
+        }
+        
+    }
+    int GetFixtureCount() const
+    {
+        return m_mapTestFixture.size();
+    }
+    int GetCaseCount() const
+    {
+        int nCount = 0;
+        for (std::map<std::string, TestFixtrue*>::const_iterator iter = m_mapTestFixture.begin();
+            iter != m_mapTestFixture.end(); ++iter)
+        {
+            TestFixtrue* pTF = iter->second;
+            nCount += pTF->GetCaseCount();
+        }
+        return nCount;
+    }
+    bool IsLastTestFail(Test* pTC)
+    {
+        bool bRet = false;
+        if (pTC)
+        {
+            bRet = (pTC == m_pLastFailedTC);
+        }
+        return bRet;
+    }
+    std::string GetTestCaseFullName(Test* pTC) const
+    {
+        std::string strName = pTC->GetFixture()->GetName();
+        strName += ".";
+        strName += pTC->GetName();
+        return strName;
+    }
+
 private:
-    std::map<std::string, TestCase*> m_mapTestCases;
-    std::map<std::string, Test*> m_mapFailedTests;
-    std::string m_strFilter;
+    static TestManager* sm_pMnger;
+    FixtureMap m_mapTestFixture;
+    Environment* m_pGlobalEnv;
+    std::vector<Test*> m_vecFailed;
+
+    int m_nOpt;
+    PatternVec m_vecPat;
+
+    Test* m_pLastFailedTC;
 };
+TestManager* TestManager::sm_pMnger = 0;
 
-#define TEST_F(TestCase, TestName)                                                      \
-    class TestCase##_##TestName##_Test : public TestCase                                \
+/////////////////////////////////////////////////////////////////////////////////////////
+
+#define TEST_F(TestFixtureName, TestCaseName)                                           \
+    class TestFixtureName##_##TestCaseName##_Test : public TestFixtureName              \
     {                                                                                   \
     public:                                                                             \
-        TestCase##_##TestName##_Test(){                                                 \
-            m_strTCName = #TestCase;                                                    \
-            m_strName = #TestName;                                                      \
-            TestManager::GetInst()->RegTest(this);                                      \
+        TestFixtureName##_##TestCaseName##_Test(std::string strName)                    \
+        {                                                                               \
+            TestFixtrue* pTF = TestManager::GetInst()->EnsureGet(#TestFixtureName);     \
+            m_pTF = pTF;                                                                \
+            m_strName = strName;                                                        \
+            pTF->Add(this);                                                             \
+            pTF->SetSetUp(&TestFixtureName::SetUpTestCase);                             \
+            pTF->SetTearDown(&TestFixtureName::TearDownTestCase);                       \
         }                                                                               \
-        virtual void Run(){                                                             \
-            SetUp();                                                                    \
-            RunMyTest();                                                                \
-            TearDown();                                                                 \
-        }                                                                               \
-        void RunMyTest();                                                               \
+        virtual void Run();                                                             \
     };                                                                                  \
-    TestCase##_##TestName##_Test* pDummy##TestCase##_##TestName##_Test  =               \
-                                                  new TestCase##_##TestName##_Test;     \
-    void TestCase##_##TestName##_Test::RunMyTest()                                      \
+    TestFixtureName##_##TestCaseName##_Test*                                            \
+        pDummy##TestFixtureName##_##TestCaseName##_Test  =                              \
+                       new TestFixtureName##_##TestCaseName##_Test(#TestCaseName);      \
+    void TestFixtureName##_##TestCaseName##_Test::Run()                                 \
 
 
-#define TEST(TestCase, TestName)                                                        \
-    class TestCase##_##TestName##_Test : public Test                                    \
+#define TEST(TestFixtureName, TestCaseName)                                             \
+    class TestFixtureName##_##TestCaseName##_Test : public Test                         \
     {                                                                                   \
     public:                                                                             \
-        TestCase##_##TestName##_Test(){                                                 \
-            m_strTCName = #TestCase;                                                    \
-            m_strName = #TestName;                                                      \
-            TestManager::GetInst()->RegTest(this);                                      \
+        TestFixtureName##_##TestCaseName##_Test(std::string strName)                    \
+        {                                                                               \
+            TestFixtrue* pTF = TestManager::GetInst()->EnsureGet(#TestFixtureName);     \
+            m_pTF = pTF;                                                                \
+            m_strName = strName;                                                        \
+            pTF->Add(this);                                                             \
         }                                                                               \
-        virtual void Run(){                                                             \
-            SetUp();                                                                    \
-            RunMyTest();                                                                \
-            TearDown();                                                                 \
-        }                                                                               \
-        void RunMyTest();                                                               \
+        virtual void Run();                                                             \
     };                                                                                  \
-    TestCase##_##TestName##_Test* pDummy##TestCase##_##TestName##_Test  =               \
-                                                  new TestCase##_##TestName##_Test;     \
-    void TestCase##_##TestName##_Test::RunMyTest()                                      \
+    TestFixtureName##_##TestCaseName##_Test*                                            \
+        pDummy##TestFixtureName##_##TestCaseName##_Test  =                              \
+                       new TestFixtureName##_##TestCaseName##_Test(#TestCaseName);      \
+    void TestFixtureName##_##TestCaseName##_Test::Run()                                 \
 
+
+#define SET_ENVIRONMENT(a) {                                                            \
+    TestManager::GetInst()->SetGlobalEnvironment(a);                                    \
+}   
 
 #define INIT_TEST(a, b) {                                                               \
     TestManager::GetInst()->InitTest(a, b);                                             \
@@ -334,44 +834,78 @@ private:
 
 
 #define RUN_ALL_TEST()                                                                  \
-    int nxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX = \
-    TestManager::GetInst()->RunAllTest();                                               \
+    int XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX = \
+    TestManager::GetInst()->Run();                                                      \
     TestManager::GetInst()->CleanUp();                                                  \
     return                                                                              \
-          nxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;\
+        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;  \
 
 
 #define EXPECT_EQ(a, b)   {                                                             \
     if(a != b) {                                                                        \
-        printf("[W]File: %s Line:%d expect: %lld actual: %lld\n", __FILE__, __LINE__, (long long)a, (long long)b); \
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " ACTUAL: "<< b << "\n";                                \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+    }                                                                                   \
+}                                                                                       \
+
+#define EXPECT_NEQ(a, b) {                                                              \
+    if(a == b) {                                                                        \
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " != " << b <<                                          \
+            " ACTUAL: "<< a << " == " << b << "\n";                                     \
         TestManager::GetInst()->AddFailedTest(this);                                    \
     }                                                                                   \
 }                                                                                       \
 
 #define EXPECT_STREQ(a, b) {                                                            \
     if(strncmp(a, b, strlen(a)) != 0) {                                                 \
-        printf("[W]File: %s Line:%d expect: %s actual: %s\n", __FILE__, __LINE__, a, b);\
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " ACTUAL: "<< b << "\n";                                \
         TestManager::GetInst()->AddFailedTest(this);                                    \
     }                                                                                   \
 }                                                                                       \
 
+#define EXPECT_STRNEQ(a, b) {                                                           \
+    if(strncmp(a, b, strlen(a)) == 0) {                                                 \
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " != " << b <<                                          \
+            " ACTUAL: "<< a << " == " << b << "\n";                                     \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+    }                                                                                   \
+}                                                                                       \
+
+
 #define EXPECT_TRUE(a) {                                                                \
     if(!((int)a)){                                                                      \
-        printf("[W]File: %s Line:%d expect: TRUE actual: FALSE\n", __FILE__, __LINE__); \
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: TRUE ACTUAL: FALSE\n";                                            \
         TestManager::GetInst()->AddFailedTest(this);                                    \
     }                                                                                   \
 }                                                                                       \
 
 #define EXPECT_FALSE(a) {                                                               \
-    if((int)a){                                                                         \
-        printf("[W]File: %s Line:%d expect: FALSE actual: TRUE\n", __FILE__, __LINE__); \
+    if(!((int)a)){                                                                      \
+        std::cout << "[W]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: FALSE ACTUAL: TRUE\n";                                            \
         TestManager::GetInst()->AddFailedTest(this);                                    \
     }                                                                                   \
 }                                                                                       \
 
 #define ASSERT_EQ(a, b) {                                                               \
     if(a != b) {                                                                        \
-        printf("[E]File: %s Line:%d expect: %lld actual: %lld\n", __FILE__, __LINE__, (long long)a, (long long)b); \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " ACTUAL: "<< b << "\n";                                \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+        return;                                                                         \
+    }                                                                                   \
+}                                                                                       \
+
+#define ASSERT_NEQ(a, b) {                                                              \
+    if(a == b) {                                                                        \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " != " << b <<                                          \
+            " ACTUAL: "<< a << " == " << b << "\n";                                     \
         TestManager::GetInst()->AddFailedTest(this);                                    \
         return;                                                                         \
     }                                                                                   \
@@ -379,15 +913,27 @@ private:
 
 #define ASSERT_STREQ(a, b) {                                                            \
     if(strncmp(a, b, strlen(a)) != 0) {                                                 \
-        printf("[E]File: %s Line:%d expect: %s actual: %s\n", __FILE__, __LINE__, a, b);\
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " ACTUAL: "<< b << "\n";                                \
         TestManager::GetInst()->AddFailedTest(this);                                    \
         return;                                                                         \
     }                                                                                   \
 }                                                                                       \
 
+#define ASSERT_STRNEQ(a, b) {                                                           \
+    if(strncmp(a, b, strlen(a)) == 0) {                                                 \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << a << " != " << b <<                                          \
+            " ACTUAL: "<< a << " == " << b << "\n";                                     \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+    return;                                                                             \
+    }                                                                                   \
+}                                                                                       \
+
 #define ASSERT_TRUE(a) {                                                                \
     if(!((int)a)){                                                                      \
-        printf("[E]File: %s Line:%d expect: TRUE actual: FALSE\n", __FILE__, __LINE__); \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: TRUE ACTUAL: FALSE\n";                                            \
         TestManager::GetInst()->AddFailedTest(this);                                    \
         return;                                                                         \
     }                                                                                   \
@@ -395,11 +941,12 @@ private:
 
 #define ASSERT_FALSE(a) {                                                               \
     if((int)a){                                                                         \
-        printf("[E]File: %s Line:%d expect: FALSE actual: TRUE\n", __FILE__, __LINE__); \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: FALSE ACTUAL: TRUE\n";                                            \
         TestManager::GetInst()->AddFailedTest(this);                                    \
         return;                                                                         \
     }                                                                                   \
 }                                                                                       \
 
 
-#endif /* TEST_H_ */
+#endif /* X_TEST_H_ */
