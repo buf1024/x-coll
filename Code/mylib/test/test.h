@@ -554,7 +554,7 @@ public:
         int nFixtureCount = GetFixtureCount();
         clock_t topb = clock();
         std::cout << "[==========] Running " << nCaseCount << " tests from "<<
-            nFixtureCount<<" test cases.\n";
+            nFixtureCount<<" test cases\n";
 
         if (m_pGlobalEnv)
         {
@@ -586,11 +586,11 @@ public:
                 clock_t te = clock();               
                 if (IsLastTestFail(pTC))
                 {
-                    std::cout << "[   FAILED ] "<< strFullName << " ( " << te - tb << " ms)\n";
+                    std::cout << "[   FAILED ] "<< strFullName << " (" << te - tb << " ms)\n";
                 }
                 else
                 {
-                    std::cout << "[       OK ] "<< strFullName << " ( " << te - tb << " ms)\n";
+                    std::cout << "[       OK ] "<< strFullName << " (" << te - tb << " ms)\n";
                 }
                 
                   
@@ -612,7 +612,7 @@ public:
         }
         clock_t tope = clock();
         std::cout << "[==========] " <<  nCaseCount <<" tests from " << 
-            nFixtureCount << " test case ran. ( " << tope - topb << " ms total)\n";
+            nFixtureCount << " test case ran (" << tope - topb << " ms total)\n";
         if (nCaseCount > 0)
         {
             int nFailed = m_vecFailed.size();
