@@ -195,7 +195,7 @@ public:
     {
         return m_strName;
     }
-    std::string SetName(std::string strName)
+    void SetName(std::string strName)
     {
         m_strName = strName;
     }
@@ -233,7 +233,7 @@ public:
     {
         return m_strName;
     }
-    std::string SetName(std::string strName)
+    void SetName(std::string strName)
     {
         m_strName = strName;
     }

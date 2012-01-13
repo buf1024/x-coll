@@ -51,7 +51,7 @@ enum
 const char* GetErrMsg(int nErrCode);
 
 class JsonException
-    : std::exception
+    : public std::exception
 {
 public:
     JsonException(const char* szMsg)
