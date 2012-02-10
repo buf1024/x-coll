@@ -18,79 +18,79 @@
 XBASIC_NAMEPACE_BEGIN
 
 #define LOG_DEBUG(...)                                               \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.Debug(__VA_ARGS__);                                         \
-}                                                                    \
+}while(0)                                                            \
 
 #define LOG_INFO(...)                                                \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.Info(__VA_ARGS__);                                          \
-}                                                                    \
+}while(0)                                                            \
 
 #define LOG_WARN(...)                                                \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.Warn(__VA_ARGS__);                                          \
-}                                                                    \
+}while(0)                                                            \
 
 #define LOG_ERROR(...)                                               \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.Error(__VA_ARGS__);                                         \
-}                                                                    \
+}while(0)                                                            \
 
 #define LOG_FATAL(...)                                               \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.Fatal(__VA_ARGS__);                                         \
-}  
+}while(0)                                                            \
 
 #define SET_FILE_LOG_LEVEL(lvl)                                      \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
     sLog.SetFileLogLevel(Minilog::GetMapLevel(lvl));                 \
-}                                                                    \
+}while(0)                                                            \
 
 
 #define SET_CONSOLE_LOG_LEVEL(lvl)                                   \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.SetConsoleLogLevel(Minilog::GetMapLevel(lvl));              \
-}                                                                    \
+}while(0)                                                            \
 
-#define SET_LOG_LEVEL(lvl)                                          \
-{                                                                    \
+#define SET_LOG_LEVEL(lvl)                                           \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
     sLog.SetConsoleLogLevel(Minilog::GetMapLevel(lvl));              \
 	sLog.SetFileLogLevel(Minilog::GetMapLevel(lvl));                 \
-}                                                                    \
+}while(0)                                                            \
 
 
 #define SET_LOG_PATH(szPath)                                         \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.SetLogPath(szPath);                                         \
-}                                                                    \
+}while(0)                                                            \
 
 #define SET_LOG_FILE_FIXED(szFile)                                   \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.SetLogFile(szFile, false);                                  \
-}                                                                    \
+}while(0)                                                            \
 
 #define SET_LOG_FILE(szFile)                                         \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.SetLogFile(szFile);                                         \
-}                                                                    \
+}while(0)                                                            \
 
 #define FLUSH_LOG()                                                  \
-{                                                                    \
+do{                                                                  \
 	Minilog& sLog = Minilog::GetInst();                              \
 	sLog.FlushLog();                                                 \
-}                                                                    \
+}while(0)                                                            \
 
 #define RELEASE_LOG()                                                \
 {                                                                    \

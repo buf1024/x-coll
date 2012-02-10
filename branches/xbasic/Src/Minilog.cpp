@@ -416,7 +416,7 @@ LogLevel Minilog::GetMapLevel(const char* szLvl)
 		return ALL;
 	}
 
-	for (int i=0; i<sizeof(strLvlMap); i++)
+	for (unsigned i=0; i<sizeof(strLvlMap); i++)
 	{
 #ifdef _MSC_VER
 		if (stricmp(szLvl, strLvlMap[i].szStr) == 0)
