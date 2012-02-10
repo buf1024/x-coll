@@ -1,3 +1,4 @@
+// Copyright 1985-2012 Luo Guochun, http://imlgc.com
 #ifndef X_TEST_H_
 #define X_TEST_H_
 
@@ -14,13 +15,36 @@
 class TheUtilThatAssummingUsingOnlyHereSoThisClassNameIsVeryVeryVeryBoringLongLongLongLong
 {
 public:
-    //static long long GetCurTimeMS()
-    //{
-    //    struct timeval tp;
-    // //   gettimeofday(&tp, 0);
-    //    long long m = (tp.tv_usec + tp.tv_sec * 1000000);
-    //    return m;
-    //}
+    static char GetHex(char ch)
+    {
+        ch = (0x0F & ch);
+        if(ch >= 10)
+        {
+            return 'A' + ch - 10;
+        }
+        return '0' + ch;
+    }
+    static std::string HexDump(void* pBuf, int nSize)
+    {
+        std::string strRet;
+        if(pBuf)
+        {
+            const char* szTmpBuf = (const char*)pBuf;
+            int nTmpSize = 0;
+            while(nTmpSize < nSize)
+            {
+                if(nTmpSize == 0)
+                {
+                    strRet = "0x";
+                }
+                char ch = *(szTmpBuf + nTmpSize);
+                strRet.push_back(GetHex((char)((0xF0 & ch) >> 4)));
+                strRet.push_back(GetHex((char)(0x0F & ch)));
+                nTmpSize++;
+            }
+        }
+        return strRet;
+    }
     static std::string ToLower(const char* szStr)
     {
         if (szStr == 0)
@@ -95,7 +119,10 @@ public:
                     text = ++retryText;
                 }
 
-                /* fall into next case */
+                if (*text++ == '\0')
+                    return false;
+
+                break;
 
             case '?':
                 if (*text++ == '\0')
@@ -109,7 +136,19 @@ public:
                 if (ch == '\0')
                     return false;
 
-                /* fall into next case */
+                if (*text == ch) {
+                    if (*text)
+                        text++;
+                    break;
+                }
+
+                if (*text) {
+                    pattern = retryPat;
+                    text = ++retryText;
+                    break;
+                }
+
+                return false;
 
             default:
                 if (*text == ch)
@@ -145,7 +184,7 @@ class Environment
 {
 public:
     Environment(){}
-    ~Environment(){}
+    virtual ~Environment(){}
 public:
     virtual void SetUp(){}
     virtual void TearDown(){}
@@ -167,7 +206,7 @@ public:
     {
     }
 
-    ~Test()
+    virtual ~Test()
     {
     }
 
@@ -390,11 +429,12 @@ public:
     }
     static TestManager* GetInst()
     {
-        if (sm_pMnger == (TestManager*)0)
+        static TestManager* spMnger = (TestManager*)0;
+        if (spMnger == (TestManager*)0)
         {
-            sm_pMnger = new TestManager;
+            spMnger = new TestManager;
         }
-        return sm_pMnger;
+        return spMnger;
     }
     void SetGlobalEnvironment(Environment* pEnv)
     {
@@ -444,7 +484,7 @@ public:
         for (int i=1; i<argc; i++)
         {
             std::string strOpt = argv[i];
-            int idx = strOpt.find('=');  
+            size_t idx = strOpt.find('=');
             if (idx != std::string::npos)
             {
                 std::string strPat = strOpt.substr(idx + 1);
@@ -770,7 +810,7 @@ public:
     }
 
 private:
-    static TestManager* sm_pMnger;
+    //static TestManager* sm_pMnger;
     FixtureMap m_mapTestFixture;
     Environment* m_pGlobalEnv;
     std::vector<Test*> m_vecFailed;
@@ -780,7 +820,7 @@ private:
 
     Test* m_pLastFailedTC;
 };
-TestManager* TestManager::sm_pMnger = 0;
+// TestManager* TestManager::sm_pMnger = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -875,6 +915,27 @@ TestManager* TestManager::sm_pMnger = 0;
     }                                                                                   \
 }                                                                                       \
 
+#define EXPECT_BINEQ(a, b, s) {                                                         \
+    if(memcmp(a, b, s) != 0) {                                                          \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << THEUTILCLASSNAME::HexDump(a, s) << " == " <<                 \
+            THEUTILCLASSNAME::HexDump(b, s) <<                                          \
+            " ACTUAL: "<< THEUTILCLASSNAME::HexDump(a, s) << " != " <<                  \
+            THEUTILCLASSNAME::HexDump(b, s) << "\n";                                    \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+    }                                                                                   \
+}                                                                                       \
+
+#define EXPECT_BINNEQ(a, b, s) {                                                        \
+    if(memcmp(a, b, s) == 0) {                                                          \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << THEUTILCLASSNAME::HexDump(a, s) << " != " <<                 \
+            THEUTILCLASSNAME::HexDump(b, s) <<                                          \
+            " ACTUAL: "<< THEUTILCLASSNAME::HexDump(a, s) << " == " <<                  \
+            THEUTILCLASSNAME::HexDump(b, s) << "\n";                                    \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+    }                                                                                   \
+}                                                                                       \
 
 #define EXPECT_TRUE(a) {                                                                \
     if(!((int)a)){                                                                      \
@@ -926,7 +987,31 @@ TestManager* TestManager::sm_pMnger = 0;
             " EXPECT: " << a << " != " << b <<                                          \
             " ACTUAL: "<< a << " == " << b << "\n";                                     \
         TestManager::GetInst()->AddFailedTest(this);                                    \
-    return;                                                                             \
+        return;                                                                         \
+    }                                                                                   \
+}                                                                                       \
+
+#define ASSERT_BINEQ(a, b, s) {                                                         \
+    if(memcmp(a, b, s) != 0) {                                                          \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << THEUTILCLASSNAME::HexDump(a, s) << " == " <<                 \
+            THEUTILCLASSNAME::HexDump(b, s) <<                                          \
+            " ACTUAL: "<< THEUTILCLASSNAME::HexDump(a, s) << " != " <<                  \
+            THEUTILCLASSNAME::HexDump(b, s) << "\n";                                    \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+        return;                                                                         \
+    }                                                                                   \
+}                                                                                       \
+
+#define ASSERT_BINNEQ(a, b, s) {                                                        \
+    if(memcmp(a, b, s) == 0) {                                                          \
+        std::cout << "[E]File: " << __FILE__ << " Line:" << __LINE__ <<                 \
+            " EXPECT: " << THEUTILCLASSNAME::HexDump(a, s) << " != " <<                 \
+            THEUTILCLASSNAME::HexDump(b, s) <<                                          \
+            " ACTUAL: "<< THEUTILCLASSNAME::HexDump(a, s) << " == " <<                  \
+            THEUTILCLASSNAME::HexDump(b, s) << "\n";                                    \
+        TestManager::GetInst()->AddFailedTest(this);                                    \
+        return;                                                                         \
     }                                                                                   \
 }                                                                                       \
 
