@@ -1,3 +1,4 @@
+// Copyright 1985-2012 Luo Guochun, http://imlgc.com
 #ifndef X_JSON_H_
 #define X_JSON_H_
 
@@ -83,7 +84,6 @@ public:
 
     JsonArray& operator = (const JsonArray& sRight);
 public:
-//    int Set(int nIndex, JsonValue& sVal);
     JsonValue& Get(int nIndex) const;
     
     JsonValue& operator[](int nIndex);

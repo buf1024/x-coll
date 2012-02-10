@@ -1,17 +1,15 @@
+// Copyright 1985-2012 Luo Guochun, http://imlgc.com
 #include "json.h"
 #include <iostream>
 #include "test.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
 #pragma warning(disable:4996)
+#endif
 
 using namespace std;
 using namespace json;
-
-
-TEST(Json, GetErrMsg)
-{
-    
-}
 
 TEST(Json, ConstructJson)
 {
@@ -84,10 +82,10 @@ TEST(Json, ParseJson)
 
 int main(int argc, char** argv)
 {
-    //testGetErrMsg();
-    //testJson();
-    SET_ENVIRONMENT(new Environment);
     INIT_TEST(argc, argv);
     RUN_ALL_TEST();
-    return 0;
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

@@ -1,3 +1,4 @@
+// Copyright 1985-2012 Luo Guochun, http://imlgc.com
 #include "json.h"
 #include <assert.h>
 #include <string.h>
@@ -156,7 +157,7 @@ static long long toInt(const char* szStrVal, bool& bStat)
     else
     {
         int nRet = -1;
-        nRet = sscanf(szStrVal, "%ld", &nVal);
+        nRet = sscanf(szStrVal, "%d", &nVal);
         if (nRet == -1)
         {
             bStat = false;
@@ -175,7 +176,7 @@ static double toDouble(const char* szStrVal, bool& bStat)
     else
     {
         int nRet = -1;
-        nRet = sscanf(szStrVal, "%f", &dVal);
+        nRet = sscanf(szStrVal, "%lf", &dVal);
         if (nRet == -1)
         {
             bStat = false;
@@ -255,7 +256,7 @@ JsonValue& JsonArray::operator[](int nIndex)
         }
         
     }
-    return *_vArray[nIndex];;
+    return *_vArray[nIndex];
 }
 const JsonValue& JsonArray::operator[](int nIndex) const
 {
@@ -832,7 +833,7 @@ JsonValue* Json::Set(const char* szKey, JsonValue& sVal)
             }
             else if (nCmp < 0)
             {
-                // pGrpPre ²åÈë
+                // pGrpPre ï¿½ï¿½ï¿½ï¿½
                 break;
             }
             else
@@ -1006,7 +1007,7 @@ void Json::DumpValue(JsonValue* pJV, std::string& strDump, int nSpace) const
         case IntegerType:
             {
                 char szBuf[9] = {0};
-                sprintf(szBuf, "%ld", pJV->_sVal._llVal);
+                sprintf(szBuf, "%lld", pJV->_sVal._llVal);
                 strDump += szBuf;
             }
             break;
