@@ -90,7 +90,7 @@ public:
     {
         if (msg->message == WM_HOTKEY){
             emit hotKeyGenerated((int)msg->wParam, 
-                HIWORD(msg->lParam), LOWORD(msg->lParam));
+                LOWORD(msg->lParam), HIWORD(msg->lParam));
             return true;
         }
         return false;

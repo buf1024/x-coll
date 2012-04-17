@@ -1,17 +1,21 @@
 #ifndef __48SLOTS_CTRL_SRV_H__
 #define __48SLOTS_CTRL_SRV_H__
 
-#include <QObject>
+#include <QWidget>
 
 class SettingDlg;
 
+#define DEFAULT_SETTINGDLG_HOTKEY_ID  1
+#define DEFAULT_SETTINGDLG_MODIFIER   (MOD_ALT | MOD_CONTROL)
+#define DEFAULT_SETTINGDLG_VK         VK_F12
+
 class CtrlSrv
-    : public QObject
+    : public QWidget
 {
     Q_OBJECT
 
 public:
-    CtrlSrv(QObject* parent = 0);
+    CtrlSrv(QWidget* parent = 0);
     ~CtrlSrv();
 
 public:
@@ -20,6 +24,8 @@ public:
 private:
     void initCtrlSrv();
 
+private slots:
+    void onHotKeyGenerated(int id, int mod, int key);
 private:
     SettingDlg* settingdlg;
 };

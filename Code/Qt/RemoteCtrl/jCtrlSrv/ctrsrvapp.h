@@ -13,7 +13,7 @@ public:
     CtrSrvApp(int argc, char** argv)
         : CuteApp(argc, argv)
     {
-
+        setQuitOnLastWindowClosed(false);
     }
     ~CtrSrvApp()
     {

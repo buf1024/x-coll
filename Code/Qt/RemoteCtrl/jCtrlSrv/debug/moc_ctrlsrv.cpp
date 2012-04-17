@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'ctrlsrv.h'
 **
-** Created: Tue Apr 17 16:22:54 2012
+** Created: Tue Apr 17 21:42:37 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,26 +23,33 @@ static const uint qt_meta_data_CtrlSrv[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: signature, parameters, type, tag, flags
+      20,    9,    8,    8, 0x08,
+
        0        // eod
 };
 
 static const char qt_meta_stringdata_CtrlSrv[] = {
-    "CtrlSrv\0"
+    "CtrlSrv\0\0id,mod,key\0onHotKeyGenerated(int,int,int)\0"
 };
 
 void CtrlSrv::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
-    Q_UNUSED(_a);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        CtrlSrv *_t = static_cast<CtrlSrv *>(_o);
+        switch (_id) {
+        case 0: _t->onHotKeyGenerated((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObjectExtraData CtrlSrv::staticMetaObjectExtraData = {
@@ -50,7 +57,7 @@ const QMetaObjectExtraData CtrlSrv::staticMetaObjectExtraData = {
 };
 
 const QMetaObject CtrlSrv::staticMetaObject = {
-    { &QObject::staticMetaObject, qt_meta_stringdata_CtrlSrv,
+    { &QWidget::staticMetaObject, qt_meta_stringdata_CtrlSrv,
       qt_meta_data_CtrlSrv, &staticMetaObjectExtraData }
 };
 
@@ -68,14 +75,19 @@ void *CtrlSrv::qt_metacast(const char *_clname)
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_CtrlSrv))
         return static_cast<void*>(const_cast< CtrlSrv*>(this));
-    return QObject::qt_metacast(_clname);
+    return QWidget::qt_metacast(_clname);
 }
 
 int CtrlSrv::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QObject::qt_metacall(_c, _id, _a);
+    _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 1)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE
