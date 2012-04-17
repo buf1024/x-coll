@@ -5,10 +5,24 @@
 
 class QDialogButtonBox;
 class QTabWidget;
-class QAbstractB
+class QAbstractButton;
+class QShowEvent;
+
+class SettingPage
+    : public QWidget
+{
+    Q_OBJECT
+
+public:
+    SettingPage(QWidget* parent = 0);
+    ~SettingPage();
+
+signals:
+    void pageModified(QWidget* widget);
+};
 
 class GeneralPage
-    : public QWidget
+    : public SettingPage
 {
     Q_OBJECT
 
@@ -18,7 +32,7 @@ public:
 };
 
 class AboutPage
-    : public QWidget
+    : public SettingPage
 {
     Q_OBJECT
 
@@ -36,16 +50,23 @@ public:
     SettingDlg(QWidget* parent = 0);
     ~SettingDlg();
 
+protected:
+    void showEvent(QShowEvent* event);
+
 private:
+    void initDefaultSetting();
     void initSetting();
 
 public slots:
     void onButtonClicked(QAbstractButton* button);
     void onPageChanged(int index);
+    void onPageModified(QWidget* widget);
 
 private:
     QDialogButtonBox* buttonBox;
     QTabWidget* tabWidget;
+
+    bool propertyChanged;
 };
 
 

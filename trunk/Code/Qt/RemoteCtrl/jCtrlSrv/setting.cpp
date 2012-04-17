@@ -15,6 +15,7 @@ Setting::Setting(const Setting&)
 
 Setting& Setting::operator = (const Setting&)
 {
+    return *this;
 }
 
 Setting::~Setting()
