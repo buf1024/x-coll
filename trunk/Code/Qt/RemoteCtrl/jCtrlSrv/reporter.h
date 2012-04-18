@@ -13,8 +13,10 @@ class QTimer;
 class QUdpSocket;
 class QHostAddress;
 
+class QWidget;
+
 class Reporter
-    : QThread
+    : public QThread
 {
     Q_OBJECT
 
@@ -22,15 +24,30 @@ public:
     Reporter(QObject* parent = 0);
     ~Reporter();
 
-protected:
-    virtual void run();
+private:
+    void initReporter();
+    void getHostIp();
+    void sendDiagram();
+
+public slots:
+    void onTimerChanged(int newtime);
+    void onBroadcastPortChanged(int newport);
+    void onListenPortChanged(int newport);
+    void onHostDescChanged(const QString& desc);
+    void onTimeout();
 
 private:
     QTimer* timer;           // 计时器
     QUdpSocket* udpSocket;   // udp socket
-    QHostAddress* hostAddr;  // 广播地址
+    
+    QString hostDesc;
+    int timeInterval;
+    int broadcastPort;
+    int listenPort;
 
-    QString hostDesc;        // 广播主机描述
+    QString hostIp;
+
+    bool stopThread;
 };
 
 #endif /* __48SLOTS_REPORTER_H__ */

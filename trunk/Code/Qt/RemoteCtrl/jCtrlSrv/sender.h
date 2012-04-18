@@ -3,6 +3,9 @@
 
 #include <QThread>
 
+class QUdpSocket;
+class QTimer;
+
 class Sender
     : public QThread
 {

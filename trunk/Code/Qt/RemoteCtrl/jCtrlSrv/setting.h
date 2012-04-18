@@ -8,9 +8,18 @@
 #include <QObject>
 #include <QReadWriteLock>
 
-
+#define DEFAULT_HOST_DESC      tr("")
+#define DEFAULT_BROADCAST_TIME 1
 #define DEFAULT_BROADCAST_PORT 50203 /* 默认广播端口 */
 #define DEFAULT_LISTEN_PORT    50204 /* 默认监听端口 */
+
+#define ORGANIZATION           tr("48slots")
+#define APPLICATION            tr("RemoteCtrl.jCtrlSrv")
+
+#define HOST_DESC_KEY          tr("HOST_DESC")
+#define BROADCAST_TIME_KEY     tr("BROADCAST_TIME")
+#define LISTEN_PORT_KEY        tr("LISTEN_PORT")
+#define BROADCAST_PORT_KEY     tr("BROADCAST_PORT")
 
 class Setting
     : public QObject
@@ -24,13 +33,19 @@ private:
 
 public:
     ~Setting();
-    Setting& instance();
+    static Setting& instance();
 
 public:
+    void restoreLastSetting();
+    void saveSetting();
+    
     QString getHostDesc();
     void setHostDesc(const QString& desc);
 
-    int getBroadcasePort();
+    int getBroadcastTimeValue();
+    void setBroadcastTimeValue(int timeval);
+
+    int getBroadcastPort();
     void setBroadcasePort(int port);
 
     int getListenPort();
@@ -38,20 +53,16 @@ public:
 
 signals:
     void hostDescriptionChanged(const QString& hostDesc);
+    void broadcastTimaeValueChanged(int time);
     void broadcastPortChanged(int port);
     void listenPortChanged(int port);
 
 private:
-    void initDefaultSetting();
-    void restoreLastSetting();
+    QString hostDesc;               // 当前主机信息描述
+    volatile int broadcastTimeval;  // 广播时间间隔
+    volatile int broadcastPort;     // 广播端口
+    volatile int listenPort;        // 监听端口
 
-private:
-    QString hostDesc; // 当前主机信息描述
-    int broadcastPort;// 广播端口
-    int listenPort;   // 监听端口
-
-
-    QReadWriteLock rdwrLock; // 多线程同步
 };
 
 
