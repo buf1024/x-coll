@@ -1,7 +1,9 @@
 #include "ctrlsrv.h"
+#include "setting.h"
 #include "settingdlg.h"
 #include "ctrsrvapp.h"
 
+#include "reporter.h"
 
 CtrlSrv::CtrlSrv(QWidget* parent)
 : QWidget(parent)
@@ -34,6 +36,12 @@ void CtrlSrv::initCtrlSrv()
         connect(app, SIGNAL(hotKeyGenerated(int, int, int)),
             this, SLOT(onHotKeyGenerated(int, int, int)));
     }
+
+    // setting
+    Setting::instance();
+
+    reporter = new Reporter(this);
+    reporter->start();
 }
 
 // slots

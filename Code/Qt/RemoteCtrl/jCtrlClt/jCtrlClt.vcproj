@@ -1,326 +1,511 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="jCtrlClt"
 	ProjectGUID="{862A9477-63B5-35E8-9B0F-8E9F29F8B3E2}"
-	Keyword="Qt4VSv1.0">
+	Keyword="Qt4VSv1.0"
+	TargetFrameworkVersion="0"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32" />
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="debug\"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			ConfigurationType="1"
 			IntermediateDirectory="debug\"
-			UseOfMfc="0">
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;d:\Qt4.8.0\include\QtCore&quot;,&quot;d:\Qt4.8.0\include\QtNetwork&quot;,&quot;d:\Qt4.8.0\include\QtGui&quot;,&quot;d:\Qt4.8.0\include&quot;,&quot;.&quot;,&quot;d:\Qt4.8.0\include\ActiveQt&quot;,&quot;debug&quot;,d:\Qt4.8.0\mkspecs\default"
-				AdditionalOptions="-Zm200 -w34100 -w34189"
-				AssemblerListingLocation="debug\"
-				BufferSecurityCheck="false"
-				DebugInformationFormat="3"
-				ExceptionHandling="1"
-				GeneratePreprocessedFile="0"
-				ObjectFile="debug\"
-				Optimization ="4"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
-				ProgramDataBaseFileName=".\"
-				RuntimeLibrary="3"
-				RuntimeTypeInfo="true"
-				SuppressStartupBanner="true"
-				TreatWChar_tAsBuiltInType="false"
-				WarningLevel="3" />
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool" />
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="d:\Qt4.8.0\lib\qtmaind.lib d:\Qt4.8.0\lib\QtGuid4.lib d:\Qt4.8.0\lib\QtNetworkd4.lib d:\Qt4.8.0\lib\QtCored4.lib"
-				AdditionalLibraryDirectories="d:\Qt4.8.0\lib"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				GenerateDebugInformation="true"
-				IgnoreImportLibrary="true"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\jCtrlClt.exe"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				SuppressStartupBanner="true" />
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
+				WarningLevel="0"
 				DefaultCharType="0"
 				EnableErrorChecks="1"
-				WarningLevel="0" />
+			/>
 			<Tool
-				Name="VCPostBuildEventTool" />
+				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm200 -w34100 -w34189"
+				Optimization="4"
+				AdditionalIncludeDirectories="&quot;d:\Qt4.8.0\include\QtCore&quot;,&quot;d:\Qt4.8.0\include\QtNetwork&quot;,&quot;d:\Qt4.8.0\include\QtGui&quot;,&quot;d:\Qt4.8.0\include&quot;,&quot;.&quot;,&quot;d:\Qt4.8.0\include\ActiveQt&quot;,&quot;debug&quot;,d:\Qt4.8.0\mkspecs\default"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
+				GeneratePreprocessedFile="0"
+				ExceptionHandling="1"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="false"
+				TreatWChar_tAsBuiltInType="false"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="debug\"
+				ObjectFile="debug\"
+				ProgramDataBaseFileName=".\"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool" />
-			<Tool
-				Name="VCPreLinkEventTool" />
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,_DEBUG" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,_DEBUG"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
+				AdditionalDependencies="d:\Qt4.8.0\lib\qtmaind.lib d:\Qt4.8.0\lib\QtGuid4.lib d:\Qt4.8.0\lib\QtNetworkd4.lib d:\Qt4.8.0\lib\QtCored4.lib"
+				OutputFile="$(OutDir)\jCtrlClt.exe"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="d:\Qt4.8.0\lib"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile=""
+				SubSystem="2"
+				LinkTimeCodeGeneration="0"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="release\"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			ConfigurationType="1"
 			IntermediateDirectory="release\"
-			UseOfMfc="0">
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;d:\Qt4.8.0\include\QtCore&quot;,&quot;d:\Qt4.8.0\include\QtNetwork&quot;,&quot;d:\Qt4.8.0\include\QtGui&quot;,&quot;d:\Qt4.8.0\include&quot;,&quot;.&quot;,&quot;d:\Qt4.8.0\include\ActiveQt&quot;,&quot;release&quot;,d:\Qt4.8.0\mkspecs\default"
-				AdditionalOptions="-Zm200 -w34100 -w34189"
-				AssemblerListingLocation="release\"
-				BufferSecurityCheck="false"
-				DebugInformationFormat="0"
-				ExceptionHandling="1"
-				GeneratePreprocessedFile="0"
-				ObjectFile="release\"
-				Optimization ="2"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,NDEBUG"
-				ProgramDataBaseFileName=".\"
-				RuntimeLibrary="2"
-				RuntimeTypeInfo="true"
-				SuppressStartupBanner="true"
-				TreatWChar_tAsBuiltInType="false"
-				WarningLevel="3" />
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool" />
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="d:\Qt4.8.0\lib\qtmain.lib d:\Qt4.8.0\lib\QtGui4.lib d:\Qt4.8.0\lib\QtNetwork4.lib d:\Qt4.8.0\lib\QtCore4.lib"
-				AdditionalLibraryDirectories="d:\Qt4.8.0\lib"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				GenerateDebugInformation="false"
-				IgnoreImportLibrary="true"
-				LinkIncremental="1"
-				LinkTimeCodeGeneration="0"
-				OutputFile="$(OutDir)\jCtrlClt.exe"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				SuppressStartupBanner="true" />
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
+				WarningLevel="0"
 				DefaultCharType="0"
 				EnableErrorChecks="1"
-				WarningLevel="0" />
+			/>
 			<Tool
-				Name="VCPostBuildEventTool" />
+				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm200 -w34100 -w34189"
+				Optimization="2"
+				AdditionalIncludeDirectories="&quot;d:\Qt4.8.0\include\QtCore&quot;,&quot;d:\Qt4.8.0\include\QtNetwork&quot;,&quot;d:\Qt4.8.0\include\QtGui&quot;,&quot;d:\Qt4.8.0\include&quot;,&quot;.&quot;,&quot;d:\Qt4.8.0\include\ActiveQt&quot;,&quot;release&quot;,d:\Qt4.8.0\mkspecs\default"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,NDEBUG"
+				GeneratePreprocessedFile="0"
+				ExceptionHandling="1"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				TreatWChar_tAsBuiltInType="false"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="release\"
+				ObjectFile="release\"
+				ProgramDataBaseFileName=".\"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="0"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool" />
-			<Tool
-				Name="VCPreLinkEventTool" />
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT" />
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
+				AdditionalDependencies="d:\Qt4.8.0\lib\qtmain.lib d:\Qt4.8.0\lib\QtGui4.lib d:\Qt4.8.0\lib\QtNetwork4.lib d:\Qt4.8.0\lib\QtCore4.lib"
+				OutputFile="$(OutDir)\jCtrlClt.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="d:\Qt4.8.0\lib"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
+				SubSystem="2"
+				LinkTimeCodeGeneration="0"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath="cltrclt.cpp" />
+				RelativePath=".\browser.cpp"
+				>
+			</File>
 			<File
-				RelativePath="detecter.cpp" />
+				RelativePath="cltrclt.cpp"
+				>
+			</File>
 			<File
-				RelativePath="heartbeat.cpp" />
+				RelativePath="detecter.cpp"
+				>
+			</File>
 			<File
-				RelativePath="main.cpp" />
+				RelativePath="heartbeat.cpp"
+				>
+			</File>
 			<File
-				RelativePath="receiver.cpp" />
+				RelativePath="main.cpp"
+				>
+			</File>
 			<File
-				RelativePath="sender.cpp" />
+				RelativePath="receiver.cpp"
+				>
+			</File>
+			<File
+				RelativePath="sender.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath="ctrlclt.h">
+				RelativePath=".\browser.h"
+				>
+			</File>
+			<File
+				RelativePath="ctrlclt.h"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;ctrlclt.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 ctrlclt.h -o debug\moc_ctrlclt.cpp"
 						Description="MOC ctrlclt.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 ctrlclt.h -o debug\moc_ctrlclt.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;ctrlclt.h"
 						Outputs="debug\moc_ctrlclt.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;ctrlclt.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 ctrlclt.h -o release\moc_ctrlclt.cpp"
 						Description="MOC ctrlclt.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 ctrlclt.h -o release\moc_ctrlclt.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;ctrlclt.h"
 						Outputs="release\moc_ctrlclt.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="detecter.h">
+				RelativePath=".\ctrlcltapp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cuteapp.h"
+				>
+			</File>
+			<File
+				RelativePath="detecter.h"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;detecter.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 detecter.h -o debug\moc_detecter.cpp"
 						Description="MOC detecter.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 detecter.h -o debug\moc_detecter.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;detecter.h"
 						Outputs="debug\moc_detecter.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;detecter.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 detecter.h -o release\moc_detecter.cpp"
 						Description="MOC detecter.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 detecter.h -o release\moc_detecter.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;detecter.h"
 						Outputs="release\moc_detecter.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="heartbeat.h">
+				RelativePath="heartbeat.h"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;heartbeat.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 heartbeat.h -o debug\moc_heartbeat.cpp"
 						Description="MOC heartbeat.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 heartbeat.h -o debug\moc_heartbeat.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;heartbeat.h"
 						Outputs="debug\moc_heartbeat.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;heartbeat.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 heartbeat.h -o release\moc_heartbeat.cpp"
 						Description="MOC heartbeat.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 heartbeat.h -o release\moc_heartbeat.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;heartbeat.h"
 						Outputs="release\moc_heartbeat.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="receiver.h">
+				RelativePath="receiver.h"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;receiver.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 receiver.h -o debug\moc_receiver.cpp"
 						Description="MOC receiver.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 receiver.h -o debug\moc_receiver.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;receiver.h"
 						Outputs="debug\moc_receiver.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;receiver.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 receiver.h -o release\moc_receiver.cpp"
 						Description="MOC receiver.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 receiver.h -o release\moc_receiver.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;receiver.h"
 						Outputs="release\moc_receiver.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="sender.h">
+				RelativePath="sender.h"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;sender.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 sender.h -o debug\moc_sender.cpp"
 						Description="MOC sender.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 sender.h -o debug\moc_sender.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;sender.h"
 						Outputs="debug\moc_sender.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;sender.h"
-						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 sender.h -o release\moc_sender.cpp"
 						Description="MOC sender.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 sender.h -o release\moc_sender.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;sender.h"
 						Outputs="release\moc_sender.cpp"
-						Path="d:\Qt4.8.0\bin" />
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Generated Files"
 			Filter="cpp;c;cxx;moc;h;def;odl;idl;res;"
-			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}">
+			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}"
+			>
 			<File
-				RelativePath="debug\moc_ctrlclt.cpp">
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="release\moc_ctrlclt.cpp">
+				RelativePath="release\moc_ctrlclt.cpp"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_detecter.cpp">
+				RelativePath="debug\moc_ctrlclt.cpp"
+				>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_detecter.cpp">
+				RelativePath="release\moc_detecter.cpp"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_heartbeat.cpp">
+				RelativePath="debug\moc_detecter.cpp"
+				>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_heartbeat.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="debug\moc_receiver.cpp">
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="release\moc_receiver.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="debug\moc_sender.cpp">
+				RelativePath="debug\moc_heartbeat.cpp"
+				>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_sender.cpp">
+				RelativePath="release\moc_heartbeat.cpp"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="release\moc_receiver.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_receiver.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="release\moc_sender.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_sender.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

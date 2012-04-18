@@ -7,6 +7,7 @@ class QDialogButtonBox;
 class QTabWidget;
 class QAbstractButton;
 class QShowEvent;
+class QTextEdit;
 
 class SettingPage
     : public QWidget
@@ -39,6 +40,9 @@ class AboutPage
 public:
     AboutPage(QWidget* parent = 0);
     ~AboutPage();
+
+private:
+    QTextEdit* text;
 };
 
 class SettingDlg
@@ -56,6 +60,8 @@ protected:
 private:
     void initDefaultSetting();
     void initSetting();
+
+    void centerWidget();
 
 public slots:
     void onButtonClicked(QAbstractButton* button);
