@@ -2,6 +2,7 @@
 #include "detecter.h"
 #include "receiver.h"
 #include "sender.h"
+#include "connectdlg.h"
 
 #include <QApplication>
 #include <QtGui>
@@ -62,6 +63,54 @@ void CtrlCtl::initCtrlClt()
     connect(receiver, SIGNAL(receiverInfoReady(QImage*)),
         this, SLOT(onReceiverInfoReady(QImage*)));
     receiver->setSocket(tcpSocket);
+
+
+    // trayicon
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/res/jCtrlClt.ico"));
+    QString tooltip = ORGANIZATION;
+    tooltip += tr(" ");
+    tooltip += APPLICATION;
+    trayIcon->setToolTip(tooltip);
+
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), 
+        this, SLOT(onQuitAction()));
+    browserAction = new QAction(tr("&Browser"), this);
+    connect(browserAction, SIGNAL(triggered()), 
+        this, SLOT(onBrowserAction()));
+    optAction = new QAction(tr("&Option"), this);
+    connect(optAction, SIGNAL(triggered()), 
+        this, SLOT(onOptAction()));
+    aboutAction = new QAction(tr("&About"), this);
+    connect(aboutAction, SIGNAL(triggered()), 
+        this, SLOT(onAboutAction()));
+    connectAction = new QAction(tr("&Connect..."), this);
+    connect(connectAction, SIGNAL(triggered()), 
+        this, SLOT(onConnectAction()));
+    visableAction = new QAction(tr("&Hide"), this);
+    connect(visableAction, SIGNAL(triggered()), 
+        this, SLOT(onVisableAction()));
+
+    QMenu* trayMenu = new QMenu(this);
+    trayMenu->addAction(aboutAction);
+    QAction* sep = new QAction(this);
+    sep->setSeparator(true);
+    trayMenu->addAction(sep);
+    trayMenu->addAction(visableAction);
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    trayMenu->addAction(sep);
+    trayMenu->addAction(optAction);
+    trayMenu->addAction(browserAction);
+    trayMenu->addAction(connectAction);
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    trayMenu->addAction(sep);
+    trayMenu->addAction(quitAction);
+
+    trayIcon->setContextMenu(trayMenu);
+
 }
 void CtrlCtl::start()
 {     
@@ -73,6 +122,11 @@ void CtrlCtl::start()
     int y = (desktopSize.height() - h) / 2;
     setGeometry(x, y, w, h);
     show();
+    trayIcon->show();
+    QString msg = APPLICATION;
+    msg += tr(" Is Running...");
+    QString title = APPLICATION;
+    trayIcon->showMessage(title, msg);
 }
 
 
@@ -132,7 +186,7 @@ void  CtrlCtl::onDisconnected()
 }
 void CtrlCtl::onError(QAbstractSocket::SocketError err)
 {
-
+    
 }
 
 
@@ -141,7 +195,56 @@ void CtrlCtl::onReceiverInfoReady(QImage* img)
 
 }
 
+void CtrlCtl::onQuitAction()
+{
+    emit aboutToQuit();
 
+    if (sender->isRunning()){
+        sender->wait();
+    }
+    if (receiver->isRunning()){
+        receiver->wait();
+    }
+
+    QCoreApplication* app = QApplication::instance();
+    app->quit();
+}
+void CtrlCtl::onAboutAction()
+{
+    QMessageBox::about(this,
+        APPLICATION, tr("buf1024@gmail.com"));
+}
+void CtrlCtl::onVisableAction()
+{
+    if (isHidden()){
+        visableAction->setText(tr("&Hide"));
+        show();
+    }else{
+        visableAction->setText(tr("&Show"));
+        hide();
+    }
+}
+void CtrlCtl::onOptAction()
+{
+
+}
+void CtrlCtl::onBrowserAction()
+{
+
+}
+
+void CtrlCtl::onConnectAction()
+{
+    ConnectDlg dlg;
+    if (dlg.exec() == QDialog::Accepted){
+        QString host = dlg.getHostAddress();
+        int port = dlg.getHostPort().toInt();
+        // ignore
+        QString key = dlg.getExchangeKey();
+
+        tcpSocket->connectToHost(host, port);
+    }
+}
 
 
 
