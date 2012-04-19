@@ -7,6 +7,7 @@
 
 class SettingDlg;
 class Reporter;
+class TcpServer;
 
 #define DEFAULT_SETTINGDLG_HOTKEY_ID  1
 #define DEFAULT_SETTINGDLG_MODIFIER   (MOD_ALT | MOD_CONTROL)
@@ -26,6 +27,7 @@ public:
 
 private:
     void initCtrlSrv();
+    
 
 private slots:
     void onHotKeyGenerated(int id, int mod, int key);
@@ -33,6 +35,9 @@ private:
     SettingDlg* settingdlg;
 
     Reporter* reporter;
+
+
+    TcpServer* server;
 };
 
 

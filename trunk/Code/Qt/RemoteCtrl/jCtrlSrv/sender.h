@@ -3,8 +3,7 @@
 
 #include <QThread>
 
-class QUdpSocket;
-class QTimer;
+class QTcpSocket;
 
 class Sender
     : public QThread
@@ -18,3 +17,7 @@ public:
 
 
 #endif /* __48SLOTS_SENDER_H__ */
+
+
+
+
