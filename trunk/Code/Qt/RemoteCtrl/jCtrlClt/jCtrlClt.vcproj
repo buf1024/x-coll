@@ -130,6 +130,8 @@
 			<File
 				RelativePath="cltrclt.cpp" />
 			<File
+				RelativePath="connectdlg.cpp" />
+			<File
 				RelativePath="detecter.cpp" />
 			<File
 				RelativePath="main.cpp" />
@@ -162,6 +164,29 @@
 						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 browser.h -o release\moc_browser.cpp"
 						Description="MOC browser.h"
 						Outputs="release\moc_browser.cpp"
+						Path="d:\Qt4.8.0\bin" />
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="connectdlg.h">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;connectdlg.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;debug&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 connectdlg.h -o debug\moc_connectdlg.cpp"
+						Description="MOC connectdlg.h"
+						Outputs="debug\moc_connectdlg.cpp"
+						Path="d:\Qt4.8.0\bin" />
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="D:\Qt4.8.0\bin\moc.exe;connectdlg.h"
+						CommandLine="D:\Qt4.8.0\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;d:\Qt4.8.0\include\QtCore&quot; -I&quot;d:\Qt4.8.0\include\QtNetwork&quot; -I&quot;d:\Qt4.8.0\include\QtGui&quot; -I&quot;d:\Qt4.8.0\include&quot; -I&quot;.&quot; -I&quot;d:\Qt4.8.0\include\ActiveQt&quot; -I&quot;release&quot; -Id:\Qt4.8.0\mkspecs\default -D_MSC_VER=1500 -DWIN32 connectdlg.h -o release\moc_connectdlg.cpp"
+						Description="MOC connectdlg.h"
+						Outputs="release\moc_connectdlg.cpp"
 						Path="d:\Qt4.8.0\bin" />
 				</FileConfiguration>
 			</File>
@@ -344,6 +369,18 @@
 					ExcludedFromBuild="true" />
 			</File>
 			<File
+				RelativePath="debug\moc_connectdlg.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_connectdlg.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
 				RelativePath="debug\moc_ctrlclt.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
@@ -426,6 +463,49 @@
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\qrc_jCtrlClt.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\qrc_jCtrlClt.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="qrc;*"
+			UniqueIdentifier="{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}"
+			ParseFiles="false">
+			<File
+				RelativePath="res\jCtrlClt.ico" />
+			<File
+				RelativePath="jCtrlClt.qrc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="D:\Qt4.8.0\bin\rcc.exe;jCtrlClt.qrc;res\jCtrlClt.ico"
+						CommandLine="D:\Qt4.8.0\bin\rcc.exe -name jCtrlClt jCtrlClt.qrc -o debug\qrc_jCtrlClt.cpp"
+						Description="RCC jCtrlClt.qrc"
+						Outputs="debug\qrc_jCtrlClt.cpp"
+						Path="d:\Qt4.8.0\bin" />
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="D:\Qt4.8.0\bin\rcc.exe;jCtrlClt.qrc;res\jCtrlClt.ico"
+						CommandLine="D:\Qt4.8.0\bin\rcc.exe -name jCtrlClt jCtrlClt.qrc -o release\qrc_jCtrlClt.cpp"
+						Description="RCC jCtrlClt.qrc"
+						Outputs="release\qrc_jCtrlClt.cpp"
+						Path="d:\Qt4.8.0\bin" />
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

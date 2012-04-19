@@ -13,6 +13,9 @@
 //#define DEFAULT_OPTION_MODIFIER   (MOD_ALT | MOD_CONTROL)
 //#define DEFAULT_OPTION_VK         VK_F11
 
+#define ORGANIZATION           tr("48slots")
+#define APPLICATION            tr("RemoteCtrl.jCtrlClt")
+
 // class HostBrower;
 
 class Detecter;
@@ -27,6 +30,10 @@ class QKeyEvent;
 class QMouseEvent;
 class QWheelEvent;
 class QPaintEvent;
+
+class QAction;
+
+class QSystemTrayIcon;
 
 class CtrlCtl
     : public QWidget
@@ -58,8 +65,18 @@ public slots:
     void onError(QAbstractSocket::SocketError);
     void onReceiverInfoReady(QImage* img);
 
+
+    // action
+    void onQuitAction();
+    void onAboutAction();
+    void onVisableAction();
+    void onOptAction();
+    void onBrowserAction();
+    void onConnectAction();
+
 signals:
     void contextInfoReady(SenderCtx*);
+    void aboutToQuit();
 
 private:
     void initCtrlClt();
@@ -73,6 +90,19 @@ private:
 
     Sender* sender;          // send thread
     Receiver* receiver;      // read thread
+
+
+
+
+
+    // ui
+    QSystemTrayIcon* trayIcon;
+    QAction* quitAction;
+    QAction* aboutAction;
+    QAction* visableAction;
+    QAction* optAction;
+    QAction* browserAction;
+    QAction* connectAction;
 };
 
 #endif /* __48SLOTS_CTRL_CLT_H__ */
