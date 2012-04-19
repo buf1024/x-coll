@@ -1,16 +1,30 @@
 #ifndef __48SLOTS_SENDER_H__
 #define __48SLOTS_SENDER_H__
 
-#include <QThread>
+#include "ctrlcltsockthread.h"
+#include <QAbstractSocket>
+
+class SenderCtx
+{
+public:
+};
 
 class Sender
-    : public QThread
+    : public SocketThread
 {
     Q_OBJECT
 
 public:
     Sender(QObject* parent = 0);
     ~Sender();
+
+public:
+    virtual void setSocket(QTcpSocket* sock);
+
+public slots:
+    void onContextInfoReady(SenderCtx* ctx);
+    void onDisconnected();
+    void onError(QAbstractSocket::SocketError);
 };
 
 

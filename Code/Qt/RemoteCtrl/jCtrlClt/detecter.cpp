@@ -58,14 +58,14 @@ const QHash<QString, int>& Detecter::getHostInfo()
  void Detecter::onTimeOut()
  {
      static unsigned long long timeoutcout = 0;
-     timeoutcout++;
-
+     timeoutcout += 4;
      QStringList strlist;
 
      QHashIterator<QString, int> it(hostsInfo);
      while(it.hasNext()){
          it.next();
-         if (it.value() <= timeoutcout){
+         int val = it.value();
+         if (val <= timeoutcout){
              strlist << it.key();
          }
      }
@@ -73,6 +73,7 @@ const QHash<QString, int>& Detecter::getHostInfo()
      while(strit.hasNext()){
          QString key = strit.next();
          hostsInfo.remove(key);
+         timeoutcout = 0;
          emit oldHostRemoved(hostsInfo, key);
      }
 

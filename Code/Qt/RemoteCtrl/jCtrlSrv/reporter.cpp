@@ -5,8 +5,8 @@
 #include <QHostInfo>
 #include <QHostAddress>
 #include <QByteArray>
-
-#include <QWidget>
+#include <QNetworkInterface>
+#include <QList>
 
 Reporter::Reporter(QObject* parent)
 : QThread(parent)
@@ -29,6 +29,8 @@ void Reporter::initReporter()
     timeInterval = setting.getBroadcastTimeValue();
     broadcastPort = setting.getBroadcastPort();
     listenPort = setting.getListenPort();
+    
+    getHostIp();
 
     timer->setInterval(timeInterval*1000);
 
@@ -51,10 +53,11 @@ void Reporter::sendDiagram()
 {
     QString msg;
     
-    msg += hostDesc + ":";
+    
     msg += QHostInfo::localHostName() + ":";
     msg += hostIp + ":";
-    msg += QString::number(listenPort);
+    msg += QString::number(listenPort) + ":";
+    msg += hostDesc;
 
     QByteArray diagram = msg.toAscii();
 
@@ -64,9 +67,18 @@ void Reporter::sendDiagram()
 }
 void Reporter::getHostIp()
 {
-    QHostInfo info=QHostInfo::fromName(QHostInfo::localHostName());
-    QHostAddress addr = info.addresses().first();
-    hostIp = addr.toString();
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+            ipAddressesList.at(i).toIPv4Address()) {
+                hostIp = ipAddressesList.at(i).toString();
+                break;
+        }
+    }
+    if (hostIp.isEmpty()){
+        hostIp = QHostAddress(QHostAddress::LocalHost).toString();
+    }
 }
 void Reporter::onTimerChanged(int newtime)
 {

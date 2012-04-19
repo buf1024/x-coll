@@ -5,6 +5,9 @@
 
 #include "reporter.h"
 
+#include <QTcpServer>
+
+
 CtrlSrv::CtrlSrv(QWidget* parent)
 : QWidget(parent)
 {
@@ -42,6 +45,11 @@ void CtrlSrv::initCtrlSrv()
 
     reporter = new Reporter(this);
     reporter->start();
+
+
+    // server
+//    server = new QTcpServer(this);
+
 }
 
 // slots
