@@ -1,24 +1,26 @@
 #include "ServiceCtrl.h"
 
 static ServiceMainCallback g_lpServiceMain               = NULL;
+static ServiceControlCallback g_lpServiceCtrl            = NULL;
 static ServiceNameCallback g_lpServiceName               = NULL;
 static ServiceTypeCallback g_lpServiceType               = NULL;
 static ServiceDescriptionCallback g_lpServiceDescription = NULL;
 
-static void InitServiceStatus(SERVICE_STATUS& sStatus)
-{
-    sStatus.dwServiceType             = SERVICE_WIN32_OWN_PROCESS;
-    sStatus.dwCurrentState            = SERVICE_STOPPED;
-    sStatus.dwControlsAccepted        = SERVICE_ACCEPT_STOP;
-    sStatus.dwWin32ExitCode           = 0;
-    sStatus.dwServiceSpecificExitCode = 0;
-    sStatus.dwCheckPoint              = 0;
-    sStatus.dwWaitHint                = 0;
-}
+static void WINAPI StupidServiceMain(DWORD dwArgc,
+                                     LPTSTR* lpszArgv);
+static DWORD WINAPI StupidCtrlHandlerEx(DWORD dwControl,
+                                        DWORD dwEventType,
+                                        LPVOID lpEventData,
+                                        LPVOID lpContext);
 
 void SetServiceMainCallback(ServiceMainCallback lpCallback)
 {
     g_lpServiceMain = lpCallback;
+}
+
+void SetServiceControlCallback(ServiceControlCallback lpCallback)
+{
+    g_lpServiceCtrl = lpCallback;
 }
 
 void SetServiceNameCallback(ServiceNameCallback lpCallback)
@@ -199,70 +201,67 @@ int ServiceUninstall()
     return ESC_SUCCESS;
 }
 
+static SERVICE_STATUS g_sStatus;
 
+static void WINAPI StupidServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
+{
+    SERVICE_STATUS_HANDLE hStatus; 
+    
+    LPTSTR lpszName = _T("");
+
+    g_sStatus.dwServiceType             = SERVICE_WIN32_OWN_PROCESS; 
+    g_sStatus.dwCurrentState            = SERVICE_START_PENDING; 
+    g_sStatus.dwControlsAccepted        =  SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
+    g_sStatus.dwWin32ExitCode           = 0; 
+    g_sStatus.dwServiceSpecificExitCode = 0; 
+    g_sStatus.dwCheckPoint              = 0; 
+    g_sStatus.dwWaitHint                = 0; 
+
+    if (g_lpServiceName != NULL)
+    {
+        lpszName = (*g_lpServiceName)();
+    }
+
+    hStatus = RegisterServiceCtrlHandlerEx(
+        lpszName, (LPHANDLER_FUNCTION_EX)StupidCtrlHandlerEx, &g_sStatus); 
+    if (hStatus == (SERVICE_STATUS_HANDLE)NULL) 
+    { 
+        return; 
+    }
+    g_sStatus.dwCurrentState = SERVICE_RUNNING; 
+    SetServiceStatus (hStatus, &g_sStatus);
+    (*g_lpServiceMain)(&g_sStatus);
+    
+
+}
+
+static DWORD WINAPI StupidCtrlHandlerEx(DWORD dwControl,
+                                        DWORD dwEventType,
+                                        LPVOID lpEventData,
+                                        LPVOID lpContext)
+{
+    return (*g_lpServiceCtrl)(dwControl, lpContext);
+}
 
 int ServiceMain()
 {
-    //if (g_lpServiceMain != NULL)
-    //{
-    //    int error; 
+    if (g_lpServiceMain != NULL && g_lpServiceCtrl != NULL)
+    {
+        SERVICE_TABLE_ENTRY sTable[2] = {0};        
+        LPTSTR lpszName = _T("");
+        if (g_lpServiceName != NULL)
+        {
+            lpszName = (*g_lpServiceName)();
+        }
 
-    //    ServiceStatus.dwServiceType = 
-    //        SERVICE_WIN32; 
-    //    ServiceStatus.dwCurrentState = 
-    //        SERVICE_START_PENDING; 
-    //    ServiceStatus.dwControlsAccepted   =  
-    //        SERVICE_ACCEPT_STOP | 
-    //        SERVICE_ACCEPT_SHUTDOWN;
-    //    ServiceStatus.dwWin32ExitCode = 0; 
-    //    ServiceStatus.dwServiceSpecificExitCode = 0; 
-    //    ServiceStatus.dwCheckPoint = 0; 
-    //    ServiceStatus.dwWaitHint = 0; 
+        lstrcpy(sTable[0].lpServiceName, lpszName);
+        sTable[0].lpServiceProc = (LPSERVICE_MAIN_FUNCTION)StupidServiceMain;
 
-    //    hStatus = RegisterServiceCtrlHandler(
-    //        "MemoryStatus", 
-    //        (LPHANDLER_FUNCTION)ControlHandler); 
-    //    if (hStatus == (SERVICE_STATUS_HANDLE)0) 
-    //    { 
-    //        // Registering Control Handler failed
-    //        return; 
-    //    }  
-    //    // Initialize Service 
-    //    error = InitService(); 
-    //    if (error) 
-    //    {
-    //        // Initialization failed
-    //        ServiceStatus.dwCurrentState = 
-    //            SERVICE_STOPPED; 
-    //        ServiceStatus.dwWin32ExitCode = -1; 
-    //        SetServiceStatus(hStatus, &ServiceStatus); 
-    //        return; 
-    //    } 
-    //    // We report the running sStatus to SCM. 
-    //    ServiceStatus.dwCurrentState = 
-    //        SERVICE_RUNNING; 
-    //    SetServiceStatus (hStatus, &ServiceStatus);
-
-    //    MEMORYSTATUS memory;
-    //    // The worker loop of a service
-    //    while (ServiceStatus.dwCurrentState == 
-    //        SERVICE_RUNNING)
-    //    {
-    //        char buffer[16];
-    //        GlobalMemoryStatus(&memory);
-    //        sprintf(buffer, "%d", memory.dwAvailPhys);
-    //        int result = WriteToLog(buffer);
-    //        if (result)
-    //        {
-    //            ServiceStatus.dwCurrentState = 
-    //                SERVICE_STOPPED; 
-    //            ServiceStatus.dwWin32ExitCode      = -1; 
-    //            SetServiceStatus(hStatus, 
-    //                &ServiceStatus);
-    //            return;
-    //        }
-    //        Sleep(SLEEP_TIME);
-    //    }
-    //}
-    return ESC_SUCCESS;
+        if(StartServiceCtrlDispatcher(sTable) == FALSE)
+        {
+            return ESC_SERVICE_RUNNING_ERROR;
+        }
+        return ESC_SUCCESS;
+    }
+    return ESC_FRAMEWORK_UNINITIALIZE;
 }
