@@ -1,0 +1,5 @@
+LIBRARY	"WinSvchostService"
+EXPORTS
+    Install
+    Uninstall
+    ServiceMain
