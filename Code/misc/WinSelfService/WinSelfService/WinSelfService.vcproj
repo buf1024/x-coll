@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Service"
+	Name="WinSelfService"
 	ProjectGUID="{097703D3-6A88-415F-BC66-B6D7EA94C4DB}"
-	RootNamespace="Service"
+	RootNamespace="WinSelfService"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
