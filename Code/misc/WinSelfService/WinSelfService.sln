@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinServiceCpp", "WinServiceCpp\WinServiceCpp.vcproj", "{097703D3-6A88-415F-BC66-B6D7EA94C4DB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSelfService", "WinSelfService\WinSelfService.vcproj", "{097703D3-6A88-415F-BC66-B6D7EA94C4DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

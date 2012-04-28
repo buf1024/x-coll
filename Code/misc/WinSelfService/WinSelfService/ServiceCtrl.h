@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <tchar.h>
 
+
 #define ESC_SUCCESS                  0
 #define ESC_INVALID_HANDLE           -1
 #define ESC_ACCESS_DENY              -2
@@ -16,12 +17,81 @@
 #define ESC_UNKNOWN                  -100
 
 // 回调函数类型
-typedef int    (*ServiceEntryCallback)(DWORD, LPTSTR*);
-typedef void   (*ServiceMainCallback)(LPVOID);
-typedef DWORD  (*ServiceControlCallback)(DWORD, LPVOID);
-typedef LPTSTR (*ServiceNameCallback)();
-typedef DWORD  (*ServiceTypeCallback)();
-typedef LPTSTR (*ServiceDescriptionCallback)();
+typedef int    (WINAPI *ServiceMainCallback)(DWORD, LPTSTR*);
+typedef DWORD  (WINAPI *ServiceControlCallback)(DWORD, LPVOID);
+
+class ServiceCtrl;
+class ServiceFactory
+{
+public:
+    static ServiceFactory& GetFactory();
+
+public:
+    ServiceCtrl* CreateServiceCtrl();
+    void RegServiceCtrl(ServiceCtrl* pCtrl);
+
+private:
+    ServiceCtrl* m_pDefServiceCtrl;
+};
+
+class ServiceCtrl
+{
+protected:
+    ServiceCtrl();
+
+public:
+    ~ServiceCtrl();
+
+public:
+    // 将错误码转化字符串
+    LPTSTR GetErrorMessage(int nRet);
+    // 安装服务
+    int ServiceInstall();
+    // 删除服务
+    int ServiceUninstall();
+    // 启用服务
+    int ServiceMain(DWORD dwArgc, LPTSTR* lpszArgs);
+
+    void SetServiceMain(ServiceMainCallback fnServiceMain);
+    void SetServiceCtrl(ServiceControlCallback fnServiceCtrl);
+
+protected:
+    void WINAPI StupidServiceMain(DWORD dwArgc, LPTSTR* lpszArgv);
+    DWORD WINAPI StupidCtrlHandlerEx(DWORD dwControl,
+        DWORD dwEventType,
+        LPVOID lpEventData,
+        LPVOID lpContext);
+
+    virtual void  SimpleServiceMain(LPVOID);
+    virtual DWORD SimpleCtrlHandleEx(DWORD dwControl, LPVOID lpContext);
+
+public:
+    virtual LPTSTR GetServiceName() = 0;
+    virtual LPTSTR GetSeerviceDisplayName(); // default same as GetServiceName
+    virtual DWORD  GetServiceType() = 0;
+    virtual LPTSTR GetServiceDescription() = 0;
+
+private:
+    ServiceMainCallback m_fnServiceMain;
+    ServiceControlCallback m_fnServiceCtrl;
+};
+
+#define REG_SERVICE(RealServiceCtrl)                              \
+    class StupidDummpy##RealServiceCtrl##DummyStupid              \
+    {                                                             \
+    public:                                                       \
+        StupidDummpy##RealServiceCtrl##DummyStupid()              \
+        {                                                         \
+            RealServiceCtrl* pCtrl = new RealServiceCtrl;         \
+            ServiceFactory& sSF = ServiceFactory::GetFactory();   \
+            sSF.RegServiceCtrl(pCtrl);                            \
+        }                                                         \
+    };                                                            \
+    static StupidDummpy##RealServiceCtrl##DummyStupid             \
+        sDummyStupidInstanceStupidDummy;                          \
+    
+
+
 
 // 服务入口回调函数，启动服务时用到。
 // 与SetServiceMainCallback两之中，必须设置一个
