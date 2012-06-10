@@ -1,66 +1,164 @@
 #include "ServiceCtrl.h"
 
-static ServiceEntryCallback g_lpServiceEntry             = NULL;
-static ServiceMainCallback g_lpServiceMain               = NULL;
-static ServiceControlCallback g_lpServiceCtrl            = NULL;
-static ServiceNameCallback g_lpServiceName               = NULL;
-static ServiceTypeCallback g_lpServiceType               = NULL;
-static ServiceDescriptionCallback g_lpServiceDescription = NULL;
 
-static void WINAPI StupidServiceMain(DWORD dwArgc,
-                                     LPTSTR* lpszArgv);
 static DWORD WINAPI StupidCtrlHandlerEx(DWORD dwControl,
                                         DWORD dwEventType,
                                         LPVOID lpEventData,
-                                        LPVOID lpContext);
+                                        LPVOID lpContext)
+{
+    ServiceFactory& sSF = ServiceFactory::GetFactory();
+    ServiceCtrl* pCtrl = sSF.CreateServiceCtrl();
 
-void SetServiceEntryCallback(ServiceEntryCallback lpCallback)
-{
-    g_lpServiceEntry = lpCallback;
-}
-void SetServiceMainCallback(ServiceMainCallback lpMainCallback, 
-                            ServiceControlCallback lpCtrlCallback)
-{
-    g_lpServiceMain = lpMainCallback;
-    g_lpServiceCtrl = lpCtrlCallback;
+    return pCtrl->SimpleCtrlHandleEx(dwControl, lpContext);
 }
 
-void SetServiceNameCallback(ServiceNameCallback lpCallback)
+static void WINAPI StupidServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
 {
-    g_lpServiceName = lpCallback;
+    SERVICE_STATUS_HANDLE hStatus; 
+    SERVICE_STATUS sStatus;
+
+    LPTSTR lpName = _T("");
+
+    sStatus.dwServiceType             = SERVICE_WIN32_OWN_PROCESS; 
+    sStatus.dwCurrentState            = SERVICE_START_PENDING; 
+    sStatus.dwControlsAccepted        =  SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
+    sStatus.dwWin32ExitCode           = 0; 
+    sStatus.dwServiceSpecificExitCode = 0; 
+    sStatus.dwCheckPoint              = 0; 
+    sStatus.dwWaitHint                = 0; 
+
+    ServiceFactory& sSF = ServiceFactory::GetFactory();
+    ServiceCtrl* pCtrl = sSF.CreateServiceCtrl();
+
+    lpName = pCtrl->GetServiceName();
+    if (lpName == NULL || lpName[0]==_T('\0')){
+        return;
+    }
+
+    hStatus = RegisterServiceCtrlHandlerEx(
+        lpName, (LPHANDLER_FUNCTION_EX)StupidCtrlHandlerEx, NULL); 
+    if (hStatus == (SERVICE_STATUS_HANDLE)NULL) 
+    { 
+        return; 
+    }
+    sStatus.dwCurrentState = SERVICE_RUNNING; 
+    SetServiceStatus (hStatus, &sStatus);
+
+    pCtrl->SimpleServiceMain(NULL);
+
 }
 
-void SetServiceTypeCallback(ServiceTypeCallback lpCallback)
+ServiceFactory::ServiceFactory()
+: m_pDefServiceCtrl(NULL)
 {
-    g_lpServiceType = lpCallback;
+
+}
+ServiceFactory::~ServiceFactory()
+{
+
 }
 
-void SetServiceDescriptionCallback(ServiceDescriptionCallback lpCallback)
+ServiceFactory& ServiceFactory::GetFactory()
 {
-    g_lpServiceDescription = lpCallback;
+    static ServiceFactory sTheFactory;
+    return sTheFactory;
 }
 
+ServiceCtrl* ServiceFactory::CreateServiceCtrl()
+{
+    return m_pDefServiceCtrl;
+}
+void ServiceFactory::RegServiceCtrl(ServiceCtrl* pCtrl)
+{
+    m_pDefServiceCtrl = pCtrl;
+}
 
-int ServiceInstall()
+ServiceCtrl::ServiceCtrl()
+: m_fnServiceMain(NULL)
+{
+
+}
+
+ServiceCtrl::~ServiceCtrl()
+{
+
+}
+
+// 将错误码转化字符串
+LPTSTR ServiceCtrl::GetErrorMessage(int nRet)
+{
+    static struct ErrMsg
+    {
+        int nErr;
+        LPTSTR lpszMsg;
+    }
+    sErrMsg [] = 
+    {
+        {ESC_SUCCESS, _T("成功")},
+        {ESC_INVALID_HANDLE, _T("无效句柄")},
+        {ESC_ACCESS_DENY, _T("没有权限")},
+        {ESC_SERVICE_NOT_EXIST, _T("服务不存在")},
+        {ESC_SERVICE_EXIST, _T("服务已经存在")},
+        {ESC_SERVICE_NAME_ERROR, _T("服务名称出错")},
+        {ESC_FRAMEWORK_UNINITIALIZE, _T("服务未初始化")},
+        {ESC_REG_ERROR, _T("处理注册表出错")},
+        {ESC_SERVICE_RUNNING_ERROR, _T("服务运行错误")},
+        {ESC_UNKNOWN, _T("未知错误")},
+    };
+
+    LPTSTR lpszRet = NULL;
+
+    int nHigh = sizeof(sErrMsg)/sizeof(sErrMsg[0]) - 1;
+    int nLow = 0;
+    while(nHigh >= nLow)
+    {
+        int nMid = (nHigh + nLow) / 2;
+        ErrMsg& sTmpMsg = sErrMsg[nMid];
+        if (sTmpMsg.nErr > nRet)
+        {
+            nLow = nMid + 1;
+        }
+        else if (sTmpMsg.nErr < nRet)
+        {
+            nHigh = nMid - 1;
+        }
+        else
+        {
+            lpszRet = sTmpMsg.lpszMsg;
+            break;
+        }
+    }
+
+    return lpszRet;
+}
+// 安装服务
+int ServiceCtrl::ServiceInstall()
 {
     TCHAR szExePath[MAX_PATH] = {0};
     LPTSTR lpName             = _T("");
+    LPTSTR lpDisplay          = _T("");
     LPTSTR lpDesc             = _T("");
     DWORD  dwType             = SERVICE_DEMAND_START;
 
-    if (g_lpServiceName == NULL) return ESC_FRAMEWORK_UNINITIALIZE;
-
-    lpName = (*g_lpServiceName)();
-
-    if (g_lpServiceDescription != NULL)
+    lpName = GetServiceName();
+    if (lpName == NULL || lpName[0]==_T('\0'))
     {
-        lpDesc = (*g_lpServiceDescription)();
+        return ESC_FRAMEWORK_UNINITIALIZE;
     }
-    
-    if (g_lpServiceType != NULL)
+
+    lpDisplay = GetSeerviceDisplayName();
+    if (lpDisplay == NULL || lpDisplay[0] == _T('\0'))
     {
-        dwType = (*g_lpServiceType)();
+        lpDisplay = lpName;
     }
+
+    lpDesc = GetServiceDescription();
+    if (lpDesc == NULL)
+    {
+        lpDesc = _T("");
+    }
+
+    dwType = GetServiceType();
 
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
@@ -76,7 +174,7 @@ int ServiceInstall()
     GetModuleFileName(NULL, szExePath, MAX_PATH - 1);
 
     SC_HANDLE hService = CreateService(
-        hSCM, lpName, lpName,
+        hSCM, lpName, lpDisplay,
         SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
         dwType, SERVICE_ERROR_NORMAL,
         szExePath, NULL, NULL, NULL, NULL, NULL);
@@ -131,15 +229,15 @@ int ServiceInstall()
 
     return ESC_SUCCESS;
 }
-
-
-int ServiceUninstall()
+// 删除服务
+int ServiceCtrl::ServiceUninstall()
 {
     LPTSTR lpName             = _T("");
-
-    if (g_lpServiceName == NULL) return ESC_FRAMEWORK_UNINITIALIZE;
-
-    lpName = (*g_lpServiceName)();
+    
+    lpName = GetServiceName();
+    if (lpName == NULL || lpName[0]==_T('\0')){
+        return ESC_FRAMEWORK_UNINITIALIZE;
+    }    
 
     SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (hSCM == NULL)
@@ -152,7 +250,7 @@ int ServiceUninstall()
     }
 
     SC_HANDLE hService = OpenService(hSCM, lpName, SERVICE_STOP | DELETE);
-    
+
     if (hService == NULL)
     {
         CloseServiceHandle(hSCM);
@@ -203,64 +301,24 @@ int ServiceUninstall()
     return ESC_SUCCESS;
 }
 
-static void WINAPI StupidServiceMain(DWORD dwArgc, LPTSTR* lpszArgv)
+// 启用服务
+int ServiceCtrl::ServiceMain(DWORD dwArgc, LPTSTR* lpszArgs)
 {
-    SERVICE_STATUS_HANDLE hStatus; 
-    SERVICE_STATUS sStatus;
-    
-    LPTSTR lpszName = _T("");
-
-    sStatus.dwServiceType             = SERVICE_WIN32_OWN_PROCESS; 
-    sStatus.dwCurrentState            = SERVICE_START_PENDING; 
-    sStatus.dwControlsAccepted        =  SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
-    sStatus.dwWin32ExitCode           = 0; 
-    sStatus.dwServiceSpecificExitCode = 0; 
-    sStatus.dwCheckPoint              = 0; 
-    sStatus.dwWaitHint                = 0; 
-
-    if (g_lpServiceName != NULL)
+    if (m_fnServiceMain != NULL)
     {
-        lpszName = (*g_lpServiceName)();
+        (*m_fnServiceMain)(dwArgc, lpszArgs);
     }
-
-    hStatus = RegisterServiceCtrlHandlerEx(
-        lpszName, (LPHANDLER_FUNCTION_EX)StupidCtrlHandlerEx, hStatus); 
-    if (hStatus == (SERVICE_STATUS_HANDLE)NULL) 
-    { 
-        return; 
-    }
-    sStatus.dwCurrentState = SERVICE_RUNNING; 
-    SetServiceStatus (hStatus, &sStatus);
-    (*g_lpServiceMain)(hStatus);
-    
-
-}
-
-static DWORD WINAPI StupidCtrlHandlerEx(DWORD dwControl,
-                                        DWORD dwEventType,
-                                        LPVOID lpEventData,
-                                        LPVOID lpContext)
-{
-    return (*g_lpServiceCtrl)(dwControl, lpContext);
-}
-
-int ServiceMain(DWORD dwArgc, LPTSTR* lpszArgs)
-{
-    if (g_lpServiceEntry != NULL)
-    {
-        return (*g_lpServiceEntry)(dwArgc, lpszArgs);
-    }
-
-    if (g_lpServiceMain != NULL && g_lpServiceCtrl != NULL)
+    else
     {
         SERVICE_TABLE_ENTRY sTable[2] = {0};        
-        LPTSTR lpszName = _T("");
-        if (g_lpServiceName != NULL)
-        {
-            lpszName = (*g_lpServiceName)();
+        LPTSTR lpName = _T("");
+
+        lpName = GetServiceName();
+        if (lpName == NULL || lpName[0]==_T('\0')){
+            return ESC_FRAMEWORK_UNINITIALIZE;
         }
 
-        lstrcpy(sTable[0].lpServiceName, lpszName);
+        lstrcpy(sTable[0].lpServiceName, lpName);
         sTable[0].lpServiceProc = (LPSERVICE_MAIN_FUNCTION)StupidServiceMain;
 
         if(StartServiceCtrlDispatcher(sTable) == FALSE)
@@ -269,54 +327,25 @@ int ServiceMain(DWORD dwArgc, LPTSTR* lpszArgs)
         }
         return ESC_SUCCESS;
     }
-    return ESC_FRAMEWORK_UNINITIALIZE;
+    return ESC_SUCCESS;
 }
 
-LPTSTR GetErrorMessage(int nRet)
+void ServiceCtrl::SetServiceMain(ServiceMainCallback fnServiceMain)
 {
-    static struct ErrMsg
-    {
-        int nErr;
-        LPTSTR lpszMsg;
-    }
-    sErrMsg [] = 
-    {
-        {ESC_SUCCESS, _T("成功")},
-        {ESC_INVALID_HANDLE, _T("无效句柄")},
-        {ESC_ACCESS_DENY, _T("没有权限")},
-        {ESC_SERVICE_NOT_EXIST, _T("服务不存在")},
-        {ESC_SERVICE_EXIST, _T("服务已经存在")},
-        {ESC_SERVICE_NAME_ERROR, _T("服务名称出错")},
-        {ESC_FRAMEWORK_UNINITIALIZE, _T("服务未初始化")},
-        {ESC_REG_ERROR, _T("处理注册表出错")},
-        {ESC_SERVICE_RUNNING_ERROR, _T("服务运行错误")},
-        {ESC_UNKNOWN, _T("未知错误")},
-    };
-
-    LPTSTR lpszRet = NULL;
-
-    int nHigh = sizeof(sErrMsg)/sizeof(sErrMsg[0]) - 1;
-    int nLow = 0;
-    while(nHigh >= nLow)
-    {
-        int nMid = (nHigh + nLow) / 2;
-        ErrMsg& sTmpMsg = sErrMsg[nMid];
-        if (sTmpMsg.nErr > nRet)
-        {
-            nLow = nMid + 1;
-        }
-        else if (sTmpMsg.nErr < nRet)
-        {
-            nHigh = nMid - 1;
-        }
-        else
-        {
-            lpszRet = sTmpMsg.lpszMsg;
-            break;
-        }
-    }
-
-    return lpszRet;
+    m_fnServiceMain = fnServiceMain;
 }
 
+void  ServiceCtrl::SimpleServiceMain(LPVOID)
+{
+
+}
+DWORD ServiceCtrl::SimpleCtrlHandleEx(DWORD dwControl, LPVOID lpContext)
+{
+    return 0;
+}
+
+LPTSTR ServiceCtrl::GetSeerviceDisplayName()
+{
+    return GetServiceName();
+}
 
