@@ -47,6 +47,11 @@ static void jmm_cmm_read_wf_cb(struct bufferevent*, void *);
 static void jmm_cmm_write_wf_cb(struct bufferevent*, void*);
 static void jmm_cmm_event_wf_cb(struct bufferevent*, short, void*);
 
+static void jmm_sock_read_wf_cb(struct bufferevent*, void *);
+static void jmm_sock_write_wf_cb(struct bufferevent*, void*);
+static void jmm_sock_event_wf_cb(struct bufferevent*, short, void*);
+
+
 int jmm_init_event(struct event_base* base)
 {
     if (base) {
@@ -161,11 +166,17 @@ int jmm_init_event_wf(struct event_base* base)
         }
 
         // CMM
-        event_wf.cmm = bufferevent_socket_new(base, shm_wf->girl_fd, BEV_OPT_CLOSE_ON_FREE);
-                   bufferevent_setcb(event_wf.cmm, jmm_cmm_read_wf_cb,
-                           jmm_cmm_write_wf_cb, jmm_cmm_event_wf_cb, NULL);
-                   bufferevent_enable(event_wf.cmm, EV_WRITE);
-                   bufferevent_enable(event_wf.cmm, EV_READ);
+        event_wf.cmm = bufferevent_socket_new(base, shm_wf->girl_fd,
+                BEV_OPT_CLOSE_ON_FREE);
+        bufferevent_setcb(event_wf.cmm, jmm_cmm_read_wf_cb, jmm_cmm_write_wf_cb,
+                jmm_cmm_event_wf_cb, NULL);
+        bufferevent_enable(event_wf.cmm, EV_WRITE);
+        bufferevent_enable(event_wf.cmm, EV_READ);
+
+        //sock
+        event_wf.sock_num = conf.proc_svr_num;
+        event_wf.sock = (struct bufferevent**)malloc(sizeof(struct bufferevent*)*event_wf.sock_num);
+        memset(event_wf.sock, 0, sizeof(struct bufferevent*)*event_wf.sock_num);
 
 
 
@@ -175,6 +186,16 @@ int jmm_init_event_wf(struct event_base* base)
 }
 int jmm_uninit_event_wf()
 {
+    if (event_wf.sock) {
+        int i = 0;
+        for (i = 0; i < event_wf.sock_num; i++) {
+            if (event_wf.sock[i] != NULL) {
+                bufferevent_free(event_wf.sock[i]);
+            }
+        }
+        event_wf.sock = NULL;
+    }
+
     if(event_wf.cmm){
         bufferevent_free(event_wf.cmm);
         event.cmm = NULL;
@@ -195,6 +216,19 @@ int jmm_uninit_event_wf()
     return JMM_SUCCESS;
 }
 
+int jmm_init_event_sock(int idx, int sfd)
+{
+    event_wf.sock[idx] = bufferevent_socket_new(event_wf.base, sfd,
+            BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(event_wf.sock[idx], jmm_sock_read_wf_cb, jmm_sock_write_wf_cb,
+            jmm_sock_event_wf_cb, NULL);
+    bufferevent_enable(event_wf.sock[idx], EV_WRITE);
+    bufferevent_enable(event_wf.sock[idx], EV_READ);
+
+    return JMM_SUCCESS;
+}
+
+
 static void jmm_ctrl_c_cb(evutil_socket_t fd, short what, void* ctx)
 {
     struct event_base *base = ctx;
@@ -203,8 +237,9 @@ static void jmm_ctrl_c_cb(evutil_socket_t fd, short what, void* ctx)
     if(shm){
         int i = 0;
         for(i=0; i<shm->proc_num; i++){
-            jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) +
-                            i*jmm_shm_wf_size(conf.proc_svr_num));
+            /*jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) +
+                            i*jmm_shm_wf_size(conf.proc_svr_num));*/
+            jmm_shm_wf* wf = jmm_shm_get_wf(shm, i, conf.proc_svr_num);
             kill(wf->pid, SIGINT);
             waitpid(wf->pid, NULL, 0);
         }
@@ -241,16 +276,18 @@ static void jmm_listener_cb(struct evconnlistener *listener, evutil_socket_t fd,
     // find free
     int wf_id = jmm_find_free_wf();
     if(wf_id == JMM_FAIL){
-        JMM_INFO("no available resource!");
-        close(fd);
+        JMM_INFO("no available resource!\n");
+        //close(fd);
     } else {
         //JMM_INFO("assign new %d\n!", wf_id);
         //TODO synchronize
         if (jmm_assign_wf(wf_id, fd) == JMM_FAIL) {
-            JMM_INFO("fail to assign program!");
-            close(fd);
+            JMM_INFO("fail to assign program!\n");
         }
+        //close(fd);
     }
+    //todo
+    close(fd);
 }
 
 static void jmm_ctrl_c_wf_cb(evutil_socket_t fd, short what, void* ctx)
@@ -287,7 +324,7 @@ static void jmm_cmm_event_cb(struct bufferevent* bev, short what, void* ctx)
 
 static void jmm_cmm_read_wf_cb(struct bufferevent* bev, void* ctx)
 {
-    //printf("jmm_cmm_read_wf_cb.\n");
+    printf("jmm_cmm_read_wf_cb.\n");
     //buffer not good
     static int  js_len                      = 0;
     static int  len_flag                    = 0;
@@ -329,34 +366,6 @@ static void jmm_cmm_read_wf_cb(struct bufferevent* bev, void* ctx)
         if (jmm_cmd_dispatch_wf(js_data) != JMM_SUCCESS) {
             printf("fail to dispatch cmd\n");
         }
-        /*        int plan = sizeof(int);
-        int actual = 0;
-        int remain = plan;
-
-        int len = 0;
-        do{
-            actual = evbuffer_remove(input, ((char*)&len)+plan-remain, remain);
-            remain -= actual;
-        }while(remain != 0);
-
-        plan = len;
-        remain = plan;
-        actual = 0;
-
-        printf("len=%d\n", len);
-        char data[1024] = "";
-        do{
-            actual = evbuffer_remove(input, data+plan-remain, remain);
-            if(actual <= 0){
-                printf("<=0, %d\n", actual);
-                break;
-            }
-            remain -= actual;
-            printf("remain=%d\n", remain);
-        }while(remain != 0);
-
-        printf("receive(%d):%s\n", len, data);*/
-        //bufferevent_enable(bev, EV_READ);
     }
 
 }
@@ -367,4 +376,27 @@ static void jmm_cmm_write_wf_cb(struct bufferevent* bev, void* ctx)
 static void jmm_cmm_event_wf_cb(struct bufferevent* bev, short what, void* ctx)
 {
     //printf("jmm_cmm_event_wf_cb.\n");
+}
+
+static void jmm_sock_read_wf_cb(struct bufferevent* bev, void* ctx)
+{
+    struct evbuffer *input = bufferevent_get_input(bev);
+
+    if(evbuffer_get_length(input) >0){
+        int len = evbuffer_get_length(input);
+
+        char data[1024] = "";
+        evbuffer_remove(input, data, len);
+        printf("get:%d, data:%s\n", len, data);
+
+    }
+
+}
+static void jmm_sock_write_wf_cb(struct bufferevent* bev, void* ctx)
+{
+
+}
+static void jmm_sock_event_wf_cb(struct bufferevent* bev, short what, void* ctx)
+{
+
 }

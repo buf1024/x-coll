@@ -10,6 +10,7 @@
 #include "jmm_shm.h"
 #include "jmm_event.h"
 #include "jmm_cmd.h"
+#include "jmm_util.h"
 #include "cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <pthread.h>
+#include <errno.h>
 #include <event2/event.h>
 #include <event2/bufferevent.h>
 
@@ -32,19 +35,38 @@ int jmm_find_free_wf()
     if(shm == NULL){
         return JMM_FAIL;
     }
+    int lock = 0;
     int i = 0;
     int j = 0;
     for(i=0; i<shm->proc_num; i++){
+        if(lock > 0 && i == shm->proc_num - 1){
+            // 顽强的尝试
+            i = 0;
+            lock = 0;
+            continue;
+        }
         /*jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) +
                         i*jmm_shm_wf_size(conf.proc_svr_num));*/
         jmm_shm_wf* wf = jmm_shm_get_wf(shm, i, conf.proc_svr_num);
+
+        if(pthread_mutex_trylock(&(wf->mutex)) == EBUSY){
+            lock++;
+            continue;
+        }
+        // 获得锁
+        if(lock > 0) lock--;
+
         for(j=0; j<wf->proc_svr_num; j++){
             /*jmm_shm_sock* sock = (jmm_shm_sock*)((char*)&wf->shm_sock + j*jmm_shm_sock_size());*/
             jmm_shm_sock* sock = jmm_shm_get_sock(wf, j);
-            if(!sock->status){
+            //if(!sock->status){
+            if(sock->sock_fd == 0){
+                // 让子程序解锁
+                //pthread_mutex_unlock(&(wf->mutex));
                 return i;
             }
         }
+        pthread_mutex_unlock(&(wf->mutex));
     }
     return JMM_FAIL;
 }
@@ -53,10 +75,12 @@ int jmm_assign_wf(int wf_id, int sock_fd)
     if(shm == NULL){
         return JMM_FAIL;
     }
-    jmm_shm_wf* wf = (jmm_shm_wf*)(shm->shm_wf + wf_id);
+    printf("wf_id:%d\n", wf_id);
+    jmm_shm_wf* wf = jmm_shm_get_wf(shm, wf_id, conf.proc_svr_num);
+#ifdef DEBUG
+    jmm_trace_shm_wf(wf, 4);
+#endif
     // todo
-    //char msg[100] = "";
-    //snprintf(msg, 100, "%d", sock_fd);
     cJSON* js = cJSON_CreateObject();
     cJSON* js_arg = cJSON_CreateObject();
 
@@ -65,12 +89,14 @@ int jmm_assign_wf(int wf_id, int sock_fd)
     cJSON_AddItemToObject(js, JMM_CMD_REQ_ARG, js_arg);
 
     char* cmd_str = jmm_cmd_get_string(js);
+
+    int nRet = jmm_send_fd(wf->father_fd, sock_fd);
+    printf("sendfd:%d, event:%d, father:%d\n", nRet, (int)(event.cmm[wf_id]), wf->father_fd);
     //write
     //printf("wf_id: %d, write:%d, %s\n", wf_id, *(int*)cmd_str, cmd_str+sizeof(int));
     if(bufferevent_write(event.cmm[wf_id], cmd_str, jmm_cmd_get_string_len(cmd_str)) < 0){
         printf("bufferevent_write error\n");
     }
-
     //close(sock_fd);
     free(cmd_str);
 
@@ -87,8 +113,10 @@ int jmm_init_proc(jmm_conf* conf)
     pid_t pid;
     int i = 0;
     for (i = 0; i < conf->proc_num; i++) {
-        jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) +
-                i*jmm_shm_wf_size(conf->proc_svr_num));
+        /*jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) +
+                i*jmm_shm_wf_size(conf->proc_svr_num));*/
+
+        jmm_shm_wf* wf = jmm_shm_get_wf(shm, i, conf->proc_svr_num);
 
         int sf[2] = { 0 };
         if (socketpair(AF_UNIX, SOCK_STREAM, 0, sf) != 0) {
@@ -97,6 +125,15 @@ int jmm_init_proc(jmm_conf* conf)
         }
         wf->boy_fd = sf[0];
         wf->girl_fd = sf[1];
+
+        memset(sf, 0, sizeof(sf));
+        if (socketpair(AF_UNIX, SOCK_STREAM, 0, sf) != 0) {
+            ret = JMM_FAIL;
+            break;
+        }
+        wf->father_fd = sf[0];
+        wf->mother_fd = sf[1];
+        //printf("father=%d, mother=%d\n", wf->father_fd, wf->mother_fd);
 
 /*        int flags;
         if ((flags = fcntl(wf->boy_fd, F_GETFL, 0)) < 0 ||
