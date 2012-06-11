@@ -9,6 +9,7 @@
 #define __48SLOTS_JMM_CMD_H__
 
 #include "jmm_cmmhdr.h"
+#include <sys/types.h>
 #include "cJSON.h"
 
 #define JMM_CMD_REQ                        "req"

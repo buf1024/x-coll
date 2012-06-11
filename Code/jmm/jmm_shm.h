@@ -11,18 +11,23 @@
 #include "jmm_conf.h"
 #include <sys/types.h>
 
+// 网络连接信息
 typedef struct jmm_shm_sock
 {
-    int status;
-    int sock_fd;
+    //int status;
+    int sock_fd;   // 当前连接文件描述符，0表示无连接
 }jmm_shm_sock;
 
+// 业务子进程信息
 typedef struct jmm_shm_wf
 {
-    pid_t pid;
-    int girl_fd;
-    int boy_fd;
-    int proc_svr_num;
+    pthread_mutex_t mutex; // 用于进程间同步
+    pid_t pid;     // 进程id
+    int father_fd; // 用于父进程向子进程传递文件描述符，因为和libevent混合在一起不行
+    int mother_fd; // 用于子进程向父进程传递文件描述符，因为和libevent混合在一起不行
+    int boy_fd;    // 父进程控制命令文件描述符
+    int girl_fd;   // 子进程控制命令文件描述符
+    int proc_svr_num; // 子进程可服务的连接数
     jmm_shm_sock* shm_sock;
 }jmm_shm_wf;
 
@@ -44,5 +49,11 @@ int jmm_uninit_shm();
 
 int jmm_init_shm_wf(int wf_id, int wf_svr_num);
 int jmm_uninit_shm_wf();
+
+#ifdef DEBUG
+void jmm_trace_shm(jmm_shm* theshm, int ls);
+void jmm_trace_shm_wf(jmm_shm_wf* theshm, int ls);
+void jmm_trace_shm_sock(jmm_shm_sock* theshm, int ls);
+#endif
 
 #endif /* __48SLOTS_JMM_SHM_H__ */

@@ -80,10 +80,12 @@ int main(int argc, char **argv)
 
     if(strlen(conf.conf_path) > 0){
         if(jmm_init_conf(&conf) == JMM_FAIL){
+            fprintf(stderr, "fail to load config from file: %s\n", conf.conf_path);
             exit(JMM_FAIL);
         }
     }else{
         jmm_init_def_conf(&conf);
+        fprintf(stdout, "config file not specific, use the default.\n");
     }
 
     base = event_base_new();
@@ -91,23 +93,23 @@ int main(int argc, char **argv)
         JMM_FATAL("event_base_new failed\n");
         exit(JMM_FAIL);
     }
-    //todo log
+    //TODO log
 
-    //todo shm
+    //TODO shm
     if(jmm_init_shm(&conf) != JMM_SUCCESS){
         JMM_FATAL("jmm_init_shm failed\n");
         event_base_free(base);
         exit(JMM_FAIL);
     }
 
-    //todo pool
+    //TODO pool
     if(jmm_init_proc(&conf) != JMM_SUCCESS){
         JMM_FATAL("jmm_init_proc failed\n");
         jmm_uninit_shm();
         event_base_free(base);
         exit(JMM_FAIL);
     }
-    //todo event
+    //TODO event
     if(jmm_init_event(base) != JMM_SUCCESS){
         JMM_FATAL("jmm_init_event failed\n");
         jmm_uninit_proc();
@@ -154,6 +156,5 @@ static void jmm_usage()
     printf("  -e, --exclude                       Don't start as daemon process\n");
     printf("  -v, --version                       Print the program version message\n");
     printf("  -h, --help                          Print this help message\n");
-
 }
 

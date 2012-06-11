@@ -31,6 +31,10 @@ typedef struct jmm_event_wf
     struct event* ctrl_c;
 
     struct bufferevent* cmm;
+
+    int sock_num;
+    struct bufferevent** sock;
+
 }jmm_event_wf;
 
 int jmm_init_event(struct event_base* base);
@@ -38,5 +42,8 @@ int jmm_uninit_event();
 
 int jmm_init_event_wf(struct event_base* base);
 int jmm_uninit_event_wf();
+
+int jmm_init_event_sock(int idx, int sfd);
+
 
 #endif /* __48SLOTS_JMM_EVENT_H__ */
