@@ -51,13 +51,18 @@ do{                                                                  \
     clog_initialize();                                               \
 }while(0)                                                            \
 
+#define CLOG_CLEARUP()                                               \
+do{                                                                  \
+    clog_clearup();                                                  \
+}while(0)                                                            \
+
 #define CLOG_INITIALIZE_DEFAULT(con_lvl, file_lvl, file_path)        \
 do{                                                                  \
-    clog_register_callback(#con_lvl,                                 \
+    clog_register_callback(con_lvl,                                 \
             clog_console_init_callback_fun, 0,                       \
             clog_console_log_callback_fun, 0,                        \
             clog_console_uninit_callback_fun, 0);                    \
-    clog_register_callback(#file_lvl,                                \
+    clog_register_callback(file_lvl,                                \
             clog_file_init_callback_fun, file_path,                  \
             clog_file_log_callback_fun, 0,                           \
             clog_file_uninit_callback_fun, 0);                       \
@@ -83,12 +88,15 @@ typedef void (*clog_log_callback_fun)(int loglvl, int reqlvl, const char* format
 typedef void (*clog_uninit_callback_fun)(void* args);
 
 /* 注册回调函数 */
-void clog_register_callback(const char* lvl,
+void clog_register_callback(int lvl,
         clog_init_callback_fun init_cb, void* init_args,
         clog_log_callback_fun log_cb, void* log_args,
         clog_uninit_callback_fun uninit_cb, void* uninit_args);
 /* 日志初始化，在主线程初始化 */
 void clog_initialize();
+
+/* 多进程环境中清理资源 */
+void clog_clearup();
 
 /* 写日志 */
 void clog_debug(const char* format, ...);

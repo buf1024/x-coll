@@ -8,6 +8,7 @@
 #include "clog.h"
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 #include <strings.h>
 #include <stdio.h>
@@ -69,7 +70,7 @@ static void clog_message(int lvl, const char* format, va_list ap)
     }
 }
 
-void clog_register_callback(const char* lvl,
+void clog_register_callback(int lvl,
         clog_init_callback_fun init_cb, void* init_args,
         clog_log_callback_fun log_cb, void* log_args,
         clog_uninit_callback_fun uninit_cb, void* uninit_args)
@@ -77,7 +78,7 @@ void clog_register_callback(const char* lvl,
     pthread_mutex_lock(&_ctx_mutex);
     struct call_back* cb = (struct call_back*)malloc(sizeof(struct call_back));
     if(cb){
-        cb->level = clog_get_level(lvl);
+        cb->level = lvl;//clog_get_level(lvl);
         cb->init_cb_fun = init_cb;
         cb->init_cb_args = init_args;
         cb->log_cb_fun = log_cb;
@@ -106,6 +107,13 @@ void clog_initialize()
         cb = cb->next;
     }
 }
+
+void clog_clearup()
+{
+    memset(&_context, 0, sizeof(_context));
+    memset(&_ctx_mutex, 0, sizeof(_ctx_mutex)); //PTHREAD_MUTEX_INITIALIZER;
+}
+
 void clog_debug(const char* format, ...)
 {
     va_list ap;
@@ -226,6 +234,9 @@ void clog_console_uninit_callback_fun(void* args)
 static FILE* _fp = 0;
 void clog_file_init_callback_fun(void* args)
 {
+    if(_fp != NULL){
+        fclose(_fp);
+    }
     char file[CLOG_DEFAULT_MAX_PATH] = {0};
     pid_t pid = getpid();
     snprintf(file, CLOG_DEFAULT_MAX_PATH, "%s.%ld", (const char*)args, (long)pid);

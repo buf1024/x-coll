@@ -11,6 +11,7 @@
 #include "jmm_event.h"
 #include "jmm_shm.h"
 #include "jmm_proc.h"
+#include "jmm_log.h"
 #include "jmm.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,8 +31,6 @@ static void jmm_uninit_env();
 static void jmm_version();
 static void jmm_usage();
 
-
-//TODO no root
 int main(int argc, char **argv)
 {
     struct event_base* base = NULL;
@@ -47,6 +46,12 @@ int main(int argc, char **argv)
     int opt;
 
     jmm_init_env();
+
+    // no root
+    if(jmm_is_runas_root() == JMM_TRUE){
+        fprintf(stderr, "%s is not allow to run as root!\n", hook_fn.prog_name());
+        exit(JMM_FAIL);
+    }
 
     while ((opt = getopt_long(argc, argv, optstr, optlong, NULL)) != -1) {
         switch (opt) {
@@ -88,41 +93,57 @@ int main(int argc, char **argv)
         fprintf(stdout, "config file not specific, use the default.\n");
     }
 
+#ifdef DEBUG
+    jmm_trace_conf(&conf, 0);
+#endif
+
     base = event_base_new();
     if(!base){
-        JMM_FATAL("event_base_new failed\n");
+        fprintf(stderr, "event_base_new failed\n");
         exit(JMM_FAIL);
     }
-    //TODO log
-
-    //TODO shm
-    if(jmm_init_shm(&conf) != JMM_SUCCESS){
-        JMM_FATAL("jmm_init_shm failed\n");
+    //log
+    if(jmm_init_log() != JMM_SUCCESS){
+        fprintf(stderr, "jmm_init_log failed\n");
         event_base_free(base);
         exit(JMM_FAIL);
     }
-
-    //TODO pool
+    JMM_INFO("logger is ready\n");
+    //shm
+    if(jmm_init_shm(&conf) != JMM_SUCCESS){
+        JMM_FATAL("jmm_init_shm failed\n");
+        jmm_uninit_log();
+        event_base_free(base);
+        exit(JMM_FAIL);
+    }
+    JMM_INFO("share memory is ready\n");
+    //pool
     if(jmm_init_proc(&conf) != JMM_SUCCESS){
         JMM_FATAL("jmm_init_proc failed\n");
         jmm_uninit_shm();
+        jmm_uninit_log();
         event_base_free(base);
         exit(JMM_FAIL);
     }
-    //TODO event
+    JMM_INFO("process pool is ready\n");
+    //event
     if(jmm_init_event(base) != JMM_SUCCESS){
         JMM_FATAL("jmm_init_event failed\n");
         jmm_uninit_proc();
         jmm_uninit_shm();
+        jmm_uninit_log();
         event_base_free(base);
         exit(JMM_FAIL);
     }
-
+    JMM_INFO("event is ready\n");
+    JMM_INFO("control process entering event loop...\n");
     event_base_dispatch(base);
 
+    JMM_INFO("free resource, exit\n");
     jmm_uninit_event();
     jmm_uninit_proc();
     jmm_uninit_shm();
+    jmm_uninit_log();
 
     event_base_free(base);
 

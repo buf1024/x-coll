@@ -23,7 +23,7 @@ struct item
 // ini 配置项
 struct section
 {
-    char name[INI_MAX_NAME_LEN + 1];;
+    char name[INI_MAX_NAME_LEN + 1];
     struct item* item;
     struct section* next;
 

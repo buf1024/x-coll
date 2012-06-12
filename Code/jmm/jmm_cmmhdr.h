@@ -12,6 +12,8 @@
 #define JMM_SUCCESS                 0
 #define JMM_FAIL                    -1
 
+#define JMM_TRUE                    1
+#define JMM_FALSE                   0
 
 #define JMM_MAX_PATH                256
 #define JMM_MAX_NAME                64
@@ -19,6 +21,7 @@
 #define JMM_MAX_ADDR                64
 #define JMM_MAX_CMD_STRING          1024
 #define JMM_SHARE_MEM_ID            0x1f
+
 
 /*
 #define JMM_DEBUG(...)              CLOG_DEBUG(__VA_ARGS__)
@@ -28,11 +31,14 @@
 #define JMM_FATAL(...)              CLOG_FATAL(__VA_ARGS__)
 */
 
+
+
 #define JMM_DEBUG(...)              printf(__VA_ARGS__)
 #define JMM_INFO(...)               printf(__VA_ARGS__)
 #define JMM_WARN(...)               printf(__VA_ARGS__)
 #define JMM_ERROR(...)              printf(__VA_ARGS__)
 #define JMM_FATAL(...)              printf(__VA_ARGS__)
+
 
 #define JMM_MAX(a, b)               ((a)>(b)?(a):(b))
 #define JMM_MIN(a, b)               ((a)>(b)?(b):(a))
