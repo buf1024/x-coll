@@ -7,6 +7,7 @@
 #include "jmm_cmmhdr.h"
 #include "jmm_shm.h"
 #include "jmm_util.h"
+#include "jmm_log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,7 +63,7 @@ int jmm_init_shm(jmm_conf* conf)
 
     key = ftok(conf->shm_path, JMM_SHARE_MEM_ID);
     if(key == -1){
-        JMM_ERROR("fail to call ftok: path=%s progid=%d\n",
+        JMM_FATAL("fail to call ftok: path=%s progid=%d\n",
                 conf->shm_path, JMM_SHARE_MEM_ID);
         return JMM_FAIL;
     }
@@ -72,7 +73,7 @@ int jmm_init_shm(jmm_conf* conf)
     shm_id = shmget(key, shm_size, IPC_CREAT | IPC_EXCL | 0600);
 
     if(shm_id == -1){
-        JMM_ERROR("fail to create share memory\n");
+        JMM_FATAL("fail to create share memory\n");
         return JMM_FAIL;
     }
 
@@ -83,7 +84,6 @@ int jmm_init_shm(jmm_conf* conf)
     shm->proc_num = conf->proc_num;
 
     for(idx = 0; idx < conf->proc_num; idx++){
-        //jmm_shm_wf* wf = (jmm_shm_wf*)((char*)&(shm->shm_wf) + idx*jmm_shm_wf_size(conf->proc_svr_num));
         jmm_shm_wf* wf = jmm_shm_get_wf(shm, idx, conf->proc_svr_num);
         memset(&(wf->mutex), 0, sizeof(wf->mutex)); //PTHREAD_MUTEX_INITIALIZER;
         wf->proc_svr_num = conf->proc_svr_num;
@@ -108,7 +108,7 @@ int jmm_init_shm_wf(int wf_id, int wf_svr_num)
 
     key = ftok(conf.shm_path, JMM_SHARE_MEM_ID);
     if(key == -1){
-        JMM_ERROR("fail to call ftok: path=%s progid=%d\n",
+        JMM_FATAL("fail to call ftok: path=%s progid=%d\n",
                 conf.shm_path, JMM_SHARE_MEM_ID);
         return JMM_FAIL;
     }
@@ -116,7 +116,7 @@ int jmm_init_shm_wf(int wf_id, int wf_svr_num)
     shm_id = shmget(key, 0, 0);
 
     if(shm_id == -1){
-        JMM_ERROR("fail to create share memory\n");
+        JMM_FATAL("fail to create share memory\n");
         return JMM_FAIL;
     }
 
@@ -126,8 +126,6 @@ int jmm_init_shm_wf(int wf_id, int wf_svr_num)
 
     shm = (jmm_shm*)shmat(shm_id, NULL, 0);
 
-/*    shm_wf = (struct jmm_shm_wf*)((char*)(&shm->shm_wf)
-            +  wf_id*jmm_shm_wf_size(wf_svr_num));*/
     shm_wf = jmm_shm_get_wf(shm, wf_id, wf_svr_num);
 
 #ifdef DEBUG
@@ -162,14 +160,6 @@ int jmm_uninit_shm_wf()
 
 
 #ifdef DEBUG
-
-static void jmm_print_space(int ls)
-{
-    int i=0;
-    for(i=0; i<ls; i++){
-        printf(" ");
-    }
-}
 
 void jmm_trace_shm(jmm_shm* theshm, int ls)
 {

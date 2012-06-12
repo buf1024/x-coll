@@ -17,8 +17,11 @@
 #define JMM_CMD_REQ_ARG                    "arg"
 #define JMM_CMD_RSP_RES                    "res"
 
+// TODO
+//{"req":"newsock", "arg":{"ip":"192.168.1.101", "port":9999}}
 #define JMM_CMD_NEWSOCK                    "newsock"
-#define JMM_CMD_NEWSOCK_SOCK               "sock"
+#define JMM_CMD_NEWSOCK_ARG_IP             "ip"
+#define JMM_CMD_NEWSOCK_ARG_PORT           "port"
 
 typedef int (*jmm_handler)(cJSON* args);
 

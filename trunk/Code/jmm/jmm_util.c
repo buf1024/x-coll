@@ -5,11 +5,13 @@
  *      Author: buf1024@gmail.com
  */
 
+#include "jmm_cmmhdr.h"
 #include "jmm_util.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <fcntl.h>
 
 void jmm_daemonlize()
 {
@@ -23,6 +25,24 @@ void jmm_daemonlize()
     {
         exit(0);
     }
+}
+
+int jmm_is_runas_root()
+{
+    if(getuid() == 0 || geteuid() == 0){
+        return JMM_TRUE;
+    }
+    return JMM_FALSE;
+}
+
+int jmm_set_fd_opt(int fd, int opt)
+{
+    int flags;
+    if ((flags = fcntl(fd, F_GETFL, 0)) < 0
+            || fcntl(fd, F_SETFL, flags | opt) < 0) {
+        return JMM_FAIL;
+    }
+    return JMM_SUCCESS;
 }
 
 ssize_t jmm_send_fd(int fd,/* void* ptr, size_t nbytes, */int sendfd)
@@ -105,3 +125,18 @@ ssize_t jmm_recv_fd(int fd,/* void* ptr, size_t nbytes, */int* recvfd)
     }
     return n;
 }
+
+
+
+
+
+
+#ifdef DEBUG
+void jmm_print_space(int ls)
+{
+    int i=0;
+    for(i=0; i<ls; i++){
+        printf(" ");
+    }
+}
+#endif

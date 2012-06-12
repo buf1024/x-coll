@@ -5,9 +5,9 @@ JMM=jmm
 
 JMM_MY_OBJ=myserver.o
 
-JMM_OBJ=ciniconfig.o cJSON.o \
+JMM_OBJ=ciniconfig.o clog.o cJSON.o \
 		jmm.o jmm_conf.o jmm_event.o jmm_proc.o jmm_shm.o jmm_util.o \
-		jmm_cmd.o \
+		jmm_cmd.o jmm_log.o \
 		$(JMM_MY_OBJ)
 
 EXT_CCFLAGS = -lm -levent_core

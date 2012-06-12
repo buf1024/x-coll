@@ -8,6 +8,7 @@
 #ifndef __48SLOTS_JMM_EVENT_H__
 #define __48SLOTS_JMM_EVENT_H__
 
+// 控制进程事件
 typedef struct jmm_event
 {
     struct event_base* base;
@@ -23,6 +24,7 @@ typedef struct jmm_event
 
 }jmm_event;
 
+// 子进程事件
 typedef struct jmm_event_wf
 {
     struct event_base* base;
@@ -37,12 +39,15 @@ typedef struct jmm_event_wf
 
 }jmm_event_wf;
 
+// 控制进程事件
 int jmm_init_event(struct event_base* base);
 int jmm_uninit_event();
 
+// 子进程事件
 int jmm_init_event_wf(struct event_base* base);
 int jmm_uninit_event_wf();
 
+// 子进程socket事件
 int jmm_init_event_sock(int idx, int sfd);
 
 

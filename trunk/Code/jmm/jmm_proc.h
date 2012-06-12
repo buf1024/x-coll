@@ -10,13 +10,18 @@
 
 #include "jmm_conf.h"
 
-int jmm_find_free_wf();
-int jmm_assign_wf(int wf_id, int sock_fd);
-
+// 初始化和销毁进程池
 int jmm_init_proc(jmm_conf* conf);
 int jmm_uninit_proc();
 
+// 查找可供服务的子进程
+int jmm_find_free_wf();
+// 将socket传递到相关的子进程中
+int jmm_assign_wf(int wf_id, int sock_fd, const char* ip, int port);
+
+// 子进程清空非必要的资源
 int jmm_proc_clear_env_wf();
+// 子进程服务进程
 int jmm_proc_wf(int wf_id);
 
 #endif /* __48SLOTS_JMM_PROC_H__ */

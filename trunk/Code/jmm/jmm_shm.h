@@ -8,13 +8,16 @@
 #ifndef __48SLOTS_JMM_SHM_H__
 #define __48SLOTS_JMM_SHM_H__
 
+#include "jmm_cmmhdr.h"
 #include "jmm_conf.h"
 #include <sys/types.h>
 
 // 网络连接信息
 typedef struct jmm_shm_sock
 {
-    //int status;
+/*    time_t cnn_time;
+    char cnn_ip[JMM_MAX_ADDR];
+    int cnn_port;*/
     int sock_fd;   // 当前连接文件描述符，0表示无连接
 }jmm_shm_sock;
 
