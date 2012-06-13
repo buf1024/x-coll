@@ -1,26 +1,26 @@
 CC = cc
 CCFLAGS = -O2 -Wall -g3
 
-JCC=jcc
+JCT=jct
 
-JCC_MY_OBJ=
+JCT_MY_OBJ=
 
-JCC_OBJ=jcc.o jcc_proc.o jcc_event.o \
-		$(JCC_MY_OBJ)
+JCT_OBJ=jct.o jct_proc.o jct_event.o \
+		$(JCT_MY_OBJ)
 
 EXT_CCFLAGS = -levent_core
 
-all:$(JCC)
+all:$(JCT)
 
-$(JCC):$(JCC_OBJ)
-	$(CC) $(EXT_CCFLAGS) -o $@ $(JCC_OBJ)
+$(JCT):$(JCT_OBJ)
+	$(CC) $(EXT_CCFLAGS) -o $@ $(JCT_OBJ)
 
 install:all
-	cp -f $(JCC) ./bin
+	cp -f $(JCT) ./bin
 
 clean:
 	rm -rf *.o
-	rm -rf $(JCC)
+	rm -rf $(JCT)
 
 .PRECIOUS:%.c
 .SUFFIXES:

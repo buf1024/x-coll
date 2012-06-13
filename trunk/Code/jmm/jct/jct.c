@@ -1,13 +1,13 @@
 /*
- * jcc.c
+ * jct.c
  *
  *  Created on: 2012-6-13
  *      Author: buf1024@gmail.com
  */
 
-#include "jcc_cmmhdr.h"
-#include "jcc_event.h"
-#include "jcc_proc.h"
+#include "jct_cmmhdr.h"
+#include "jct_event.h"
+#include "jct_proc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,13 +17,13 @@
 #include <sys/socket.h>
 #include <event2/event.h>
 
-#define JCC_VERSION        "0.01"
-#define JCC_NAME           "jcc"
+#define JCT_VERSION        "0.01"
+#define JCT_NAME           "jct"
 
-static int jcc_is_runas_root();
-static void jcc_daemonlize();
-static void jcc_version();
-static void jcc_usage();
+static int jct_is_runas_root();
+static void jct_daemonlize();
+static void jct_version();
+static void jct_usage();
 
 int main(int argc, char **argv)
 {
@@ -43,9 +43,9 @@ int main(int argc, char **argv)
     int port = 0;
 
     // no root
-    if (jcc_is_runas_root() == JCC_TRUE) {
-        fprintf(stderr, "%s is not allow to run as root!\n", JCC_NAME);
-        exit(JCC_FAIL);
+    if (jct_is_runas_root() == JCT_TRUE) {
+        fprintf(stderr, "%s is not allow to run as root!\n", JCT_NAME);
+        exit(JCT_FAIL);
     }
 
     int opt;
@@ -61,17 +61,17 @@ int main(int argc, char **argv)
             daemon = 0;
             break;
         case 'v':
-            jcc_version();
-            exit(JCC_SUCCESS);
+            jct_version();
+            exit(JCT_SUCCESS);
             break;
         case 'h':
-            jcc_usage();
-            exit(JCC_SUCCESS);
+            jct_usage();
+            exit(JCT_SUCCESS);
             break;
         case ':':
         case '?':
-            jcc_usage();
-            exit(JCC_FAIL);
+            jct_usage();
+            exit(JCT_FAIL);
             break;
         default:
             break;
@@ -81,17 +81,17 @@ int main(int argc, char **argv)
     if(strlen(host) == 0 || port <= 0 || port >= USHRT_MAX){
         fprintf(stdout, "address or port is not valid. address=%s, port=%d\n",
                 host, port);
-        exit(JCC_FAIL);
+        exit(JCT_FAIL);
     }
 
     if(daemon){
-        jcc_daemonlize();
+        jct_daemonlize();
     }
 
     base = event_base_new();
     if(base == NULL){
         fprintf(stdout, "fail to create event_base!\n");
-        exit(JCC_FAIL);
+        exit(JCT_FAIL);
     }
 
     struct sockaddr_in addr;
@@ -99,37 +99,37 @@ int main(int argc, char **argv)
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
 
-    if(jcc_init_event(base, (struct sockaddr*)&addr, sizeof(addr)) == JCC_FAIL){
+    if(jct_init_event(base, (struct sockaddr*)&addr, sizeof(addr)) == JCT_FAIL){
         event_base_free(base);
-        exit(JCC_FAIL);
+        exit(JCT_FAIL);
     }
 
-    if(jcc_init_worker() == JCC_FAIL){
+    if(jct_init_worker() == JCT_FAIL){
         fprintf(stdout, "fail to create worker thread.\n");
-        jcc_uninit_event();
+        jct_uninit_event();
         event_base_loopexit(base, NULL);
-        exit(JCC_FAIL);
+        exit(JCT_FAIL);
     }
 
     event_base_dispatch(base);
 
-    jcc_uninit_event();
-    jcc_uninit_workder();
+    jct_uninit_event();
+    jct_uninit_workder();
 
     event_base_free(base);
 
-    return JCC_SUCCESS;
+    return JCT_SUCCESS;
 }
 
 
-static int jcc_is_runas_root()
+static int jct_is_runas_root()
 {
     if(getuid() == 0 || geteuid() == 0){
-        return JCC_TRUE;
+        return JCT_TRUE;
     }
-    return JCC_FALSE;
+    return JCT_FALSE;
 }
-static void jcc_daemonlize()
+static void jct_daemonlize()
 {
     int pid = 0;
     if((pid = fork()) > 0)
@@ -142,13 +142,13 @@ static void jcc_daemonlize()
         exit(0);
     }
 }
-static void jcc_version()
+static void jct_version()
 {
-    printf("%s version : %s\n", JCC_NAME, JCC_VERSION);
+    printf("%s version : %s\n", JCT_NAME, JCT_VERSION);
 }
-static void jcc_usage()
+static void jct_usage()
 {
-    printf("%s ---- %s\n\n", JCC_NAME, JCC_VERSION);
+    printf("%s ---- %s\n\n", JCT_NAME, JCT_VERSION);
     printf("  -i, --ip=ip/host address            Specific the ip/host address\n");
     printf("  -p, --port=port number              Specific the port number\n");
     printf("  -e, --exclude                       Don't start as daemon process\n");
