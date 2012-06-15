@@ -28,8 +28,12 @@ typedef struct jmm_shm_wf
     pid_t pid;     // 进程id
     int father_fd; // 用于父进程向子进程传递文件描述符，因为和libevent混合在一起不行
     int mother_fd; // 用于子进程向父进程传递文件描述符，因为和libevent混合在一起不行
+
     int boy_fd;    // 父进程控制命令文件描述符
     int girl_fd;   // 子进程控制命令文件描述符
+
+
+    //加变量在这之前加
     int proc_svr_num; // 子进程可服务的连接数
     jmm_shm_sock* shm_sock;
 }jmm_shm_wf;
@@ -37,6 +41,7 @@ typedef struct jmm_shm_wf
 typedef struct jmm_shm
 {
     pid_t pid;
+    //加变量在这之前加
     int proc_num;
     jmm_shm_wf* shm_wf;
 }jmm_shm;

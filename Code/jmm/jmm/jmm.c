@@ -11,14 +11,13 @@
 #include "jmm_event.h"
 #include "jmm_shm.h"
 #include "jmm_proc.h"
-#include "jmm_log.h"
 #include "jmm.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <getopt.h>
 #include <event2/event.h>
 
+#define JMM_PROG_DEF_NAME           "jmm"
+#define JMM_PROG_DEF_VERSION        "0.01"
+#define JMM_PROG_DEF_DESC           "scratch server"
 
 jmm_hook                        hook_fn = {0};
 jmm_conf                           conf = {0};
@@ -36,13 +35,13 @@ int main(int argc, char **argv)
     struct event_base* base = NULL;
     const char* optstr = "c:ehv";
     struct option optlong[] = {
-            {"config", 1, NULL, 'c'},
+            {"configure", 1, NULL, 'c'},
             {"exclude", 0, NULL, 'e'},
             {"version", 0, NULL, 'v'},
             {"help", 0, NULL, 'h'},
             {NULL, 0, NULL, 0}
     };
-    int daemon = 1;
+    int daemon = JMM_TRUE;
     int opt;
 
     jmm_init_env();
@@ -59,11 +58,11 @@ int main(int argc, char **argv)
             strncpy(conf.conf_path, optarg, JMM_MAX_PATH - 1);
             break;
         case 'e':
-            daemon = 0;
+            daemon = JMM_FALSE;
             break;
         case 'v':
             jmm_version();
-            exit(0);
+            exit(JMM_SUCCESS);
             break;
         case 'h':
             jmm_usage();
@@ -85,17 +84,13 @@ int main(int argc, char **argv)
 
     if(strlen(conf.conf_path) > 0){
         if(jmm_init_conf(&conf) == JMM_FAIL){
-            fprintf(stderr, "fail to load config from file: %s\n", conf.conf_path);
+            fprintf(stderr, "fail to load configure from file: %s\n", conf.conf_path);
             exit(JMM_FAIL);
         }
     }else{
         jmm_init_def_conf(&conf);
-        fprintf(stdout, "config file not specific, use the default.\n");
+        fprintf(stdout, "configure file not specific, use the default.\n");
     }
-
-#ifdef DEBUG
-    jmm_trace_conf(&conf, 0);
-#endif
 
     base = event_base_new();
     if(!base){
@@ -139,7 +134,7 @@ int main(int argc, char **argv)
     JMM_INFO("control process entering event loop...\n");
     event_base_dispatch(base);
 
-    JMM_INFO("free resource, exit\n");
+    JMM_INFO("free resource and exit\n");
     jmm_uninit_event();
     jmm_uninit_proc();
     jmm_uninit_shm();
@@ -167,12 +162,16 @@ static void jmm_uninit_env()
 
 static void jmm_version()
 {
-    printf("%s version : %s\n", hook_fn.prog_name(), hook_fn.prog_version());
+    printf("%s version : %s\n",
+            hook_fn.prog_name?hook_fn.prog_name():JMM_PROG_DEF_NAME,
+            hook_fn.prog_version?hook_fn.prog_version():JMM_PROG_DEF_VERSION);
 }
 static void jmm_usage()
 {
-    printf("%s ---- %s\n\n", hook_fn.prog_name(), hook_fn.prog_desc());
-    printf("  -c, --config=configuration file     Specific the configuration file\n");
+    printf("%s ---- %s\n\n",
+            hook_fn.prog_name?hook_fn.prog_name():JMM_PROG_DEF_NAME,
+            hook_fn.prog_desc?hook_fn.prog_desc():JMM_PROG_DEF_DESC);
+    printf("  -c, --configure=configuration file  Specific the configuration file\n");
     printf("                                      If not specific, use the default setting\n");
     printf("  -e, --exclude                       Don't start as daemon process\n");
     printf("  -v, --version                       Print the program version message\n");

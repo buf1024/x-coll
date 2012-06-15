@@ -13,6 +13,9 @@
 #include <strings.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/time.h>
+
+#define CLOG_DEFAULT_HEAD_SIZE   128
 
 struct call_back
 {
@@ -65,12 +68,17 @@ static void clog_message(int lvl, const char* format, va_list ap)
 {
     struct call_back* cb = _context.cb;
     while(cb){
-        cb->log_cb_fun(cb->level, lvl, format, ap, cb->log_cb_args);
+        if (cb->log_cb_fun) {
+            if (cb->log_cb_fun(cb->level, lvl, format, ap,
+                    cb->log_cb_args) == CLOG_FAIL) {
+                fprintf(stderr, "fail to log message!\n");
+            }
+        }
         cb = cb->next;
     }
 }
 
-void clog_register_callback(int lvl,
+int clog_register_callback(int lvl,
         clog_init_callback_fun init_cb, void* init_args,
         clog_log_callback_fun log_cb, void* log_args,
         clog_uninit_callback_fun uninit_cb, void* uninit_args)
@@ -98,20 +106,59 @@ void clog_register_callback(int lvl,
         }
     }
     pthread_mutex_unlock(&_ctx_mutex);
+    return CLOG_SUCCESS;
 }
-void clog_initialize()
+int clog_start()
 {
     struct call_back* cb = _context.cb;
     while(cb){
-        cb->init_cb_fun(cb->init_cb_args);
+        if (cb->init_cb_fun) {
+            if (cb->init_cb_fun(cb->init_cb_args) == CLOG_FAIL) {
+                fprintf(stderr, "fail to init call back!\n");
+                return CLOG_FAIL;
+            }
+        }
         cb = cb->next;
     }
+    return CLOG_SUCCESS;
 }
 
 void clog_clearup()
 {
     memset(&_context, 0, sizeof(_context));
     memset(&_ctx_mutex, 0, sizeof(_ctx_mutex)); //PTHREAD_MUTEX_INITIALIZER;
+}
+
+char* clog_get_header(int lvl, char* buf, int size)
+{
+    const char* head = 0;
+    switch(lvl)
+    {
+    case CLOG_DEBUG:
+        head = "[D]";
+        break;
+    case CLOG_INFO:
+        head = "[I]";
+        break;
+    case CLOG_WARN:
+        head = "[W]";
+        break;
+    case CLOG_ERROR:
+        head = "[E]";
+        break;
+    case CLOG_FATAL:
+        head = "[F]";
+        break;
+    default:
+        break;
+    }
+    struct timeval tv = {0};
+    gettimeofday(&tv, NULL);
+    struct tm* tm = localtime(&tv.tv_sec);
+    snprintf(buf, size, "%s[%4d%2d%2d%2d%2d%2d:%ld]", head,
+            tm->tm_year,tm->tm_mon + 1, tm->tm_mday,
+            tm->tm_hour, tm->tm_min, tm->tm_sec, (long)tv.tv_usec);
+    return buf;
 }
 
 void clog_debug(const char* format, ...)
@@ -165,58 +212,59 @@ void clog_fatal(const char* format, ...)
     pthread_mutex_unlock(&_ctx_mutex);
 }
 
-void clog_finish()
+int clog_finish()
 {
     pthread_mutex_lock(&_ctx_mutex);
 
     struct call_back* cb = _context.cb;
     while(cb){
         struct call_back* tmp_cb = cb;
-        cb->uninit_cb_fun(cb->uninit_cb_args);
+        if (cb->uninit_cb_fun) {
+            if (cb->uninit_cb_fun(cb->uninit_cb_args) == CLOG_FAIL) {
+                fprintf(stderr, "fail to uninit call back!\n");
+            }
+        }
         cb = cb->next;
         free(tmp_cb);
     }
 
     pthread_mutex_unlock(&_ctx_mutex);
+
+    return CLOG_SUCCESS;
 }
-
-
+int clog_initialize_default(int con_lvl, int file_lvl, char* file_path)
+{
+    clog_clearup();
+    int ret = clog_register_callback(con_lvl, clog_console_init_callback_fun, 0,
+            clog_console_log_callback_fun, 0, clog_console_uninit_callback_fun,
+            0);
+    if (ret == CLOG_FAIL) {
+        return CLOG_FAIL;
+    }
+    ret = clog_register_callback(file_lvl, clog_file_init_callback_fun,
+            file_path, clog_file_log_callback_fun, 0,
+            clog_file_uninit_callback_fun, 0);
+    if (ret == CLOG_FAIL) {
+        return CLOG_FAIL;
+    }
+    return clog_start();
+}
+int clog_initilize()
+{
+    clog_clearup();
+    return clog_start();
+}
 /////////////////////////////////////
 // default appender
 #define CLOG_DEFAULT_BUFFER_SIZE 4096
-#define CLOG_DEFAULT_HEAD_SIZE   128
-#define CLOG_DEFAULT_MAX_PATH    256
-static const char* clog_get_header(int lvl, char* buf, int size)
-{
-    const char* head = 0;
-    switch(lvl)
-    {
-    case CLOG_DEBUG:
-        head = "[D]";
-        break;
-    case CLOG_INFO:
-        head = "[I]";
-        break;
-    case CLOG_WARN:
-        head = "[W]";
-        break;
-    case CLOG_ERROR:
-        head = "[E]";
-        break;
-    case CLOG_FATAL:
-        head = "[F]";
-        break;
-    default:
-        break;
-    }
-    snprintf(buf, size, "%s[%ld] ", head, (long)time(0));
 
-    return buf;
-}
-void clog_console_init_callback_fun(void* args)
+#define CLOG_DEFAULT_MAX_PATH    256
+
+int clog_console_init_callback_fun(void* args)
 {
+    return CLOG_SUCCESS;
 }
-void clog_console_log_callback_fun(int loglvl, int reqlvl, const char* format,
+int clog_console_log_callback_fun(int loglvl, int reqlvl, const char* format,
         va_list ap, void* args)
 {
     if(reqlvl >= loglvl){
@@ -225,14 +273,15 @@ void clog_console_log_callback_fun(int loglvl, int reqlvl, const char* format,
         fprintf(stdout, head);
         vfprintf(stdout, format, ap);
     }
+    return CLOG_SUCCESS;
 }
-void clog_console_uninit_callback_fun(void* args)
+int clog_console_uninit_callback_fun(void* args)
 {
-
+    return CLOG_SUCCESS;
 }
 
 static FILE* _fp = 0;
-void clog_file_init_callback_fun(void* args)
+int clog_file_init_callback_fun(void* args)
 {
     if(_fp != NULL){
         fclose(_fp);
@@ -241,8 +290,12 @@ void clog_file_init_callback_fun(void* args)
     pid_t pid = getpid();
     snprintf(file, CLOG_DEFAULT_MAX_PATH, "%s.%ld", (const char*)args, (long)pid);
     _fp = fopen(file, "a+");
+    if(_fp == NULL){
+        return CLOG_FAIL;
+    }
+    return CLOG_SUCCESS;
 }
-void clog_file_log_callback_fun(int loglvl, int reqlvl, const char* format,
+int clog_file_log_callback_fun(int loglvl, int reqlvl, const char* format,
         va_list ap, void* args)
 {
     if(reqlvl >= loglvl){
@@ -251,8 +304,12 @@ void clog_file_log_callback_fun(int loglvl, int reqlvl, const char* format,
         fprintf(_fp, head);
         vfprintf(_fp, format, ap);
     }
+    return CLOG_SUCCESS;
 }
-void clog_file_uninit_callback_fun(void* args)
+int clog_file_uninit_callback_fun(void* args)
 {
-    fclose(_fp);
+    if(_fp){
+        fclose(_fp);
+    }
+    return CLOG_SUCCESS;
 }

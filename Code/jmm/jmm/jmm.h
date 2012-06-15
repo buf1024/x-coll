@@ -12,17 +12,30 @@
 
 #define REG_INIT_HOOK_FUN(fn)  prog_init_hook prog_init_hook_fn = fn;
 
+typedef struct jmm_prog_in
+{
+    int len;
+    char* bytes;
+}jmm_prog_in;
+
+typedef struct jmm_prog_out
+{
+    int status;
+    int len;
+    char* bytes;
+}jmm_prog_out;
+
 typedef struct jmm_hook
 {
     const char* (*prog_name)();
     const char* (*prog_version)();
     const char* (*prog_desc)();
 
-    int (*prog_init)(void*);
-    int (*prog_service)(void*, void*);
+    int (*prog_init)(char*);
+    int (*prog_service)(jmm_prog_in*, jmm_prog_out*);
     int (*prog_uninit)();
 
-    void* (*prog_malloc)(size_t);
+    void* (*prog_malloc)(size_t); // sys/types.h
     void (*prog_free)(void*);
 
 }jmm_hook;

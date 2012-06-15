@@ -19,9 +19,6 @@ typedef struct jmm_event
 
     struct evconnlistener* listener;
 
-    int cmm_num;
-    struct bufferevent** cmm;
-
 }jmm_event;
 
 // 子进程事件
@@ -32,7 +29,7 @@ typedef struct jmm_event_wf
     struct event* usr1;
     struct event* ctrl_c;
 
-    struct bufferevent* cmm;
+    struct event* cmm;
 
     int sock_num;
     struct bufferevent** sock;
