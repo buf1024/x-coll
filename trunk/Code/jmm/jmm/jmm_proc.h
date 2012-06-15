@@ -15,9 +15,9 @@ int jmm_init_proc(jmm_conf* conf);
 int jmm_uninit_proc();
 
 // 查找可供服务的子进程
-int jmm_find_free_wf();
+int jmm_find_free_wf(int* wf_id, int* sock_id);
 // 将socket传递到相关的子进程中
-int jmm_assign_wf(int wf_id, int sock_fd, const char* ip, int port);
+int jmm_assign_wf(int wf_id, int sock_id, int sock_fd, const char* ip, int port);
 
 // 子进程清空非必要的资源
 int jmm_proc_clear_env_wf();

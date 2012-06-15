@@ -10,14 +10,11 @@
 #include "jmm_conf.h"
 #include "jmm_proc.h"
 #include "jmm_shm.h"
-#include "jmm_cmd.h"
-#include "jmm_log.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "jmm_util.h"
+#include "jmm.h"
 #include <signal.h>
-#include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
@@ -32,6 +29,10 @@ jmm_event_wf              event_wf = {0};
 extern jmm_conf               conf;
 extern jmm_shm*                shm;
 extern jmm_shm_wf*          shm_wf;
+extern jmm_hook            hook_fn;
+
+// 单个进程只要一个接收缓冲就可以了
+static char          sock_recv_buf[JMM_MAX_SOCK_RECV_SIZE] = "";
 
 // 控制进程事件回调
 static void jmm_ctrl_c_cb(evutil_socket_t fd, short what, void* ctx);
@@ -44,22 +45,15 @@ static void jmm_listener_cb(struct evconnlistener* listener, evutil_socket_t fd,
 static void jmm_ctrl_c_wf_cb(evutil_socket_t fd, short what, void* ctx);
 static void jmm_usr1_wf_cb(evutil_socket_t fd, short what, void* ctx);
 
-// 控制进程和子进程通信事件回调
-static void jmm_cmm_read_cb(struct bufferevent*, void *);
-static void jmm_cmm_write_cb(struct bufferevent*, void*);
-static void jmm_cmm_event_cb(struct bufferevent*, short, void*);
-
 // 子进程和控制进程通信事件回调
-static void jmm_cmm_read_wf_cb(struct bufferevent*, void *);
-static void jmm_cmm_write_wf_cb(struct bufferevent*, void*);
-static void jmm_cmm_event_wf_cb(struct bufferevent*, short, void*);
+static void jmm_cmm_read_wf_cb(evutil_socket_t fd, short what, void* ctx);
 
 // 子进程 socket 事件回调
 static void jmm_sock_read_wf_cb(struct bufferevent*, void *);
 static void jmm_sock_write_wf_cb(struct bufferevent*, void*);
 static void jmm_sock_event_wf_cb(struct bufferevent*, short, void*);
 
-
+// 控制进程事件
 int jmm_init_event(struct event_base* base)
 {
     if (base) {
@@ -85,20 +79,6 @@ int jmm_init_event(struct event_base* base)
             return JMM_FAIL;
         }
 
-        //CMM 控制事件
-        event.cmm_num = shm->proc_num;
-        event.cmm = (struct bufferevent**)malloc(sizeof(struct bufferevent*)*event.cmm_num);
-        int i = 0;
-        for (i = 0; i < shm->proc_num; i++) {
-            jmm_shm_wf* wf = jmm_shm_get_wf(shm, i, conf.proc_svr_num);
-            event.cmm[i] = bufferevent_socket_new(base, wf->boy_fd, BEV_OPT_CLOSE_ON_FREE);
-            bufferevent_setcb(event.cmm[i], jmm_cmm_read_cb,
-                    jmm_cmm_write_cb, jmm_cmm_event_cb, (void*)i);
-            bufferevent_enable(event.cmm[i], EV_WRITE);
-            bufferevent_enable(event.cmm[i], EV_READ);
-        }
-
-
         // 监听接口
         struct sockaddr_in sin;
         memset(&sin, 0, sizeof(sin));
@@ -118,15 +98,6 @@ int jmm_init_event(struct event_base* base)
 }
 int jmm_uninit_event()
 {
-    if(event.cmm){
-        int i = 0;
-        for(i=0; i<event.cmm_num; i++){
-            bufferevent_free(event.cmm[i]);
-        }
-        free(event.cmm);
-        event.cmm = NULL;
-        event.cmm_num = 0;
-    }
     if(event.listener){
         evconnlistener_free(event.listener);
         event.listener = NULL;
@@ -151,6 +122,7 @@ int jmm_uninit_event()
     return JMM_SUCCESS;
 }
 
+// 子进程事件
 int jmm_init_event_wf(struct event_base* base)
 {
     if (base) {
@@ -173,12 +145,11 @@ int jmm_init_event_wf(struct event_base* base)
         }
 
         // CMM
-        event_wf.cmm = bufferevent_socket_new(base, shm_wf->girl_fd,
-                BEV_OPT_CLOSE_ON_FREE);
-        bufferevent_setcb(event_wf.cmm, jmm_cmm_read_wf_cb, jmm_cmm_write_wf_cb,
-                jmm_cmm_event_wf_cb, NULL);
-        bufferevent_enable(event_wf.cmm, EV_WRITE);
-        bufferevent_enable(event_wf.cmm, EV_READ);
+        event_wf.cmm = event_new(base, shm_wf->girl_fd, EV_READ | EV_PERSIST,
+                jmm_cmm_read_wf_cb, NULL);
+        if (!event_wf.cmm || event_add(event_wf.cmm, NULL) < 0) {
+            return JMM_FAIL;
+        }
 
         //sock
         event_wf.sock_num = conf.proc_svr_num;
@@ -205,18 +176,18 @@ int jmm_uninit_event_wf()
     }
 
     if(event_wf.cmm){
-        bufferevent_free(event_wf.cmm);
-        event.cmm = NULL;
+        event_free(event_wf.cmm);
+        event_wf.cmm = NULL;
     }
     if(event_wf.ctrl_c){
         event_free(event_wf.ctrl_c);
         event_wf.ctrl_c = NULL;
     }
-    if(event.usr1){
+    if(event_wf.usr1){
         event_free(event_wf.usr1);
         event_wf.usr1 = NULL;
     }
-    if(event.term){
+    if(event_wf.term){
         event_free(event_wf.term);
         event_wf.term = NULL;
     }
@@ -224,6 +195,7 @@ int jmm_uninit_event_wf()
     return JMM_SUCCESS;
 }
 
+// socket事件
 int jmm_init_event_sock(int idx, int sfd)
 {
     if(event_wf.sock[idx] != NULL){
@@ -254,10 +226,11 @@ static void jmm_ctrl_c_cb(evutil_socket_t fd, short what, void* ctx)
                 kill(wf->pid, SIGINT);
                 waitpid(wf->pid, NULL, 0);
             }
+            wf->pid = 0;
         }
     }
 
-    event_base_loopexit(base, NULL);
+    event_base_loopbreak(base);
 }
 // 控制进程USR1
 static void jmm_usr1_cb(evutil_socket_t fd, short what, void* ctx)
@@ -303,11 +276,12 @@ static void jmm_listener_cb(struct evconnlistener *listener, evutil_socket_t fd,
     }
 
     // 寻找可用的子进程
-    int wf_id = jmm_find_free_wf();
-    if(wf_id == JMM_FAIL){
+    int wf_id   = 0;
+    int sock_id = 0;;
+    if(jmm_find_free_wf(&wf_id, &sock_id) == JMM_FAIL){
         JMM_INFO("no available resource!\n");
     } else {
-        if (jmm_assign_wf(wf_id, fd, ip_addr, port) == JMM_FAIL) {
+        if (jmm_assign_wf(wf_id, sock_id, fd, ip_addr, port) == JMM_FAIL) {
             JMM_INFO("fail to assign program!\n");
         }
     }
@@ -319,101 +293,75 @@ static void jmm_ctrl_c_wf_cb(evutil_socket_t fd, short what, void* ctx)
 {
     struct event_base *base = ctx;
 
-    printf("jmm_ctrl_c_wf_cb.\n");
 
-    event_base_loopexit(base, NULL);
+    event_base_loopbreak(base);
 }
 static void jmm_usr1_wf_cb(evutil_socket_t fd, short what, void* ctx)
 {
-    printf("jmm_usr1_wf_cb.\n");
 }
 
-static void jmm_cmm_read_cb(struct bufferevent* bev, void* ctx)
+static void jmm_cmm_read_wf_cb(evutil_socket_t fd, short what, void* ctx)
 {
-    //printf("jmm_cmm_read_cb.\n");
-}
-static void jmm_cmm_write_cb(struct bufferevent* bev, void* ctx)
-{
-   // int idx = (int)(ctx);
-    //printf("jmm_cmm_write_cb(%d).\n", idx);
-    struct evbuffer *output = bufferevent_get_output(bev);
-    if (evbuffer_get_length(output) == 0) {
-        //printf("flushed answer(%d)\n", idx);
-        //bufferevent_free(bev);
-    }
-}
-static void jmm_cmm_event_cb(struct bufferevent* bev, short what, void* ctx)
-{
-    //printf("jmm_cmm_write_cb.\n");
-}
+    if(what & EV_READ){
+        int sock_id = 0;
+        read(fd, &sock_id, sizeof(int));
+        JMM_DEBUG("jmm_cmm_read_wf_cb, sock_id: %d\n", sock_id);
+        jmm_shm_sock* shm_sock = jmm_shm_get_sock(shm_wf, sock_id);
+        if (shm_sock->sock_fd == 0) {
+            int newsf=-1;
+            jmm_recv_fd(shm_wf->mother_fd, &newsf);
+            jmm_set_fd_opt(newsf, O_NONBLOCK);
+            jmm_init_event_sock(sock_id, newsf);
 
-static void jmm_cmm_read_wf_cb(struct bufferevent* bev, void* ctx)
-{
-    //buffer not good
-    static int  js_len                      = 0;
-    static int  len_flag                    = 0;
-    static char js_data[JMM_MAX_CMD_STRING] = "";
-    static int  data_flag                   = 0;
+            shm_sock->sock_fd = newsf;
 
-    int actual = 0;
-
-    struct evbuffer *input = bufferevent_get_input(bev);
-    while (evbuffer_get_length(input) != 0) {
-
-        if(data_flag != 0){
-            actual = evbuffer_remove(input, js_data + data_flag, js_len - data_flag);
-            if (actual != js_len - data_flag) {
-                data_flag += actual;
-                break;
-            }
-            data_flag = 0;
-            //printf("receive(%d):%s\n", js_len, js_data);
-            if(jmm_cmd_dispatch_wf(js_data) != JMM_SUCCESS){
-                JMM_ERROR("fail to dispatch cmd\n");
-            }
-        }
-
-        actual = evbuffer_remove(input, ((char*)&js_len)+len_flag, sizeof(int)-len_flag);
-        if(actual != sizeof(int)-len_flag){
-            len_flag += actual;
-            break;
-        }
-        len_flag = 0;
-
-        actual = evbuffer_remove(input, js_data + data_flag, js_len - data_flag);
-        if (actual != js_len - len_flag) {
-            data_flag += actual;
-            break;
-        }
-        data_flag = 0;
-        //printf("receive(%d):%s\n", js_len, js_data);
-        if (jmm_cmd_dispatch_wf(js_data) != JMM_SUCCESS) {
-            JMM_ERROR("fail to dispatch cmd\n");
+            JMM_DEBUG("jmm_cmm_read_wf_cb, sock_fd: %d\n", newsf);
+            // 子进程解父进程锁
+            pthread_mutex_unlock(&(shm_wf->mutex));
+        }else{
+            JMM_DEBUG("should never go here: sock_fd=%d\n", shm_sock->sock_fd);
         }
     }
-
-}
-static void jmm_cmm_write_wf_cb(struct bufferevent* bev, void* ctx)
-{
-    //printf("jmm_cmm_write_wf_cb.\n");
-}
-static void jmm_cmm_event_wf_cb(struct bufferevent* bev, short what, void* ctx)
-{
-    //printf("jmm_cmm_event_wf_cb.\n");
 }
 
+// socket
 static void jmm_sock_read_wf_cb(struct bufferevent* bev, void* ctx)
 {
     struct evbuffer *input = bufferevent_get_input(bev);
+    int len = 0;
+    int actual = 0;
+    char* data = sock_recv_buf;
+    while ((len = evbuffer_get_length(input)) != 0) {
+        while (len != 0) {
+            if(len > JMM_MAX_SOCK_RECV_SIZE){
+                evbuffer_remove(input, data, JMM_MAX_SOCK_RECV_SIZE);
+                actual = JMM_MAX_SOCK_RECV_SIZE;
+                len -= JMM_MAX_SOCK_RECV_SIZE;
+            }else{
+                evbuffer_remove(input, data, len);
+                actual = len;
+                len = 0;
+            }
+            if(hook_fn.prog_service){
+                jmm_prog_in in = {0};
+                jmm_prog_out out = {0};
 
-    if(evbuffer_get_length(input) >0){
-        int len = evbuffer_get_length(input);
+                in.len = actual;
+                in.bytes = data;
 
-        char data[1024] = "";
-        evbuffer_remove(input, data, len);
-        printf("get:%d, data:%s\n", len, data);
-        const char* msg = "who are you?";
-        bufferevent_write(bev, msg, strlen(msg));
+                if(hook_fn.prog_service(&in, &out) != JMM_SUCCESS){
+                    // FATAL ERROR
+                    JMM_FATAL("server encounter fatal error!\n");
+                    event_base_loopbreak(event_wf.base);
+                }else{
+                    if(out.status == JMM_SUCCESS && out.len > 0){
+                        bufferevent_write(bev, out.bytes, out.len);
+                    }else{
+                        JMM_ERROR("business error!\n");
+                    }
+                }
+            }
+        }
 
     }
 
@@ -422,8 +370,6 @@ static void jmm_sock_write_wf_cb(struct bufferevent* bev, void* ctx)
 {
     struct evbuffer *output = bufferevent_get_output(bev);
     if (evbuffer_get_length(output) == 0) {
-        //printf("flushed answer(%d)\n", idx);
-        //bufferevent_free(bev);
     }
 }
 static void jmm_sock_event_wf_cb(struct bufferevent* bev, short what, void* ctx)

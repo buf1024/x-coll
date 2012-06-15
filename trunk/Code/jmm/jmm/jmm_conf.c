@@ -6,12 +6,7 @@
  */
 
 #include "jmm_conf.h"
-#include "jmm_util.h"
 #include "ciniconfig.h"
-#include "clog.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 // read ini macro
 #define JMM_GET_SESSION_MUST(ini, sec, name)                   \
@@ -148,7 +143,9 @@ int jmm_init_conf(jmm_conf* conf)
     if(file_new != conf->conf_path){
         strncpy(conf->conf_path, file_new, JMM_MAX_PATH-1);
     }
-     uninit_ini(&ini);
+
+
+    uninit_ini(&ini);
 
     return JMM_SUCCESS;
 }
@@ -168,7 +165,6 @@ int jmm_init_def_conf(jmm_conf* conf)
     conf->proc_svr_num = JMM_CONF_DEF_PROC_SVR_NUM;
     strcpy(conf->shm_path, JMM_CONF_DEF_SHM_PATH);
 
-    //strcpy(conf->conf_path, JMM_CONF_DEF_CONF_PATH);
 
     return JMM_SUCCESS;
 }

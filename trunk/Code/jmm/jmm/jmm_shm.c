@@ -7,10 +7,6 @@
 #include "jmm_cmmhdr.h"
 #include "jmm_shm.h"
 #include "jmm_util.h"
-#include "jmm_log.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/shm.h>
 #include <unistd.h>
 #include <pthread.h>
