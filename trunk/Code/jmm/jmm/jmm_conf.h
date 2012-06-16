@@ -20,6 +20,7 @@ typedef struct jmm_conf
     int net_backlog;
     int proc_num;
     int proc_svr_num;
+    int sock_use_thread;
     char shm_path[JMM_MAX_PATH];
 
     char conf_path[JMM_MAX_PATH];

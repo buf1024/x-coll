@@ -195,6 +195,15 @@ int jmm_uninit_event_wf()
     return JMM_SUCCESS;
 }
 
+int jmm_init_event_wf_thread(struct event_base* base)
+{
+    return JMM_SUCCESS;
+}
+int jmm_uninit_event_wf_thread()
+{
+    return JMM_SUCCESS;
+}
+
 // socket事件
 int jmm_init_event_sock(int idx, int sfd)
 {
@@ -311,6 +320,7 @@ static void jmm_cmm_read_wf_cb(evutil_socket_t fd, short what, void* ctx)
             int newsf=-1;
             jmm_recv_fd(shm_wf->mother_fd, &newsf);
             jmm_set_fd_opt(newsf, O_NONBLOCK);
+            //thread
             jmm_init_event_sock(sock_id, newsf);
 
             shm_sock->sock_fd = newsf;
