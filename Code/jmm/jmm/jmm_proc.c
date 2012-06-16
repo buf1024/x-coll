@@ -194,13 +194,24 @@ int jmm_proc_wf(int wf_id)
         event_base_free(base);
         return JMM_FAIL;
     }
-    if(hook_fn.prog_init){
-        if(hook_fn.prog_init(conf.conf_path) == JMM_FAIL){
+    if (conf.sock_use_thread == JMM_FALSE) {
+        if (hook_fn.prog_init) {
+            if (hook_fn.prog_init(conf.conf_path) == JMM_FAIL) {
+                jmm_uninit_event_wf();
+                jmm_uninit_shm_wf();
+                jmm_uninit_log_wf();
+                event_base_free(base);
+                return JMM_FAIL;
+            }
+        }
+    }else{
+        // thread
+        if (jmm_init_sock_thread() == JMM_FAIL) {
             jmm_uninit_event_wf();
             jmm_uninit_shm_wf();
-                    jmm_uninit_log_wf();
-                    event_base_free(base);
-                    return JMM_FAIL;
+            jmm_uninit_log_wf();
+            event_base_free(base);
+            return JMM_FAIL;
         }
     }
     JMM_INFO("child(%d) event is ready!\n", wf_id);
@@ -208,8 +219,13 @@ int jmm_proc_wf(int wf_id)
     event_base_dispatch(base);
 
     JMM_INFO("free resource, exit\n");
-    if(hook_fn.prog_uninit){
-        hook_fn.prog_uninit();
+    if (conf.sock_use_thread == JMM_FALSE) {
+        if (hook_fn.prog_uninit) {
+            hook_fn.prog_uninit();
+        }
+    }else{
+        // thread, should not go here
+        jmm_uninit_sock_thread();
     }
     jmm_uninit_event_wf();
     jmm_uninit_shm_wf();
@@ -218,3 +234,13 @@ int jmm_proc_wf(int wf_id)
 
     return JMM_SUCCESS;
 }
+
+int jmm_init_sock_thread()
+{
+    return JMM_SUCCESS;
+}
+int jmm_uninit_sock_thread()
+{
+    return JMM_SUCCESS;
+}
+

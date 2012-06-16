@@ -76,6 +76,7 @@ NET_PORT=10433
 NET_BACKLOG=128
 PROC_NUM=8
 PROC_SVR_NUM=1
+SOCK_USE_THREAD=1
 SHM_PATH=conf/jmm_shm
 */
 
@@ -88,6 +89,7 @@ SHM_PATH=conf/jmm_shm
 #define JMM_CONF_NET_BACKLOG                                   "NET_BACKLOG"
 #define JMM_CONF_PROC_NUM                                      "PROC_NUM"
 #define JMM_CONF_PROC_SVR_NUM                                  "PROC_SVR_NUM"
+#define JMM_CONF_SOCK_USE_THREAD                               "SOCK_USE_THREAD"
 #define JMM_CONF_SHM_PATH                                      "SHM_PATH"
 
 // default value
@@ -96,8 +98,9 @@ SHM_PATH=conf/jmm_shm
 #define JMM_CONF_DEF_LOG_FILE_PATH                             "log/jmm"
 #define JMM_CONF_DEF_NET_PORT                                  10433
 #define JMM_CONF_DEF_NET_BACKLOG                               128
-#define JMM_CONF_DEF_PROC_NUM                                  2
-#define JMM_CONF_DEF_PROC_SVR_NUM                              2
+#define JMM_CONF_DEF_PROC_NUM                                  1
+#define JMM_CONF_DEF_PROC_SVR_NUM                              1
+#define JMM_CONF_DEF_SOCK_USE_THREAD                           1
 #define JMM_CONF_DEF_SHM_PATH                                  "conf/jmm_shm"
 #define JMM_CONF_DEF_CONF_PATH                                 "conf/jmm.conf"
 
@@ -137,13 +140,16 @@ int jmm_init_conf(jmm_conf* conf)
     //proc
     JMM_GET_INT_MUST(&ini, sec, JMM_CONF_PROC_NUM, &(conf->proc_num));
     JMM_GET_INT_MUST(&ini, sec, JMM_CONF_PROC_SVR_NUM, &(conf->proc_svr_num));
+    JMM_GET_INT_OPT(&ini, sec, JMM_CONF_SOCK_USE_THREAD, &(conf->sock_use_thread));
+
+    conf->sock_use_thread = !! conf->sock_use_thread;
+
     //shm
     JMM_GET_STRING_MUST(&ini, sec, JMM_CONF_SHM_PATH, conf->shm_path, JMM_MAX_PATH-1);
 
     if(file_new != conf->conf_path){
         strncpy(conf->conf_path, file_new, JMM_MAX_PATH-1);
     }
-
 
     uninit_ini(&ini);
 
@@ -163,6 +169,7 @@ int jmm_init_def_conf(jmm_conf* conf)
     conf->net_backlog = JMM_CONF_DEF_NET_BACKLOG;
     conf->proc_num = JMM_CONF_DEF_PROC_NUM;
     conf->proc_svr_num = JMM_CONF_DEF_PROC_SVR_NUM;
+    conf->sock_use_thread = JMM_CONF_DEF_SOCK_USE_THREAD;
     strcpy(conf->shm_path, JMM_CONF_DEF_SHM_PATH);
 
 
